@@ -77,10 +77,14 @@ export function assessPlayer(player, allPlayers) {
     factors.push({ effect: 'caution', text: `${player.stats_season ?? 'Prior'} usage was earned on ${player.stats_team}; now on ${player.team} — role may differ` });
   }
 
-  // Market disagreement between the two external sources is itself information.
+  // Market disagreement between external sources is itself information.
   const e = player.expert?.rank, a = player.adp?.rank;
   if (e != null && a != null && Math.abs(e - a) >= 15) {
     factors.push({ effect: 'context', text: `ADP (#${a}) and expert consensus (#${e}) disagree by ${Math.abs(e - a)} spots — the market itself is unsure` });
+  }
+  const t = player.trade_market?.rank;
+  if (e != null && t != null && Math.abs(e - t) >= 15) {
+    factors.push({ effect: 'context', text: `The trade market prices him #${t} vs expert consensus #${e} — a ${Math.abs(e - t)}-spot split between what people pay and what experts say` });
   }
 
   const score = base * mult;

@@ -10,6 +10,7 @@ function compactRow(p, a, state) {
     name: p.name, pos: p.position, team: p.team, bye: p.bye,
     adp: p.adp?.overall ?? null, adp_rank: p.adp?.rank ?? null,
     expert_rank: p.expert?.rank ?? null, expert_tier: p.expert?.tier ?? null,
+    trade_market_rank: p.trade_market?.rank ?? null,
     ai_rank: a.ai_rank, ai_confidence: a.confidence,
     usage_trend: a.trend.available ? a.trend.usage : 'no 2025 data',
     sleeper_state: a.signal.state,

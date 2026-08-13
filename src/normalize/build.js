@@ -20,6 +20,7 @@ import { join } from 'node:path';
 import { loadSnapshot, parseCsv, ROOT, RAW_DIR } from '../ingest/util.js';
 import { nameKey, normPosition, normTeam, samePositionGroup, playerId } from './names.js';
 import { resolveSeason } from './season.js';
+import { matchTradeMarket } from './tradeMarket.js';
 import { loadState } from '../store/state.js';
 
 const FANTASY_POSITIONS = new Set(['QB', 'RB', 'WR', 'TE', 'K', 'DST']);
@@ -289,6 +290,12 @@ export function buildDatabase() {
     };
   });
 
+  // Trade-market values (optional source — a missing snapshot never blocks).
+  const statsguySnap = loadSnapshot('statsguy_values.json');
+  const tradeMatch = statsguySnap
+    ? matchTradeMarket(players, JSON.parse(statsguySnap.body))
+    : (players.forEach(p => { p.trade_market = null; }), { matched: 0, unmatched: [] });
+
   const suspiciousNoStats = players
     .filter(p => !['K', 'DST'].includes(p.position))
     .filter(p => p.games.length === 0 && (p.meta?.years_exp ?? 0) > 0)
@@ -304,6 +311,7 @@ export function buildDatabase() {
     sources: {
       adp: ffcSnap.meta,
       expert: fpSnap.meta,
+      trade_market: statsguySnap?.meta ?? null,
       weekly_stats: weeklySnap.meta,
       snap_counts: snapsSnap.meta,
       player_meta: sleeperSnap.meta,
@@ -314,8 +322,9 @@ export function buildDatabase() {
       with_adp: players.filter(p => p.adp).length,
       with_expert: players.filter(p => p.expert).length,
       with_stats: players.filter(p => p.games.length).length,
+      with_trade_market: players.filter(p => p.trade_market).length,
     },
-    unmatched: { ffc_only: unmatchedFfc, veterans_without_stats: suspiciousNoStats },
+    unmatched: { ffc_only: unmatchedFfc, veterans_without_stats: suspiciousNoStats, trade_market: tradeMatch.unmatched },
     players,
   };
 

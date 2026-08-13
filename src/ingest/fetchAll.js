@@ -14,6 +14,7 @@ import { ingestFfcAdp } from './sources/ffcAdp.js';
 import { ingestFantasyPros, ingestFantasyProsROS } from './sources/fantasyPros.js';
 import { ingestWeeklyStats, ingestSnapCounts } from './sources/nflverse.js';
 import { ingestSleeperPlayers, ingestSleeperState } from './sources/sleeper.js';
+import { ingestStatsGuy } from './sources/statsGuy.js';
 
 export async function runIngest({ log = console } = {}) {
   // State first — it decides the stats years.
@@ -33,6 +34,7 @@ export async function runIngest({ log = console } = {}) {
     ['FantasyPros draft consensus', ingestFantasyPros],
     ['FantasyPros rest-of-season consensus', ingestFantasyProsROS],
     ['Sleeper player metadata', ingestSleeperPlayers],
+    ['Stats Guy trade-market values', ingestStatsGuy],
     [`nflverse weekly stats ${prevSeason}`, () => ingestWeeklyStats(prevSeason),
       // Skip the big download when the previous season's snapshot already
       // exists — completed seasons don't change.

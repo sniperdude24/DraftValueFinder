@@ -65,15 +65,15 @@ export async function renderMarket(el, refresh) {
   const m = await api.market();
   el.innerHTML = `
     <div class="panel"><h2>Market disagreement</h2>
-      <p class="small">Where ADP (FantasyFootballCalculator), expert consensus (FantasyPros), and this app's AI assessment point in different directions. Positive Δ = AI is higher on the player than that source. Experts are evidence, not truth.</p></div>
+      <p class="small">Where ADP (FantasyFootballCalculator), expert consensus (FantasyPros), the trade market (<a href="https://statsguyfantasy.com" target="_blank" style="color:var(--accent)">Stats Guy Fantasy</a> — values from real Sleeper-league trades), and this app's AI assessment point in different directions. Positive Δ = AI is higher on the player than that source. All of them are evidence, not truth.</p></div>
     <table>
-      <thead><tr><th>Player</th><th>ADP</th><th>Expert</th><th>AI</th><th>AI vs ADP</th><th>AI vs Expert</th><th>Expert vs ADP</th><th>Verdict</th><th>Conf</th><th>Why the AI differs</th></tr></thead>
+      <thead><tr><th>Player</th><th>ADP</th><th>Expert</th><th>Trade Mkt</th><th>AI</th><th>AI vs ADP</th><th>AI vs Expert</th><th>AI vs Trade</th><th>Verdict</th><th>Conf</th><th>Why the AI differs</th></tr></thead>
       <tbody>
         ${m.biggest.map(r => `
           <tr>
             <td class="name" data-id="${esc(r.id)}">${esc(r.name)}<span class="team">${esc(r.position)} · ${esc(r.team ?? 'FA')}</span></td>
-            <td>${r.adp_rank ?? '—'}</td><td>${r.expert_rank ?? '—'}</td><td>${r.ai_rank ?? '—'}</td>
-            ${[r.ai_vs_adp, r.ai_vs_expert, r.expert_vs_adp].map(d => `<td class="${d > 0 ? 'trend-up' : d < 0 ? 'trend-down' : ''}">${d == null ? '—' : (d > 0 ? '+' : '') + d}</td>`).join('')}
+            <td>${r.adp_rank ?? '—'}</td><td>${r.expert_rank ?? '—'}</td><td>${r.trade_rank ?? '—'}</td><td>${r.ai_rank ?? '—'}</td>
+            ${[r.ai_vs_adp, r.ai_vs_expert, r.ai_vs_trade].map(d => `<td class="${d > 0 ? 'trend-up' : d < 0 ? 'trend-down' : ''}">${d == null ? '—' : (d > 0 ? '+' : '') + d}</td>`).join('')}
             <td class="verdict-${esc(r.ai_verdict)}">${esc(r.ai_verdict)}</td>
             <td>${r.confidence ?? '—'}%</td>
             <td style="white-space:normal;min-width:280px" class="small">${r.factors.filter(f => ['up', 'down'].includes(f.effect)).map(f => esc(f.text)).join(' · ') || '<span class="aid">market sources disagree with each other</span>'}</td>

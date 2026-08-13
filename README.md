@@ -30,6 +30,7 @@ Then restart the server. Run tests with `npm test`.
 | Weekly stats 2025 | nflverse `stats_player_week_2025.csv` |
 | Snap counts 2025 | nflverse `snap_counts_2025.csv` |
 | Player metadata | Sleeper API (teams, depth charts, injury status) |
+| Trade-market values | [Stats Guy Fantasy](https://statsguyfantasy.com) (free API; values from >1M real Sleeper-league trades, non-SF redraft format) |
 
 Every snapshot is stored with source + fetch timestamp (`data/raw/*.meta.json`),
 and every number in the UI is traceable to its source. Conflicts between

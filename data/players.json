@@ -1,5 +1,5 @@
 {
- "built_at": "2026-08-13T21:05:37.770Z",
+ "built_at": "2026-08-13T23:27:52.140Z",
  "mode": "draft",
  "season": 2026,
  "stats_season": 2025,
@@ -21,6 +21,14 @@
    "url": "https://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php",
    "kind": "expert_rankings",
    "detail": "505 players, 86 experts, accessed 8/13"
+  },
+  "trade_market": {
+   "fetched_at": "2026-08-13T23:27:51.575Z",
+   "bytes": 30940,
+   "source": "Stats Guy Fantasy trade-market values (non-SF redraft)",
+   "url": "https://api.statsguyfantasy.com/api/v1/rankings?format=non_sf_redraft&limit=500",
+   "kind": "trade_market_values",
+   "detail": "224 players, values as of 2026-08-13T13:01:29.840Z, derived from real Sleeper-league trades"
   },
   "weekly_stats": {
    "fetched_at": "2026-08-13T09:19:56.602Z",
@@ -50,7 +58,8 @@
   "core": 200,
   "with_adp": 228,
   "with_expert": 247,
-  "with_stats": 212
+  "with_stats": 212,
+  "with_trade_market": 205
  },
  "unmatched": {
   "ffc_only": [
@@ -85,6 +94,103 @@
     "id": "WR-nathaniel_dell",
     "name": "Tank Dell",
     "years_exp": 3
+   }
+  ],
+  "trade_market": [
+   {
+    "rank": 59,
+    "name": "Devin Neal",
+    "position": "RB"
+   },
+   {
+    "rank": 157,
+    "name": "Fernando Mendoza",
+    "position": "QB"
+   },
+   {
+    "rank": 179,
+    "name": "Cyrus Allen",
+    "position": "WR"
+   },
+   {
+    "rank": 180,
+    "name": "Kaelon Black",
+    "position": "RB"
+   },
+   {
+    "rank": 182,
+    "name": "Joe Mixon",
+    "position": "RB"
+   },
+   {
+    "rank": 186,
+    "name": "Ja'Kobi Lane",
+    "position": "WR"
+   },
+   {
+    "rank": 189,
+    "name": "Tyreek Hill",
+    "position": "WR"
+   },
+   {
+    "rank": 196,
+    "name": "Jordan James",
+    "position": "RB"
+   },
+   {
+    "rank": 197,
+    "name": "Brandon Aiyuk",
+    "position": "WR"
+   },
+   {
+    "rank": 199,
+    "name": "Chris Bell",
+    "position": "WR"
+   },
+   {
+    "rank": 205,
+    "name": "Malachi Fields",
+    "position": "WR"
+   },
+   {
+    "rank": 206,
+    "name": "Eli Stowers",
+    "position": "TE"
+   },
+   {
+    "rank": 207,
+    "name": "Demond Claiborne",
+    "position": "RB"
+   },
+   {
+    "rank": 212,
+    "name": "Jake Tonges",
+    "position": "TE"
+   },
+   {
+    "rank": 216,
+    "name": "Elijah Sarratt",
+    "position": "WR"
+   },
+   {
+    "rank": 217,
+    "name": "Trey Benson",
+    "position": "RB"
+   },
+   {
+    "rank": 218,
+    "name": "Ted Hurst",
+    "position": "WR"
+   },
+   {
+    "rank": 221,
+    "name": "Samaje Perine",
+    "position": "RB"
+   },
+   {
+    "rank": 224,
+    "name": "Tom Brady",
+    "position": "QB"
    }
   ]
  },
@@ -467,7 +573,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 3,
+    "value": 8505,
+    "pos_rank": 1,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-jahmyr_gibbs",
@@ -868,7 +980,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 1,
+    "value": 10000,
+    "pos_rank": 1,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-puka_nacua",
@@ -1248,7 +1366,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 4,
+    "value": 7763,
+    "pos_rank": 2,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-bijan_robinson",
@@ -1649,7 +1773,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 2,
+    "value": 9828,
+    "pos_rank": 2,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-jaxon_smithnjigba",
@@ -2050,7 +2180,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 5,
+    "value": 7314,
+    "pos_rank": 3,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-amonra_st_brown",
@@ -2451,7 +2587,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 7,
+    "value": 6566,
+    "pos_rank": 4,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-ceedee_lamb",
@@ -2768,7 +2910,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 9,
+    "value": 6202,
+    "pos_rank": 5,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-christian_mccaffrey",
@@ -3169,7 +3317,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 6,
+    "value": 6569,
+    "pos_rank": 3,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-justin_jefferson",
@@ -3570,7 +3724,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 11,
+    "value": 5901,
+    "pos_rank": 6,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-jonathan_taylor",
@@ -3971,7 +4131,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 8,
+    "value": 6470,
+    "pos_rank": 4,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-drake_london",
@@ -4267,7 +4433,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 17,
+    "value": 4830,
+    "pos_rank": 7,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-aj_brown",
@@ -4626,7 +4798,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 21,
+    "value": 4607,
+    "pos_rank": 8,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-nico_collins",
@@ -4985,7 +5163,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 25,
+    "value": 4390,
+    "pos_rank": 9,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-ashton_jeanty",
@@ -5386,7 +5570,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 12,
+    "value": 5821,
+    "pos_rank": 6,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-chase_brown",
@@ -5787,7 +5977,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 16,
+    "value": 4863,
+    "pos_rank": 10,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-james_cook",
@@ -6188,7 +6384,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 10,
+    "value": 6102,
+    "pos_rank": 5,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-trey_mcbride",
@@ -6589,7 +6791,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 19,
+    "value": 4772,
+    "pos_rank": 1,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-george_pickens",
@@ -6990,7 +7198,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 26,
+    "value": 4279,
+    "pos_rank": 10,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-brock_bowers",
@@ -7286,7 +7500,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 20,
+    "value": 4693,
+    "pos_rank": 2,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-chris_olave",
@@ -7666,7 +7886,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 29,
+    "value": 3894,
+    "pos_rank": 13,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-devon_achane",
@@ -8046,7 +8272,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 13,
+    "value": 5505,
+    "pos_rank": 7,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-rashee_rice",
@@ -8258,7 +8490,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 28,
+    "value": 4001,
+    "pos_rank": 12,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-devonta_smith",
@@ -8659,7 +8897,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 38,
+    "value": 3331,
+    "pos_rank": 17,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-omarion_hampton",
@@ -8892,7 +9136,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 15,
+    "value": 5010,
+    "pos_rank": 9,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-josh_allen",
@@ -9272,7 +9522,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 24,
+    "value": 4410,
+    "pos_rank": 1,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-saquon_barkley",
@@ -9652,7 +9908,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 14,
+    "value": 5069,
+    "pos_rank": 8,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-malik_nabers",
@@ -9780,7 +10042,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 27,
+    "value": 4178,
+    "pos_rank": 11,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-kenneth_walker",
@@ -10181,7 +10449,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 18,
+    "value": 4828,
+    "pos_rank": 11,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-zay_flowers",
@@ -10582,7 +10856,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 44,
+    "value": 3125,
+    "pos_rank": 20,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-garrett_wilson",
@@ -10773,7 +11053,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 42,
+    "value": 3249,
+    "pos_rank": 19,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-lamar_jackson",
@@ -11090,7 +11376,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 34,
+    "value": 3659,
+    "pos_rank": 2,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-tetairoa_mcmillan",
@@ -11491,7 +11783,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 36,
+    "value": 3454,
+    "pos_rank": 15,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-tee_higgins",
@@ -11850,7 +12148,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 32,
+    "value": 3698,
+    "pos_rank": 14,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-ladd_mcconkey",
@@ -12230,7 +12534,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 41,
+    "value": 3310,
+    "pos_rank": 18,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-emeka_egbuka",
@@ -12631,7 +12941,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 37,
+    "value": 3434,
+    "pos_rank": 16,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-derrick_henry",
@@ -13032,7 +13348,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 22,
+    "value": 4460,
+    "pos_rank": 12,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-jeremiyah_love",
@@ -13075,7 +13397,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 23,
+    "value": 4425,
+    "pos_rank": 13,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-colston_loveland",
@@ -13455,7 +13783,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 43,
+    "value": 3221,
+    "pos_rank": 3,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-jaylen_waddle",
@@ -13835,7 +14169,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 46,
+    "value": 3032,
+    "pos_rank": 21,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-drake_maye",
@@ -14236,7 +14576,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 49,
+    "value": 2876,
+    "pos_rank": 3,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-breece_hall",
@@ -14616,7 +14962,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 33,
+    "value": 3672,
+    "pos_rank": 16,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-kyren_williams",
@@ -15017,7 +15369,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 31,
+    "value": 3761,
+    "pos_rank": 15,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-josh_jacobs",
@@ -15376,7 +15734,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 30,
+    "value": 3884,
+    "pos_rank": 14,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-terry_mclaurin",
@@ -15630,7 +15994,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 55,
+    "value": 2630,
+    "pos_rank": 24,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-joe_burrow",
@@ -15842,7 +16212,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 53,
+    "value": 2779,
+    "pos_rank": 4,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-javonte_williams",
@@ -16222,7 +16598,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 35,
+    "value": 3460,
+    "pos_rank": 17,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-luther_burden",
@@ -16581,7 +16963,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 47,
+    "value": 2981,
+    "pos_rank": 22,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-jayden_daniels",
@@ -16772,7 +17160,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 62,
+    "value": 2408,
+    "pos_rank": 5,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-davante_adams",
@@ -17110,7 +17504,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 50,
+    "value": 2844,
+    "pos_rank": 23,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-travis_etienne",
@@ -17511,7 +17911,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 39,
+    "value": 3325,
+    "pos_rank": 18,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-dj_moore",
@@ -17912,7 +18318,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 60,
+    "value": 2417,
+    "pos_rank": 27,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-tyler_warren",
@@ -18313,7 +18725,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 48,
+    "value": 2949,
+    "pos_rank": 4,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-mike_evans",
@@ -18525,7 +18943,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 58,
+    "value": 2459,
+    "pos_rank": 26,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-cam_skattebo",
@@ -18737,7 +19161,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 45,
+    "value": 3081,
+    "pos_rank": 20,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-jameson_williams",
@@ -19138,7 +19568,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 57,
+    "value": 2511,
+    "pos_rank": 25,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-christian_watson",
@@ -19392,7 +19828,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 71,
+    "value": 2214,
+    "pos_rank": 31,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-jalen_hurts",
@@ -19772,7 +20214,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 67,
+    "value": 2284,
+    "pos_rank": 6,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-bucky_irving",
@@ -20026,7 +20474,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 40,
+    "value": 3324,
+    "pos_rank": 19,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-rome_odunze",
@@ -20322,7 +20776,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 61,
+    "value": 2409,
+    "pos_rank": 28,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-dandre_swift",
@@ -20702,7 +21162,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 56,
+    "value": 2514,
+    "pos_rank": 24,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-quinshon_judkins",
@@ -21040,7 +21506,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 51,
+    "value": 2842,
+    "pos_rank": 21,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-david_montgomery",
@@ -21441,7 +21913,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 54,
+    "value": 2741,
+    "pos_rank": 23,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-treveyon_henderson",
@@ -21842,7 +22320,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 52,
+    "value": 2826,
+    "pos_rank": 22,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-carnell_tate",
@@ -21885,7 +22369,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 65,
+    "value": 2336,
+    "pos_rank": 29,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-caleb_williams",
@@ -22286,7 +22776,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 75,
+    "value": 1907,
+    "pos_rank": 7,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-bhayshul_tuten",
@@ -22645,7 +23141,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 64,
+    "value": 2366,
+    "pos_rank": 26,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-marvin_harrison",
@@ -22941,7 +23443,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 77,
+    "value": 1842,
+    "pos_rank": 33,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-justin_herbert",
@@ -23321,7 +23829,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 82,
+    "value": 1772,
+    "pos_rank": 9,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-parker_washington",
@@ -23701,7 +24215,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 85,
+    "value": 1698,
+    "pos_rank": 37,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-tucker_kraft",
@@ -23913,7 +24433,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 66,
+    "value": 2336,
+    "pos_rank": 6,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-jadarian_price",
@@ -23956,7 +24482,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 68,
+    "value": 2265,
+    "pos_rank": 27,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-jaylen_warren",
@@ -24336,7 +24868,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 73,
+    "value": 1971,
+    "pos_rank": 28,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-harold_fannin",
@@ -24716,7 +25254,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 63,
+    "value": 2382,
+    "pos_rank": 5,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-dk_metcalf",
@@ -25075,7 +25619,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 81,
+    "value": 1789,
+    "pos_rank": 35,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-brian_thomas",
@@ -25413,7 +25963,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 70,
+    "value": 2216,
+    "pos_rank": 30,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-trevor_lawrence",
@@ -25814,7 +26370,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 96,
+    "value": 1349,
+    "pos_rank": 11,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-dak_prescott",
@@ -26215,7 +26777,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 83,
+    "value": 1761,
+    "pos_rank": 10,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-chris_godwin",
@@ -26448,7 +27016,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 94,
+    "value": 1423,
+    "pos_rank": 40,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-tony_pollard",
@@ -26849,7 +27423,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 89,
+    "value": 1569,
+    "pos_rank": 32,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-rhamondre_stevenson",
@@ -27187,7 +27767,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 86,
+    "value": 1634,
+    "pos_rank": 31,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-sam_laporta",
@@ -27420,7 +28006,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 69,
+    "value": 2253,
+    "pos_rank": 7,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-kyle_pitts",
@@ -27821,7 +28413,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 72,
+    "value": 2132,
+    "pos_rank": 8,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-michael_pittman",
@@ -28222,7 +28820,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 100,
+    "value": 1201,
+    "pos_rank": 42,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-jordyn_tyson",
@@ -28265,7 +28869,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 76,
+    "value": 1903,
+    "pos_rank": 32,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-courtland_sutton",
@@ -28666,7 +29276,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 84,
+    "value": 1700,
+    "pos_rank": 36,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-josh_downs",
@@ -29046,7 +29662,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 112,
+    "value": 1027,
+    "pos_rank": 48,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-chuba_hubbard",
@@ -29405,7 +30027,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 78,
+    "value": 1841,
+    "pos_rank": 30,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-wandale_robinson",
@@ -29785,7 +30413,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 110,
+    "value": 1061,
+    "pos_rank": 47,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-rico_dowdle",
@@ -30186,7 +30820,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 92,
+    "value": 1458,
+    "pos_rank": 34,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-michael_wilson",
@@ -30587,7 +31227,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 80,
+    "value": 1799,
+    "pos_rank": 34,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-alec_pierce",
@@ -30946,7 +31592,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 88,
+    "value": 1591,
+    "pos_rank": 39,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-rj_harvey",
@@ -31347,7 +31999,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 74,
+    "value": 1937,
+    "pos_rank": 29,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-jaxson_dart",
@@ -31685,7 +32343,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 79,
+    "value": 1834,
+    "pos_rank": 8,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-brock_purdy",
@@ -31918,7 +32582,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 104,
+    "value": 1130,
+    "pos_rank": 14,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-travis_kelce",
@@ -32319,7 +32989,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 103,
+    "value": 1156,
+    "pos_rank": 11,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-bo_nix",
@@ -32720,7 +33396,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 113,
+    "value": 1022,
+    "pos_rank": 15,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-patrick_mahomes",
@@ -33058,7 +33740,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 98,
+    "value": 1308,
+    "pos_rank": 12,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-makai_lemon",
@@ -33101,7 +33789,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 87,
+    "value": 1631,
+    "pos_rank": 38,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-kenny_gainwell",
@@ -33502,7 +34196,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 111,
+    "value": 1030,
+    "pos_rank": 37,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-jakobi_meyers",
@@ -33882,7 +34582,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 97,
+    "value": 1315,
+    "pos_rank": 41,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-jk_dobbins",
@@ -34136,7 +34842,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 93,
+    "value": 1441,
+    "pos_rank": 35,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-quentin_johnston",
@@ -34453,7 +35165,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 105,
+    "value": 1128,
+    "pos_rank": 44,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-matthew_stafford",
@@ -34854,7 +35572,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 99,
+    "value": 1272,
+    "pos_rank": 13,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-kyle_monangai",
@@ -35255,7 +35979,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 91,
+    "value": 1459,
+    "pos_rank": 33,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-george_kittle",
@@ -35530,7 +36260,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 90,
+    "value": 1508,
+    "pos_rank": 9,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-jared_goff",
@@ -35931,7 +36667,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 138,
+    "value": 697,
+    "pos_rank": 20,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-jonathon_brooks",
@@ -35974,7 +36716,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 116,
+    "value": 897,
+    "pos_rank": 40,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-jordan_addison",
@@ -36312,7 +37060,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 101,
+    "value": 1168,
+    "pos_rank": 43,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-rachaad_white",
@@ -36713,7 +37467,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 124,
+    "value": 837,
+    "pos_rank": 42,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-jayden_reed",
@@ -36862,7 +37622,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 108,
+    "value": 1075,
+    "pos_rank": 46,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-blake_corum",
@@ -37263,7 +38029,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 95,
+    "value": 1401,
+    "pos_rank": 36,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-aaron_jones",
@@ -37559,7 +38331,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 114,
+    "value": 1020,
+    "pos_rank": 38,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-kyler_murray",
@@ -37708,7 +38486,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 132,
+    "value": 745,
+    "pos_rank": 18,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-jake_ferguson",
@@ -38109,7 +38893,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 107,
+    "value": 1087,
+    "pos_rank": 12,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-dalton_kincaid",
@@ -38405,7 +39195,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 102,
+    "value": 1166,
+    "pos_rank": 10,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-stefon_diggs",
@@ -38806,7 +39602,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 125,
+    "value": 831,
+    "pos_rank": 50,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-isaiah_likely",
@@ -39102,7 +39904,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 117,
+    "value": 891,
+    "pos_rank": 14,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-baker_mayfield",
@@ -39503,7 +40311,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 126,
+    "value": 819,
+    "pos_rank": 17,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-jacory_croskeymerritt",
@@ -39904,7 +40718,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 115,
+    "value": 1016,
+    "pos_rank": 39,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-ricky_pearsall",
@@ -40128,7 +40948,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 106,
+    "value": 1107,
+    "pos_rank": 45,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-jordan_love",
@@ -40487,7 +41313,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 121,
+    "value": 845,
+    "pos_rank": 16,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-khalil_shakir",
@@ -40867,7 +41699,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 131,
+    "value": 753,
+    "pos_rank": 54,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-jordan_mason",
@@ -41247,7 +42085,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 118,
+    "value": 882,
+    "pos_rank": 41,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-dallas_goedert",
@@ -41606,7 +42450,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 119,
+    "value": 867,
+    "pos_rank": 15,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-tyler_shough",
@@ -41881,7 +42731,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 136,
+    "value": 704,
+    "pos_rank": 19,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-jayden_higgins",
@@ -42282,7 +43138,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 127,
+    "value": 786,
+    "pos_rank": 51,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-jalen_coker",
@@ -42557,7 +43419,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 135,
+    "value": 726,
+    "pos_rank": 56,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-xavier_worthy",
@@ -42895,7 +43763,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 130,
+    "value": 767,
+    "pos_rank": 53,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-mark_andrews",
@@ -43296,7 +44170,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 123,
+    "value": 839,
+    "pos_rank": 17,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-romeo_doubs",
@@ -43676,7 +44556,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 122,
+    "value": 843,
+    "pos_rank": 49,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-malik_willis",
@@ -43804,7 +44690,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 150,
+    "value": 579,
+    "pos_rank": 21,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-matthew_golden",
@@ -44142,7 +45034,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 134,
+    "value": 729,
+    "pos_rank": 55,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-kc_concepcion",
@@ -44185,7 +45083,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 129,
+    "value": 779,
+    "pos_rank": 52,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-tyrone_tracy",
@@ -44544,7 +45448,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 142,
+    "value": 649,
+    "pos_rank": 46,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-tyler_allgeier",
@@ -44945,7 +45855,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 140,
+    "value": 660,
+    "pos_rank": 44,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-cj_stroud",
@@ -45283,7 +46199,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 151,
+    "value": 573,
+    "pos_rank": 22,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-woody_marks",
@@ -45663,7 +46585,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 146,
+    "value": 639,
+    "pos_rank": 47,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-sam_darnold",
@@ -46064,7 +46992,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 155,
+    "value": 524,
+    "pos_rank": 23,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-chris_rodriguez",
@@ -46360,7 +47294,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 147,
+    "value": 630,
+    "pos_rank": 48,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-zach_charbonnet",
@@ -46740,7 +47680,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 133,
+    "value": 743,
+    "pos_rank": 43,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-juwan_johnson",
@@ -47141,7 +48087,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 145,
+    "value": 643,
+    "pos_rank": 21,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-tyjae_spears",
@@ -47458,7 +48410,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 164,
+    "value": 450,
+    "pos_rank": 53,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-deebo_samuel",
@@ -47838,7 +48796,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 137,
+    "value": 701,
+    "pos_rank": 57,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-rashid_shaheed",
@@ -48260,7 +49224,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 148,
+    "value": 609,
+    "pos_rank": 59,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-alvin_kamara",
@@ -48535,7 +49505,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 152,
+    "value": 547,
+    "pos_rank": 50,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-dylan_sampson",
@@ -48894,7 +49870,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 161,
+    "value": 462,
+    "pos_rank": 52,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-isiah_pacheco",
@@ -49211,7 +50193,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 166,
+    "value": 430,
+    "pos_rank": 55,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-cameron_ward",
@@ -49612,7 +50600,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 160,
+    "value": 465,
+    "pos_rank": 25,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-chigoziem_okonkwo",
@@ -50013,7 +51007,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 143,
+    "value": 645,
+    "pos_rank": 20,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-brenton_strange",
@@ -50309,7 +51309,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 139,
+    "value": 686,
+    "pos_rank": 19,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-keaton_mitchell",
@@ -50626,7 +51632,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 159,
+    "value": 469,
+    "pos_rank": 51,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-daniel_jones",
@@ -50943,7 +51955,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 178,
+    "value": 298,
+    "pos_rank": 26,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-denzel_boston",
@@ -50986,7 +52004,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 144,
+    "value": 643,
+    "pos_rank": 58,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-jauan_jennings",
@@ -51345,7 +52369,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 162,
+    "value": 454,
+    "pos_rank": 63,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-jerry_jeudy",
@@ -51746,7 +52776,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 172,
+    "value": 369,
+    "pos_rank": 66,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "DST-houston_texans",
@@ -51782,7 +52818,8 @@
    "meta": null,
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "QB-bryce_young",
@@ -52162,7 +53199,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 185,
+    "value": 215,
+    "pos_rank": 27,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-hunter_henry",
@@ -52563,7 +53606,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 120,
+    "value": 859,
+    "pos_rank": 16,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-tank_bigsby",
@@ -52922,7 +53971,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 170,
+    "value": 386,
+    "pos_rank": 56,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-brian_robinson",
@@ -53323,7 +54378,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 141,
+    "value": 653,
+    "pos_rank": 45,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-adonai_mitchell",
@@ -53703,7 +54764,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 192,
+    "value": 140,
+    "pos_rank": 75,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-jalen_mcmillan",
@@ -53831,7 +54898,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 168,
+    "value": 407,
+    "pos_rank": 64,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-omar_cooper",
@@ -53874,7 +54947,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 154,
+    "value": 537,
+    "pos_rank": 61,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-jonah_coleman",
@@ -53917,7 +54996,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 149,
+    "value": 600,
+    "pos_rank": 49,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "DST-denver_broncos",
@@ -53953,7 +55038,8 @@
    "meta": null,
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "WR-dezhaun_stribling",
@@ -53996,7 +55082,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 169,
+    "value": 387,
+    "pos_rank": 65,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-oronde_gadsden",
@@ -54355,7 +55447,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 109,
+    "value": 1072,
+    "pos_rank": 13,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-dalton_schultz",
@@ -54756,7 +55854,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 156,
+    "value": 518,
+    "pos_rank": 22,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-tre_tucker",
@@ -55157,7 +56261,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 190,
+    "value": 147,
+    "pos_rank": 74,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "DST-seattle_seahawks",
@@ -55193,7 +56303,8 @@
    "meta": null,
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "DST-los_angeles_rams",
@@ -55229,7 +56340,8 @@
    "meta": null,
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "WR-tre_harris",
@@ -55609,7 +56721,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 203,
+    "value": 73,
+    "pos_rank": 80,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-travis_hunter",
@@ -55805,7 +56923,13 @@
      "field": "stats_position",
      "note": "stats list this player at CB; matched by name + offensive usage"
     }
-   ]
+   ],
+   "trade_market": {
+    "rank": 158,
+    "value": 487,
+    "pos_rank": 62,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-braelon_allen",
@@ -55933,7 +57057,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 187,
+    "value": 191,
+    "pos_rank": 62,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "DST-philadelphia_eagles",
@@ -55969,7 +57099,8 @@
    "meta": null,
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "TE-tj_hockenson",
@@ -56328,7 +57459,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 163,
+    "value": 450,
+    "pos_rank": 23,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-ray_davis",
@@ -56729,7 +57866,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 211,
+    "value": 32,
+    "pos_rank": 70,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "DST-jacksonville_defense",
@@ -56756,7 +57899,8 @@
    "meta": null,
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "WR-ryan_flournoy",
@@ -57115,7 +58259,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 213,
+    "value": 30,
+    "pos_rank": 83,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "DST-pittsburgh_steelers",
@@ -57151,7 +58301,8 @@
    "meta": null,
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "WR-jalen_nailor",
@@ -57552,7 +58703,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 153,
+    "value": 541,
+    "pos_rank": 60,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "QB-jacoby_brissett",
@@ -57890,7 +59047,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 200,
+    "value": 103,
+    "pos_rank": 29,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "DST-new_england_patriots",
@@ -57926,7 +59089,8 @@
    "meta": null,
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "DST-jacksonville_jaguars",
@@ -57953,7 +59117,8 @@
    "meta": null,
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "DST-minnesota_vikings",
@@ -57989,7 +59154,8 @@
    "meta": null,
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "K-brandon_aubrey",
@@ -58390,7 +59556,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "RB-kimani_vidal",
@@ -58707,7 +59874,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 208,
+    "value": 40,
+    "pos_rank": 68,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "DST-los_angeles_chargers",
@@ -58743,7 +59916,8 @@
    "meta": null,
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "WR-dontayvion_wicks",
@@ -59060,7 +60234,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "K-cameron_dicker",
@@ -59461,7 +60636,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "RB-emmett_johnson",
@@ -59495,7 +60671,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 165,
+    "value": 431,
+    "pos_rank": 54,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-kayshon_boutte",
@@ -59833,7 +61015,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 194,
+    "value": 129,
+    "pos_rank": 76,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "K-kaimi_fairbairn",
@@ -60192,7 +61380,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "RB-sean_tucker",
@@ -60584,7 +61773,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 223,
+    "value": 16,
+    "pos_rank": 74,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-malik_washington",
@@ -60985,7 +62180,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 177,
+    "value": 311,
+    "pos_rank": 70,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-pat_bryant",
@@ -61293,7 +62494,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "TE-aj_barner",
@@ -61694,7 +62896,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 167,
+    "value": 422,
+    "pos_rank": 24,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "DST-baltimore_ravens",
@@ -61730,7 +62938,8 @@
    "meta": null,
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "K-cam_little",
@@ -62131,7 +63340,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "RB-james_conner",
@@ -62238,7 +63448,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 175,
+    "value": 358,
+    "pos_rank": 58,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-calvin_ridley",
@@ -62429,7 +63645,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "K-jason_myers",
@@ -62830,7 +64047,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "WR-troy_franklin",
@@ -63222,7 +64440,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 215,
+    "value": 26,
+    "pos_rank": 85,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-jaylin_noel",
@@ -63614,7 +64838,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "DST-green_bay_packers",
@@ -63650,7 +64875,8 @@
    "meta": null,
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "RB-mike_washington",
@@ -63693,7 +64919,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 188,
+    "value": 188,
+    "pos_rank": 63,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "K-eddy_pineiro",
@@ -64031,7 +65263,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "K-tyler_loop",
@@ -64432,7 +65665,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "RB-emanuel_wilson",
@@ -64824,7 +66058,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 209,
+    "value": 37,
+    "pos_rank": 69,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-darnell_mooney",
@@ -65183,7 +66423,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 220,
+    "value": 20,
+    "pos_rank": 89,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-nicholas_singleton",
@@ -65217,7 +66463,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 171,
+    "value": 385,
+    "pos_rank": 57,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-kenyon_sadiq",
@@ -65260,7 +66512,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 128,
+    "value": 780,
+    "pos_rank": 18,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-gunnar_helm",
@@ -65631,7 +66889,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 201,
+    "value": 95,
+    "pos_rank": 28,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "DST-kansas_city_chiefs",
@@ -65658,7 +66922,8 @@
    "meta": null,
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "WR-isaac_teslaa",
@@ -65996,7 +67261,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 202,
+    "value": 76,
+    "pos_rank": 79,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-marshawn_lloyd",
@@ -66039,7 +67310,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 184,
+    "value": 215,
+    "pos_rank": 61,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-nathaniel_dell",
@@ -66082,7 +67359,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 176,
+    "value": 322,
+    "pos_rank": 69,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-rashod_bateman",
@@ -66399,7 +67682,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "K-cairo_santos",
@@ -66758,7 +68042,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "RB-aj_dillon",
@@ -66919,7 +68204,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "QB-geno_smith",
@@ -67269,7 +68555,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "K-jake_bates",
@@ -67670,7 +68957,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "DST-detroit_lions",
@@ -67706,7 +68994,8 @@
    "meta": null,
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "QB-aaron_rodgers",
@@ -68086,7 +69375,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 195,
+    "value": 119,
+    "pos_rank": 28,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-cooper_kupp",
@@ -68466,7 +69761,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 214,
+    "value": 29,
+    "pos_rank": 84,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "RB-jaydon_blue",
@@ -68615,7 +69916,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 193,
+    "value": 135,
+    "pos_rank": 64,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "K-evan_mcpherson",
@@ -69016,7 +70323,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "K-chase_mclaughlin",
@@ -69417,7 +70725,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "K-andy_borregales",
@@ -69809,7 +71118,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "RB-kaytron_allen",
@@ -69843,7 +71153,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 198,
+    "value": 109,
+    "pos_rank": 66,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-zachariah_branch",
@@ -69886,7 +71202,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 174,
+    "value": 360,
+    "pos_rank": 68,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "K-harrison_mevis",
@@ -70119,7 +71441,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "TE-pat_freiermuth",
@@ -70469,7 +71792,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "DST-buffalo_bills",
@@ -70505,7 +71829,8 @@
    "meta": null,
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "TE-cade_otton",
@@ -70864,7 +72189,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 183,
+    "value": 216,
+    "pos_rank": 26,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-antonio_williams",
@@ -70907,7 +72238,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 173,
+    "value": 361,
+    "pos_rank": 67,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-terrance_ferguson",
@@ -71173,7 +72510,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 181,
+    "value": 240,
+    "pos_rank": 25,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "DST-cleveland_browns",
@@ -71209,7 +72552,8 @@
    "meta": null,
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "RB-jaylen_wright",
@@ -71433,7 +72777,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 222,
+    "value": 16,
+    "pos_rank": 73,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-chimere_dike",
@@ -71825,7 +73175,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "K-harrison_butker",
@@ -72226,7 +73577,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "TE-evan_engram",
@@ -72597,7 +73949,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "RB-justice_hill",
@@ -72851,7 +74204,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "RB-ollie_gordon",
@@ -73243,7 +74597,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "WR-germie_bernard",
@@ -73286,7 +74641,13 @@
    },
    "games": [],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 210,
+    "value": 37,
+    "pos_rank": 82,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "WR-elic_ayomanor",
@@ -73657,7 +75018,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "TE-greg_dulcich",
@@ -73890,7 +75252,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 204,
+    "value": 64,
+    "pos_rank": 29,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "K-chris_boswell",
@@ -74291,7 +75659,8 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": null
   },
   {
    "id": "WR-keon_coleman",
@@ -74578,7 +75947,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 219,
+    "value": 20,
+    "pos_rank": 88,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   },
   {
    "id": "TE-david_njoku",
@@ -74844,7 +76219,13 @@
     }
    ],
    "baseline": null,
-   "conflicts": []
+   "conflicts": [],
+   "trade_market": {
+    "rank": 191,
+    "value": 143,
+    "pos_rank": 27,
+    "as_of": "2026-08-13T13:01:29.840Z"
+   }
   }
  ]
 }
