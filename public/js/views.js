@@ -181,6 +181,9 @@ export async function renderAbout(el, refresh) {
         : `Analyzing ${m.stats_season} stats for the ${m.season} draft. The app switches to season mode automatically once ${m.season} week-1 stats are published (refresh data after week 1).`}</p>
       <button class="rowbtn mt" id="data-refresh" style="padding:8px 14px">Refresh data now</button>
       <span class="small" id="data-refresh-status"></span>
+      <p class="small mt">${m.auto_refresh?.enabled
+        ? `Auto-refresh: on — the server re-fetches everything when the data is over 20 hours old${m.auto_refresh.last_attempt ? ` (last auto run ${new Date(m.auto_refresh.last_attempt).toLocaleString()}: ${esc(m.auto_refresh.last_result ?? '…')})` : ' (no auto run yet this session)'}.`
+        : 'Auto-refresh: disabled (DVF_NO_AUTO_REFRESH is set).'}</p>
     </div>
     <div class="panel"><h2>Data sources & freshness</h2>
       <table class="mt">

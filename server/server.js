@@ -16,6 +16,7 @@ import { syncOnce, draftComplete } from '../src/yahoo/sync.js';
 import { LEAGUE } from '../src/analyze/roster.js';
 import { runIngest } from '../src/ingest/fetchAll.js';
 import { buildDatabase } from '../src/normalize/build.js';
+import { isStale } from '../src/ingest/freshness.js';
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..');
 const PUBLIC = join(ROOT, 'public');
@@ -79,6 +80,40 @@ async function readBody(req) {
 const autosync = { timer: null };
 const refreshing = { busy: false };
 
+// ---- auto-refresh: keep every source fresh without manual clicks ----
+const autoRefresh = {
+  enabled: !process.env.DVF_NO_AUTO_REFRESH,
+  last_attempt: null,
+  last_result: null,
+};
+
+async function doRefresh(trigger) {
+  const lines = [];
+  const log = { log: m => { lines.push(m); console.log(m); }, error: m => { lines.push(m); console.error(m); } };
+  const { failures, total } = await runIngest({ log });
+  buildDatabase();
+  loadDb();
+  return { ok: true, trigger, failures, total, mode: db.mode, stats_season: db.stats_season, week: db.week, built_at: db.built_at, log: lines };
+}
+
+async function maybeAutoRefresh() {
+  if (!autoRefresh.enabled || refreshing.busy || !isStale(db.built_at)) return;
+  refreshing.busy = true;
+  autoRefresh.last_attempt = new Date().toISOString();
+  try {
+    const r = await doRefresh('auto');
+    autoRefresh.last_result = `ok — ${r.total - r.failures}/${r.total} sources, ${r.mode} mode`;
+    console.log(`Auto-refresh complete (${autoRefresh.last_result})`);
+  } catch (err) {
+    autoRefresh.last_result = `failed: ${err.message}`;
+    console.error('Auto-refresh failed:', err.message);
+  } finally {
+    refreshing.busy = false;
+  }
+}
+setTimeout(maybeAutoRefresh, 3000);
+setInterval(maybeAutoRefresh, 60 * 60 * 1000);
+
 const server = createServer(async (req, res) => {
   try {
     const url = new URL(req.url, `http://localhost:${PORT}`);
@@ -88,7 +123,7 @@ const server = createServer(async (req, res) => {
       const state = loadState();
 
       if (req.method === 'GET' && path === '/api/meta') {
-        return send(res, 200, { built_at: db.built_at, mode: db.mode, season: db.season, stats_season: db.stats_season, baseline_season: db.baseline_season, week: db.week, sources: db.sources, counts: db.counts, unmatched: db.unmatched });
+        return send(res, 200, { built_at: db.built_at, mode: db.mode, season: db.season, stats_season: db.stats_season, baseline_season: db.baseline_season, week: db.week, sources: db.sources, counts: db.counts, unmatched: db.unmatched, auto_refresh: autoRefresh });
       }
       if (req.method === 'GET' && path === '/api/board') {
         return send(res, 200, { mode: db.mode, week: db.week, stats_season: db.stats_season, players: db.players.map(p => boardRow(p, state)) });
@@ -97,12 +132,7 @@ const server = createServer(async (req, res) => {
         if (refreshing.busy) return send(res, 409, { error: 'A refresh is already running' });
         refreshing.busy = true;
         try {
-          const lines = [];
-          const log = { log: m => { lines.push(m); console.log(m); }, error: m => { lines.push(m); console.error(m); } };
-          const { failures, total } = await runIngest({ log });
-          buildDatabase();
-          loadDb();
-          return send(res, 200, { ok: true, failures, total, mode: db.mode, stats_season: db.stats_season, week: db.week, built_at: db.built_at, log: lines });
+          return send(res, 200, await doRefresh('manual'));
         } finally {
           refreshing.busy = false;
         }

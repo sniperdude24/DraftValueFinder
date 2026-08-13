@@ -65,13 +65,38 @@ sources are recorded on the player record, not silently resolved.
 
 ```
 src/ingest/     fetch raw snapshots (each source independent, none blocking)
-src/normalize/  name/team matching → data/players.json
+src/normalize/  name/team matching, mode resolution → data/players.json
 src/analyze/    trends, signals, scoring, market comparison, recommendations
 src/ai/         chat grounded in structured data (Claude + fallback)
 src/store/      draft state, personal ranks, history log
+src/yahoo/      dormant Yahoo draft sync (credential-gated)
 server/         zero-framework node:http API + static frontend
 public/         vanilla-JS UI (no build step)
 ```
+
+### Data pipeline
+
+| Source | Snapshot | Role (draft / season mode) | Cadence | On failure |
+|---|---|---|---|---|
+| Sleeper `state/nfl` | `sleeper_state.json` | Decides the mode + current week | Every refresh | Last snapshot kept |
+| nflverse weekly stats + snaps | `stats_player_week_<yr>.csv`, `snap_counts_<yr>.csv` | Trends/game logs; prior year doubles as the in-season baseline | Weekly in-season; completed seasons cached | Last snapshot kept |
+| FFC ADP | `ffc_adp.json` | Draft market / stale artifact | Daily | Last snapshot kept |
+| FantasyPros cheat sheet | `fantasypros_ecr.json` | Expert ranks (draft mode) | Daily | Last snapshot kept |
+| FantasyPros rest-of-season | `fantasypros_ros.json` | Expert ranks (season mode) | Weekly in-season | Last snapshot kept |
+| Sleeper players | `sleeper_players.json` | Teams, depth charts, injuries | Every refresh | Last snapshot kept |
+| Stats Guy trade values | `statsguy_values.json` | Trade-market column (host is `api.statsguyfantasy.com` — the docs page's bare paths return HTML) | ~Daily | Column goes empty, app unaffected |
+
+The server auto-refreshes the whole pipeline when the built database is
+older than 20 hours (hourly check; manual button on the Data page; disable
+with `DVF_NO_AUTO_REFRESH=1`).
+
+### Deferred / dormant
+
+1. **Yahoo draft sync** — fully built, waiting on Yahoo's API-access
+   approval; activation steps are on the app's Data page.
+2. **Stats Guy value-history** — per-player market-price timelines, useful
+   for grading "the market was late" calls in the accountability log.
+3. **Start/sit + waiver claims** — deliberately out of scope.
 
 ## Yahoo draft sync (optional)
 
