@@ -52,6 +52,7 @@ function boardRow(p, state) {
     personal_rank: state.personalRanks[p.id] ?? null,
     drafted: state.drafted.includes(p.id),
     mine: state.mine.includes(p.id),
+    pick_number: state.drafted.includes(p.id) ? state.drafted.indexOf(p.id) + 1 : null,
     changed_team: p.changed_team,
   };
 }
