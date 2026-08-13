@@ -5,7 +5,7 @@ import { computeSignal, contextFactors } from '../src/analyze/signals.js';
 function player(games, { id = 'WR-test', team = 'KC', pos = 'WR', meta = { years_exp: 3 } } = {}) {
   return {
     id, name: 'Test Player', position: pos, team, meta,
-    games_2025: games.map(([snap, tgt], i) => ({
+    games: games.map(([snap, tgt], i) => ({
       week: i + 1, snap_pct: snap, targets: tgt, receptions: Math.round(tgt * 0.7),
       carries: 0, attempts: 0, fantasy_points_ppr: tgt * 1.8, target_share: null,
     })),

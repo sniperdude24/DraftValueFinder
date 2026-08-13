@@ -35,18 +35,19 @@ export function assessPlayer(player, allPlayers) {
   }
 
   if (trend.available) {
+    const w = trend.basis.window_label;
     if (trend.usage === 'rising') {
       mult *= 0.85;
-      factors.push({ effect: 'up', text: `Usage rising: snap share ${pct(trend.season.snap_pct)} → ${pct(trend.recent.snap_pct)}, opportunities ${trend.season.opportunities} → ${trend.recent.opportunities} per game (last 3 of 2025)` });
+      factors.push({ effect: 'up', text: `Usage rising: snap share ${pct(trend.season.snap_pct)} → ${pct(trend.recent.snap_pct)}, opportunities ${trend.season.opportunities} → ${trend.recent.opportunities} per game (${w})` });
     } else if (trend.usage === 'mixed-up') {
       mult *= 0.93;
-      factors.push({ effect: 'up', text: `Partial usage growth: snaps ${trend.directions.snaps}, opportunities ${trend.directions.opportunities} (last 3 of 2025)` });
+      factors.push({ effect: 'up', text: `Partial usage growth: snaps ${trend.directions.snaps}, opportunities ${trend.directions.opportunities} (${w})` });
     } else if (trend.usage === 'falling') {
       mult *= 1.15;
-      factors.push({ effect: 'down', text: `Usage falling: snap share ${pct(trend.season.snap_pct)} → ${pct(trend.recent.snap_pct)}, opportunities ${trend.season.opportunities} → ${trend.recent.opportunities} per game (last 3 of 2025)` });
+      factors.push({ effect: 'down', text: `Usage falling: snap share ${pct(trend.season.snap_pct)} → ${pct(trend.recent.snap_pct)}, opportunities ${trend.season.opportunities} → ${trend.recent.opportunities} per game (${w})` });
     } else if (trend.usage === 'mixed-down') {
       mult *= 1.07;
-      factors.push({ effect: 'down', text: `Partial usage decline: snaps ${trend.directions.snaps}, opportunities ${trend.directions.opportunities} (last 3 of 2025)` });
+      factors.push({ effect: 'down', text: `Partial usage decline: snaps ${trend.directions.snaps}, opportunities ${trend.directions.opportunities} (${w})` });
     }
     if (trend.flags.unsustainable_spike) {
       mult *= 1.10;
@@ -73,7 +74,7 @@ export function assessPlayer(player, allPlayers) {
   }
 
   if (player.changed_team) {
-    factors.push({ effect: 'caution', text: `2025 usage was earned on ${player.team_2025}; now on ${player.team} — role may differ` });
+    factors.push({ effect: 'caution', text: `${player.stats_season ?? 'Prior'} usage was earned on ${player.stats_team}; now on ${player.team} — role may differ` });
   }
 
   // Market disagreement between the two external sources is itself information.

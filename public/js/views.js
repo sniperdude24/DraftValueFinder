@@ -4,9 +4,11 @@ import { openProfile } from './profile.js';
 
 export async function renderRecs(el, refresh) {
   const r = await api.recommendations();
+  const season = r.mode === 'season';
   el.innerHTML = `
     <div class="panel">
-      <h2>Pick #${r.current_pick} · Round ${r.round}</h2>
+      <h2>${season ? `Waiver targets · Week ${r.week ?? '?'}` : `Pick #${r.current_pick} · Round ${r.round}`}</h2>
+      ${season ? '<p class="small">Free agents ranked by the same engine — usage evidence + roster fit + tier scarcity. Pick-value math is off (no draft in progress).</p>' : ''}
       <p class="small">Roster: ${Object.entries(r.roster.counts).map(([p, n]) => `${p} ${n}`).join(' · ')}
         ${r.roster.needs.length ? ' · Needs: ' + r.roster.needs.map(n => `${n.missing} ${n.position}`).join(', ') : ' · All starting slots covered'}</p>
       ${r.roster.byeConflicts?.length ? r.roster.byeConflicts.map(b => `<div class="warn mt">Bye week ${b.week} stack: ${b.players.join(', ')}</div>`).join('') : ''}
@@ -30,9 +32,12 @@ export async function renderRecs(el, refresh) {
 }
 
 export async function renderSleepers(el, refresh) {
-  const { sleepers } = await api.sleepers();
-  const late = sleepers.filter(s => s.late_round && !s.drafted);
-  const early = sleepers.filter(s => !s.late_round && !s.drafted);
+  const { sleepers, mode, week } = await api.sleepers();
+  const season = mode === 'season';
+  // Draft mode: split by ADP lateness. Season mode: free agents are the
+  // waiver targets; rostered players with signals are context.
+  const late = season ? sleepers.filter(s => !s.drafted) : sleepers.filter(s => s.late_round && !s.drafted);
+  const early = season ? sleepers.filter(s => s.drafted) : sleepers.filter(s => !s.late_round && !s.drafted);
   const card = s => `
     <div class="card">
       <h3><span class="clickable" data-id="${esc(s.id)}">${esc(s.name)}</span>
@@ -47,11 +52,11 @@ export async function renderSleepers(el, refresh) {
       ${s.context?.length ? `<ul class="mt">${s.context.map(c => `<li class="small">${esc(c.text)} <span class="aid">(${esc(c.source)})</span></li>`).join('')}</ul>` : ''}
     </div>`;
   el.innerHTML = `
-    <div class="panel"><h2>Sleeper radar</h2>
-      <p class="small">SLEEPER SIGNAL = snap share AND opportunities both rising over the last 3 games of 2025 (market may be late). EMERGING = something interesting, evidence incomplete. Surfaced for your judgment — nothing is auto-added anywhere.</p></div>
-    <h2 class="mt">Late-round (ADP 61+) — the actual sleepers</h2>
+    <div class="panel"><h2>${season ? `Waiver radar · Week ${week ?? '?'}` : 'Sleeper radar'}</h2>
+      <p class="small">SLEEPER SIGNAL = snap share AND opportunities both rising (market may be late). EMERGING = something interesting, evidence incomplete. Surfaced for your judgment — nothing is auto-added anywhere.</p></div>
+    <h2 class="mt">${season ? 'Free agents with active signals — the waiver targets' : 'Late-round (ADP 61+) — the actual sleepers'}</h2>
     <div class="cards mt">${late.map(card).join('') || '<p class="small">None right now.</p>'}</div>
-    <h2 class="mt">Early-round players with the same signals</h2>
+    <h2 class="mt">${season ? 'Rostered players with the same signals' : 'Early-round players with the same signals'}</h2>
     <div class="cards mt">${early.map(card).join('') || '<p class="small">None right now.</p>'}</div>`;
   el.querySelectorAll('[data-id]').forEach(x => x.onclick = () => openProfile(x.dataset.id, refresh));
 }
@@ -170,6 +175,13 @@ export async function renderAbout(el, refresh) {
   const [m, y] = await Promise.all([api.meta(), api.yahoo.status()]);
   el.innerHTML = `
     ${yahooSection(y)}
+    <div class="panel"><h2>Mode: ${m.mode === 'season' ? `Season · Week ${m.week ?? '?'} of ${m.season}` : `Draft prep for ${m.season}`}</h2>
+      <p class="small">${m.mode === 'season'
+        ? `Analyzing ${m.stats_season} weekly stats (updates all season); early-season trends compare against each player's ${m.baseline_season} baseline. Expert ranks are rest-of-season consensus.`
+        : `Analyzing ${m.stats_season} stats for the ${m.season} draft. The app switches to season mode automatically once ${m.season} week-1 stats are published (refresh data after week 1).`}</p>
+      <button class="rowbtn mt" id="data-refresh" style="padding:8px 14px">Refresh data now</button>
+      <span class="small" id="data-refresh-status"></span>
+    </div>
     <div class="panel"><h2>Data sources & freshness</h2>
       <table class="mt">
         <thead><tr><th>Role</th><th>Source</th><th>Fetched</th><th>Detail</th></tr></thead>
@@ -181,10 +193,24 @@ export async function renderAbout(el, refresh) {
       <p class="small mt">Database built ${new Date(m.built_at).toLocaleString()} · ${m.counts.players} players (${m.counts.core} core + ${m.counts.players - m.counts.core} watch) · ${m.counts.with_adp} with ADP · ${m.counts.with_expert} with expert rank · ${m.counts.with_stats} with 2025 stats.</p>
       <p class="small mt">Refresh data: run <code class="src">npm run refresh</code> in the project folder, then restart the server.</p>
     </div>
-    ${m.unmatched.veterans_without_2025_stats.length ? `<div class="panel"><h2>Data gaps (visible, not hidden)</h2>
-      <p class="small">Veterans with no 2025 stats matched (injury/holdout or a name-matching gap):
-      ${m.unmatched.veterans_without_2025_stats.map(p => esc(p.name)).join(', ')}</p>
+    ${m.unmatched.veterans_without_stats.length ? `<div class="panel"><h2>Data gaps (visible, not hidden)</h2>
+      <p class="small">Veterans with no ${m.stats_season} stats matched (injury/holdout or a name-matching gap):
+      ${m.unmatched.veterans_without_stats.map(p => esc(p.name)).join(', ')}</p>
       ${m.unmatched.ffc_only.length ? `<p class="small mt">In ADP data but not expert rankings: ${m.unmatched.ffc_only.map(p => esc(p.name)).join(', ')}</p>` : ''}
     </div>` : ''}`;
+  const refreshBtn = el.querySelector('#data-refresh');
+  refreshBtn.onclick = async () => {
+    refreshBtn.disabled = true;
+    const status = el.querySelector('#data-refresh-status');
+    status.textContent = ' Fetching all sources… (can take a minute)';
+    try {
+      const r = await api.adminRefresh();
+      status.textContent = ` Done — ${r.total - r.failures}/${r.total} sources OK, ${r.mode} mode, stats ${r.stats_season}.`;
+      setTimeout(() => refresh?.(), 1200);
+    } catch (err) {
+      status.textContent = ` Failed: ${err.message}`;
+      refreshBtn.disabled = false;
+    }
+  };
   await wireYahoo(el, refresh ?? (() => renderAbout(el, refresh)));
 }

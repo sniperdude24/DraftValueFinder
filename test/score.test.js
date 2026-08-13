@@ -8,7 +8,7 @@ function mkPlayer(games, { adpRank = 50, expertRank = 50, injury = null, id = 'W
     bye: 8, meta: { years_exp: 3, injury_status: injury },
     adp: { rank: adpRank, overall: adpRank, formatted: 'x', stdev: 3 },
     expert: { rank: expertRank, tier: 3, stdev: 5 },
-    games_2025: games.map(([snap, tgt], i) => ({
+    games: games.map(([snap, tgt], i) => ({
       week: i + 1, snap_pct: snap, targets: tgt, receptions: Math.round(tgt * 0.7),
       carries: 0, attempts: 0, fantasy_points_ppr: tgt * 1.8, target_share: null,
     })),

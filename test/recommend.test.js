@@ -10,7 +10,7 @@ function mkPlayer(id, pos, { adpRank, expertRank, tier = 3, bye = 8 } = {}) {
     meta: { years_exp: 3, injury_status: null },
     adp: adpRank ? { rank: adpRank, overall: adpRank, formatted: 'x', stdev: 2 } : null,
     expert: expertRank ? { rank: expertRank, tier, stdev: 4 } : null,
-    games_2025: Array.from({ length: 8 }, (_, i) => ({
+    games: Array.from({ length: 8 }, (_, i) => ({
       week: i + 1, snap_pct: 0.6, targets: 6, receptions: 4, carries: pos === 'RB' ? 12 : 0,
       attempts: pos === 'QB' ? 30 : 0, fantasy_points_ppr: 12, target_share: null,
     })),

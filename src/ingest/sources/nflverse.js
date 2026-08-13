@@ -1,35 +1,43 @@
 // Statistical database: nflverse (official play-by-play derived, free).
-// - stats_player_week_2025.csv: weekly per-player stats (targets, carries,
-//   receptions, yards, TDs, PPR points, ...) for the 2025 season.
-// - snap_counts_2025.csv: weekly offensive snap counts / percentages.
+// - stats_player_week_<year>.csv: weekly per-player stats (targets, carries,
+//   receptions, yards, TDs, PPR points, ...)
+// - snap_counts_<year>.csv: weekly offensive snap counts / percentages.
+//
+// Snapshots are year-suffixed; during the season the current year's files
+// are fetched (they appear on nflverse shortly after week 1 and update
+// weekly), while the previous year's stay on disk as the trend baseline.
 import { fetchText, saveSnapshot } from '../util.js';
 
 const BASE = 'https://github.com/nflverse/nflverse-data/releases/download';
-const WEEKLY_URL = `${BASE}/stats_player/stats_player_week_2025.csv`;
-const SNAPS_URL = `${BASE}/snap_counts/snap_counts_2025.csv`;
+const weeklyUrl = year => `${BASE}/stats_player/stats_player_week_${year}.csv`;
+const snapsUrl = year => `${BASE}/snap_counts/snap_counts_${year}.csv`;
 
-export async function ingestWeeklyStats() {
-  const csv = await fetchText(WEEKLY_URL, { timeoutMs: 180000 });
+export async function ingestWeeklyStats(year) {
+  const url = weeklyUrl(year);
+  const csv = await fetchText(url, { timeoutMs: 180000 });
   if (!csv.startsWith('player_id') && !csv.includes(',week,')) {
-    throw new Error('nflverse weekly stats: unexpected CSV header');
+    throw new Error(`nflverse weekly stats ${year}: unexpected CSV header`);
   }
-  saveSnapshot('stats_player_week_2025.csv', csv, {
-    source: 'nflverse (2025 season weekly player stats)',
-    url: WEEKLY_URL,
+  saveSnapshot(`stats_player_week_${year}.csv`, csv, {
+    source: `nflverse (${year} season weekly player stats)`,
+    url,
     kind: 'weekly_stats',
+    season: year,
   });
-  return { bytes: csv.length };
+  return { year, bytes: csv.length };
 }
 
-export async function ingestSnapCounts() {
-  const csv = await fetchText(SNAPS_URL, { timeoutMs: 180000 });
+export async function ingestSnapCounts(year) {
+  const url = snapsUrl(year);
+  const csv = await fetchText(url, { timeoutMs: 180000 });
   if (!csv.includes('offense_snaps')) {
-    throw new Error('nflverse snap counts: unexpected CSV header');
+    throw new Error(`nflverse snap counts ${year}: unexpected CSV header`);
   }
-  saveSnapshot('snap_counts_2025.csv', csv, {
-    source: 'nflverse (2025 season snap counts)',
-    url: SNAPS_URL,
+  saveSnapshot(`snap_counts_${year}.csv`, csv, {
+    source: `nflverse (${year} season snap counts)`,
+    url,
     kind: 'snap_counts',
+    season: year,
   });
-  return { bytes: csv.length };
+  return { year, bytes: csv.length };
 }

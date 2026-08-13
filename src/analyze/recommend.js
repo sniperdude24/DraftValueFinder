@@ -25,7 +25,10 @@ export function tierScarcity(availablePlayers) {
   return out;
 }
 
-export function recommendations(players, assessments, state, { count = 8 } = {}) {
+// mode: 'draft' (pick-value vs ADP applies) or 'season' (waiver targets —
+// ADP is a stale draft artifact, so the value-vs-pick component is dropped;
+// roster need, trends, and tier scarcity still apply).
+export function recommendations(players, assessments, state, { count = 8, mode = 'draft' } = {}) {
   const drafted = new Set(state.drafted ?? []);
   const mine = new Set(state.mine ?? []);
   const personal = state.personalRanks ?? {};
@@ -72,7 +75,7 @@ export function recommendations(players, assessments, state, { count = 8 } = {})
       // Value vs current pick: positive when the market would already have
       // taken this player (they're falling to you).
       const adpRank = p.adp?.rank ?? null;
-      const value = adpRank != null ? currentPick - adpRank : null;
+      const value = mode === 'draft' && adpRank != null ? currentPick - adpRank : null;
       const needBoost = starterNeedPositions.has(p.position)
         || (starterNeedPositions.has('FLEX') && LEAGUE.flexEligible.includes(p.position));
       // Late-round K/DST convention: don't recommend them while the user
@@ -130,6 +133,7 @@ export function recommendations(players, assessments, state, { count = 8 } = {})
   });
 
   return {
+    mode,
     current_pick: currentPick,
     round,
     roster,

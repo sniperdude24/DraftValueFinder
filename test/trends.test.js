@@ -7,7 +7,7 @@ function wr(games) {
   return {
     position: 'WR',
     meta: { years_exp: 3 },
-    games_2025: games.map(([snap, tgt, ppr], i) => ({
+    games: games.map(([snap, tgt, ppr], i) => ({
       week: i + 1, snap_pct: snap, targets: tgt, receptions: Math.round(tgt * 0.7),
       carries: 0, attempts: 0, fantasy_points_ppr: ppr, target_share: null,
     })),
@@ -47,13 +47,13 @@ test('too few games → trend unavailable with reason', () => {
 });
 
 test('rookie with no games → unavailable, labeled rookie', () => {
-  const t = computeTrend({ position: 'WR', meta: { years_exp: 0 }, games_2025: [] });
+  const t = computeTrend({ position: 'WR', meta: { years_exp: 0 }, games: [] });
   assert.equal(t.available, false);
   assert.match(t.reason, /rookie/i);
 });
 
 test('K/DST excluded from trend analysis', () => {
-  const t = computeTrend({ position: 'DST', games_2025: [] });
+  const t = computeTrend({ position: 'DST', games: [] });
   assert.equal(t.available, false);
 });
 

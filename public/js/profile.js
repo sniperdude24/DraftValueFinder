@@ -17,7 +17,7 @@ export async function openProfile(id, onChange) {
             <h2>${esc(p.name)}</h2>
             <span class="small">${esc(p.position)} · ${esc(p.team ?? 'FA')} · Bye ${p.bye ?? '?'}
               ${p.meta?.injury_status ? `<span class="badge inj">${esc(p.meta.injury_status)}</span>` : ''}
-              ${p.changed_team ? `<span class="badge newteam">2025: ${esc(p.team_2025)}</span>` : ''}
+              ${p.changed_team ? `<span class="badge newteam">${esc(String(p.stats_season))}: ${esc(p.stats_team)}</span>` : ''}
               ${signalBadge(a.signal.state)}</span>
             <button class="close">✕</button>
           </div>
@@ -60,25 +60,27 @@ function tabBody(data, tab) {
         ${p.position !== 'QB' ? statCard('Targets/g', t.season.targets, t.recent.targets, null) : ''}
         ${['RB', 'QB'].includes(p.position) ? statCard('Carries/g', t.season.carries, t.recent.carries, null) : ''}
         ${statCard('PPR pts/g', t.season.ppr, t.recent.ppr, t.deltas.ppr)}
-        <div class="stat"><div class="lab">2025 games</div><div class="val">${t.season.games}</div></div>
+        <div class="stat"><div class="lab">${t.basis.type === 'prior-baseline' ? 'baseline games' : `${esc(String(p.stats_season))} games`}</div><div class="val">${t.season.games}</div></div>
       </div>
-      <p class="small">Season average vs last 3 games played (weeks ${t.recent.weeks.join(', ')}). Source: nflverse 2025 weekly stats + snap counts.</p>
+      <p class="small">${t.basis.type === 'prior-baseline'
+        ? `Prior-season per-game baseline vs ${esc(String(p.stats_season))} games (weeks ${t.recent.weeks.join(', ')}).`
+        : `Season average vs last 3 games played (weeks ${t.recent.weeks.join(', ')}).`} Source: nflverse weekly stats + snap counts.</p>
       ` : `<p>${esc(t.reason)}</p>`}
       ${p.meta ? `<p class="mt small">Age ${p.meta.age ?? '?'} · ${p.meta.years_exp === 0 ? 'Rookie' : (p.meta.years_exp ?? '?') + ' yrs experience'}${p.meta.depth_chart_order ? ` · Depth chart: ${esc(p.meta.depth_chart_position ?? p.position)}${p.meta.depth_chart_order}` : ''} <span class="aid">(Sleeper)</span></p>` : ''}
       ${p.conflicts?.length ? `<div class="warn mt">Source conflicts: ${p.conflicts.map(c => esc(c.note ?? `${c.field}: kept ${c.kept}`)).join(' · ')}</div>` : ''}`;
   }
   if (tab === 'Game Log') {
-    if (!p.games_2025?.length) return '<p>No 2025 game data available.</p>';
+    if (!p.games?.length) return `<p>No ${esc(String(p.stats_season))} game data available.</p>`;
     const isQB = p.position === 'QB';
     return `<table><thead><tr>
       <th>Wk</th><th>Opp</th><th>Snap%</th>${isQB ? '<th>Cmp/Att</th><th>Pass Yd</th><th>Pass TD</th><th>INT</th>' : '<th>Tgt</th><th>Rec</th><th>Rec Yd</th><th>Rec TD</th>'}<th>Car</th><th>Rush Yd</th><th>Rush TD</th><th>PPR</th></tr></thead>
-      <tbody>${p.games_2025.map(g => `<tr>
+      <tbody>${p.games.map(g => `<tr>
         <td>${g.week}</td><td>${esc(g.opponent ?? '')}</td><td>${g.snap_pct != null ? Math.round(g.snap_pct * 100) + '%' : '—'}</td>
         ${isQB ? `<td>${g.completions ?? 0}/${g.attempts ?? 0}</td><td>${g.passing_yards ?? 0}</td><td>${g.passing_tds ?? 0}</td><td>${g.interceptions ?? 0}</td>`
                : `<td>${g.targets ?? 0}</td><td>${g.receptions ?? 0}</td><td>${g.receiving_yards ?? 0}</td><td>${g.receiving_tds ?? 0}</td>`}
         <td>${g.carries ?? 0}</td><td>${g.rushing_yards ?? 0}</td><td>${g.rushing_tds ?? 0}</td><td><b>${g.fantasy_points_ppr ?? '—'}</b></td>
       </tr>`).join('')}</tbody></table>
-      <p class="small mt">2025 regular season, games played. Source: nflverse.</p>`;
+      <p class="small mt">${esc(String(p.stats_season))} regular season, games played. Source: nflverse.</p>`;
   }
   if (tab === 'Trends') {
     const t = a.trend;
@@ -90,7 +92,7 @@ function tabBody(data, tab) {
         <b>Opportunities:</b> season ${t.season.opportunities}/g → last 3: ${t.recent.opportunities}/g (${t.directions.opportunities})<br>
         <b>PPR points:</b> season ${t.season.ppr}/g → last 3: ${t.recent.ppr}/g<br>
         ${t.season.target_share != null ? `<b>Target share:</b> season ${pct(t.season.target_share)} → last 3: ${pct(t.recent.target_share)}<br>` : ''}
-        <b>Window:</b> weeks ${t.recent.weeks.join(', ')} of 2025
+        <b>Window:</b> ${esc(t.basis.window_label)}
       </div>
       ${t.flags.unsustainable_spike ? '<div class="warn mt">Point spike without usage growth — treated as noise, not opportunity.</div>' : ''}
       ${t.flags.quiet_usage_rise ? '<div class="warn mt" style="border-color:var(--purple);color:var(--purple);background:rgba(181,140,255,.08)">Usage rose faster than production — the market may be slow to price this in.</div>' : ''}

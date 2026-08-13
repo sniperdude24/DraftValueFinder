@@ -14,21 +14,27 @@ import { isConfigured, isConnected, authorizeUrl, awaitCallback } from '../src/y
 import { yahooApi } from '../src/yahoo/client.js';
 import { syncOnce, draftComplete } from '../src/yahoo/sync.js';
 import { LEAGUE } from '../src/analyze/roster.js';
+import { runIngest } from '../src/ingest/fetchAll.js';
+import { buildDatabase } from '../src/normalize/build.js';
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..');
 const PUBLIC = join(ROOT, 'public');
 const PORT = Number(process.env.PORT ?? 3210);
 
-// ---- load database & precompute assessments (rebuild-cheap, restart to refresh) ----
+// ---- load database & precompute assessments (hot-reloadable via /api/admin/refresh) ----
 const dbPath = join(ROOT, 'data', 'players.json');
 if (!existsSync(dbPath)) {
   console.error('data/players.json missing — run `npm run refresh` first.');
   process.exit(1);
 }
-const db = JSON.parse(readFileSync(dbPath, 'utf8'));
-const assessments = assessAll(db.players);
-const byId = new Map(db.players.map(p => [p.id, p]));
-console.log(`Loaded ${db.players.length} players (built ${db.built_at})`);
+let db, assessments, byId;
+function loadDb() {
+  db = JSON.parse(readFileSync(dbPath, 'utf8'));
+  assessments = assessAll(db.players);
+  byId = new Map(db.players.map(p => [p.id, p]));
+  console.log(`Loaded ${db.players.length} players (${db.mode ?? 'draft'} mode, stats ${db.stats_season ?? '?'}, built ${db.built_at})`);
+}
+loadDb();
 
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
@@ -71,6 +77,7 @@ async function readBody(req) {
 }
 
 const autosync = { timer: null };
+const refreshing = { busy: false };
 
 const server = createServer(async (req, res) => {
   try {
@@ -81,10 +88,24 @@ const server = createServer(async (req, res) => {
       const state = loadState();
 
       if (req.method === 'GET' && path === '/api/meta') {
-        return send(res, 200, { built_at: db.built_at, season: db.season, sources: db.sources, counts: db.counts, unmatched: db.unmatched });
+        return send(res, 200, { built_at: db.built_at, mode: db.mode, season: db.season, stats_season: db.stats_season, baseline_season: db.baseline_season, week: db.week, sources: db.sources, counts: db.counts, unmatched: db.unmatched });
       }
       if (req.method === 'GET' && path === '/api/board') {
-        return send(res, 200, { players: db.players.map(p => boardRow(p, state)) });
+        return send(res, 200, { mode: db.mode, week: db.week, stats_season: db.stats_season, players: db.players.map(p => boardRow(p, state)) });
+      }
+      if (req.method === 'POST' && path === '/api/admin/refresh') {
+        if (refreshing.busy) return send(res, 409, { error: 'A refresh is already running' });
+        refreshing.busy = true;
+        try {
+          const lines = [];
+          const log = { log: m => { lines.push(m); console.log(m); }, error: m => { lines.push(m); console.error(m); } };
+          const { failures, total } = await runIngest({ log });
+          buildDatabase();
+          loadDb();
+          return send(res, 200, { ok: true, failures, total, mode: db.mode, stats_season: db.stats_season, week: db.week, built_at: db.built_at, log: lines });
+        } finally {
+          refreshing.busy = false;
+        }
       }
       if (req.method === 'GET' && path.startsWith('/api/player/')) {
         const id = decodeURIComponent(path.slice('/api/player/'.length));
@@ -106,9 +127,9 @@ const server = createServer(async (req, res) => {
         return send(res, 200, marketComparison(db.players, assessments));
       }
       if (req.method === 'GET' && path === '/api/recommendations') {
-        const result = recommendations(db.players, assessments, state);
-        const logged = logRecommendations(result, { trigger: 'board' });
-        return send(res, 200, { ...result, newly_logged: logged });
+        const result = recommendations(db.players, assessments, state, { mode: db.mode ?? 'draft' });
+        const logged = logRecommendations(result, { trigger: db.mode === 'season' ? 'waiver' : 'board' });
+        return send(res, 200, { ...result, week: db.week, newly_logged: logged });
       }
       if (req.method === 'GET' && path === '/api/sleepers') {
         const rows = db.players
@@ -123,7 +144,7 @@ const server = createServer(async (req, res) => {
             drafted: state.drafted.includes(p.id),
             late_round: (p.adp?.rank ?? p.expert?.rank ?? 999) > 60,
           }));
-        return send(res, 200, { sleepers: rows });
+        return send(res, 200, { mode: db.mode, week: db.week, sleepers: rows });
       }
       if (req.method === 'GET' && path === '/api/history') {
         return send(res, 200, { events: readHistory().slice(-500).reverse() });
