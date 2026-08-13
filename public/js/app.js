@@ -26,5 +26,12 @@ async function show(name) {
 }
 
 document.querySelectorAll('#nav button').forEach(b => b.onclick = () => show(b.dataset.view));
+
+// Sticky table headers pin just below the topbar, whose height varies when
+// the nav wraps — measure it instead of hardcoding.
+const setTopbarHeight = () => document.documentElement.style.setProperty('--topbar-h', `${document.getElementById('topbar').offsetHeight}px`);
+setTopbarHeight();
+window.addEventListener('resize', setTopbarHeight);
+
 initChat();
 show('board');
