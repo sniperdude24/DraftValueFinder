@@ -87,6 +87,49 @@ test('warns when unfilled starters equal remaining picks', () => {
   assert.ok(r.position_warnings.some(w => /prioritize starters/i.test(w)));
 });
 
+test('never recommends a 3rd QB in a 1-QB league, even as the best player on the board', () => {
+  const players = universe();
+  // The clearest possible value trap: a QB who is the consensus #1 player.
+  players.push(mkPlayer('QB-value', 'QB', { adpRank: 1, expertRank: 1, tier: 1 }));
+  const myQBs = [mkPlayer('QB-mine1', 'QB'), mkPlayer('QB-mine2', 'QB')];
+  const all = [...players, ...myQBs];
+  const assess = assessAll(all);
+  const state = { drafted: myQBs.map(p => p.id), mine: myQBs.map(p => p.id), personalRanks: {} };
+  const r = recommendations(all, assess, state);
+  assert.ok(!r.recommendations.some(rec => rec.position === 'QB'),
+    'two rostered QBs must end QB recommendations');
+});
+
+test('surplus at a position discounts further picks there', () => {
+  const players = universe();
+  const myWRs = Array.from({ length: 4 }, (_, i) => mkPlayer(`WR-mine${i}`, 'WR'));
+  const all = [...players, ...myWRs];
+  const assess = assessAll(all);
+  const state = { drafted: myWRs.map(p => p.id), mine: myWRs.map(p => p.id), personalRanks: {} };
+  const r = recommendations(all, assess, state);
+  // With 4 WRs already rostered, top-ranked WRs (universe #2, #4) must be
+  // pushed out of the top of the list in favor of positions still needed.
+  const top5 = r.recommendations.slice(0, 5).map(rec => rec.position);
+  assert.ok(!top5.includes('WR'), `5th WR must not crack the top 5 (got ${top5.join(',')})`);
+});
+
+test('when remaining picks are needed for K/DST, they top the recommendations', () => {
+  const players = universe();
+  // 13 picks used, none on K/DST → 2 picks left, 2 unfilled starter slots.
+  const mine = [
+    mkPlayer('QB-m', 'QB'), mkPlayer('TE-m', 'TE'),
+    ...Array.from({ length: 6 }, (_, i) => mkPlayer(`WR-m${i}`, 'WR')),
+    ...Array.from({ length: 5 }, (_, i) => mkPlayer(`RB-m${i}`, 'RB')),
+  ];
+  const all = [...players, ...mine];
+  const assess = assessAll(all);
+  const state = { drafted: mine.map(p => p.id), mine: mine.map(p => p.id), personalRanks: {} };
+  const r = recommendations(all, assess, state);
+  const topTwo = r.recommendations.slice(0, 2).map(rec => rec.position).sort();
+  assert.deepEqual(topTwo, ['DST', 'K'], 'K and DST must be the top two recommendations');
+  assert.ok(r.recommendations[0].why.some(w => /starting slot/i.test(w)));
+});
+
 test('tierScarcity counts remaining players in best tier', () => {
   const players = universe();
   const sc = tierScarcity(players);

@@ -52,8 +52,21 @@ export function recommendations(players, assessments, state, { count = 8 } = {})
     }
   }
 
+  // Positional saturation: value alone must not stack a 3rd QB or 7th WR.
+  // Hard caps end recommendations at a position; soft penalties discount
+  // surplus bodies once the starting lineup (incl. flex) is covered.
+  const ROSTER_CAPS = { QB: 2, TE: 3, K: 1, DST: 1, RB: 8, WR: 8 };
+  const s = LEAGUE.starters;
+  const lineupSlots = { QB: s.QB, RB: s.RB + 1, WR: s.WR + 1, TE: s.TE + 1, K: s.K, DST: s.DST }; // +1 ≈ flex/bench share
+  const surplusPenalty = pos => Math.max(0, (roster.counts[pos] ?? 0) - lineupSlots[pos] + 1) * 12;
+
+  // Endgame: once every remaining pick is needed for an unfilled starting
+  // slot, players at those positions must top the list.
+  const mustFillNow = starterSlotsUnfilled >= roundsLeft && starterSlotsUnfilled > 0;
+
   const scored = available
     .filter(p => assessments.get(p.id)?.ai_rank != null)
+    .filter(p => (roster.counts[p.position] ?? 0) < ROSTER_CAPS[p.position])
     .map(p => {
       const a = assessments.get(p.id);
       // Value vs current pick: positive when the market would already have
@@ -62,19 +75,25 @@ export function recommendations(players, assessments, state, { count = 8 } = {})
       const value = adpRank != null ? currentPick - adpRank : null;
       const needBoost = starterNeedPositions.has(p.position)
         || (starterNeedPositions.has('FLEX') && LEAGUE.flexEligible.includes(p.position));
-      // Late-round K/DST convention: don't recommend before the final rounds.
-      const kdstPenalty = ['K', 'DST'].includes(p.position) && round < LEAGUE.rounds - 2 ? 1000 : 0;
+      // Late-round K/DST convention: don't recommend them while the user
+      // still has several picks in hand (keyed to MY remaining picks, not
+      // league-wide pick count — others' picks may not be tracked).
+      const kdstPenalty = ['K', 'DST'].includes(p.position) && roundsLeft > 3 ? 1000 : 0;
+      const mustFillBoost = mustFillNow && starterNeedPositions.has(p.position) ? 1000 : 0;
       const draftScore = a.ai_rank_score
         - Math.max(0, Math.min(value ?? 0, 25)) * 0.8   // falling players get a push
         - (needBoost ? 6 : 0)
-        + kdstPenalty;
-      return { p, a, value, needBoost, draftScore };
+        + surplusPenalty(p.position)
+        + kdstPenalty
+        - mustFillBoost;
+      return { p, a, value, needBoost, mustFillNow: mustFillBoost > 0, draftScore };
     })
     .sort((x, y) => x.draftScore - y.draftScore);
 
-  const recs = scored.slice(0, count).map(({ p, a, value, needBoost }) => {
+  const recs = scored.slice(0, count).map(({ p, a, value, needBoost, mustFillNow: lastChance }) => {
     const why = [];
     const risk = [];
+    if (lastChance) why.push(`Every remaining pick is needed to fill a starting slot — ${p.position} is still open`);
     const adpRank = p.adp?.rank, eRank = p.expert?.rank;
 
     if (value != null && value > 3) why.push(`Value: ADP says pick ~#${adpRank} (${p.adp.formatted}); still available at pick #${currentPick}`);
