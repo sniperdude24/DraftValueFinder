@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Draft Value Finder</title>
+<link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<header id="topbar">
+  <div class="brand">🏈 Draft Value Finder <span class="sub">10-team PPR · 2026</span></div>
+  <nav id="nav">
+    <button data-view="board" class="active">Draft Board</button>
+    <button data-view="recs">Recommendations</button>
+    <button data-view="sleepers">Sleepers</button>
+    <button data-view="market">Market</button>
+    <button data-view="history">History</button>
+    <button data-view="about">Data</button>
+  </nav>
+  <div id="draft-status"></div>
+  <button id="chat-toggle" title="AI chat">💬 Chat</button>
+</header>
+
+<main id="view"></main>
+
+<aside id="chat-panel" class="hidden">
+  <div class="chat-head">
+    <strong>AI Assistant</strong>
+    <span class="chat-note">grounded in this board's data</span>
+    <button id="chat-close">✕</button>
+  </div>
+  <div id="chat-log"></div>
+  <form id="chat-form">
+    <input id="chat-input" placeholder='Try "best remaining WRs" or a player name…' autocomplete="off">
+    <button type="submit">Send</button>
+  </form>
+</aside>
+
+<div id="modal-root"></div>
+
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>

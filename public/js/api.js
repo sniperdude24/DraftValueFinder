@@ -1,0 +1,42 @@
+async function req(path, opts) {
+  const res = await fetch(path, opts);
+  const body = await res.json();
+  if (!res.ok) throw new Error(body.error ?? `HTTP ${res.status}`);
+  return body;
+}
+
+export const api = {
+  meta: () => req('/api/meta'),
+  board: () => req('/api/board'),
+  player: id => req(`/api/player/${encodeURIComponent(id)}`),
+  market: () => req('/api/market'),
+  recommendations: () => req('/api/recommendations'),
+  sleepers: () => req('/api/sleepers'),
+  history: () => req('/api/history'),
+  draft: (id, mine) => req('/api/draft', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id, mine }) }),
+  undraft: id => req('/api/undraft', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id }) }),
+  resetDraft: () => req('/api/reset-draft', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' }),
+  personalRank: (id, rank) => req('/api/personal-rank', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id, rank }) }),
+  chat: (message, history) => req('/api/chat', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ message, history }) }),
+};
+
+export function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+export function trendArrow(t) {
+  if (t === 'rising') return '<span class="trend-up" title="snaps AND opportunities rising">▲▲</span>';
+  if (t === 'mixed-up') return '<span class="trend-up" title="one of snaps/opportunities rising">▲</span>';
+  if (t === 'falling') return '<span class="trend-down" title="snaps AND opportunities falling">▼▼</span>';
+  if (t === 'mixed-down') return '<span class="trend-down" title="one of snaps/opportunities falling">▼</span>';
+  if (t === 'flat') return '<span class="trend-flat">—</span>';
+  return '<span class="trend-flat" title="no 2025 usage data">·</span>';
+}
+
+export function signalBadge(s) {
+  if (s === 'signal') return '<span class="badge signal">SLEEPER SIGNAL</span>';
+  if (s === 'emerging') return '<span class="badge emerging">EMERGING</span>';
+  return '';
+}
+
+export function pct(v) { return v == null ? '—' : `${Math.round(v * 100)}%`; }

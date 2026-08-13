@@ -1,0 +1,20 @@
+{
+  "name": "draft-value-finder",
+  "version": "0.1.0",
+  "description": "Fantasy Football Draft Value Finder — Phase 1. Numbers first. Team context second. AI connects the dots.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "ingest": "node src/ingest/fetchAll.js",
+    "build-data": "node src/normalize/build.js",
+    "refresh": "node src/ingest/fetchAll.js && node src/normalize/build.js",
+    "start": "node server/server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.116.0"
+  }
+}
