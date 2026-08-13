@@ -8,7 +8,7 @@
     "ingest": "node src/ingest/fetchAll.js",
     "build-data": "node src/normalize/build.js",
     "refresh": "node src/ingest/fetchAll.js && node src/normalize/build.js",
-    "start": "node server/server.js",
+    "start": "node --env-file-if-exists=.env server/server.js",
     "test": "node --test"
   },
   "engines": {
