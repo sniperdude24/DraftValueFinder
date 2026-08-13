@@ -1,5 +1,6 @@
 import { renderBoard } from './board.js';
 import { renderRecs, renderSleepers, renderMarket, renderHistory, renderAbout } from './views.js';
+import { renderRoster } from './roster.js';
 import { initChat } from './chat.js';
 
 const VIEWS = {
@@ -23,6 +24,7 @@ async function show(name) {
   } catch (err) {
     viewEl.innerHTML = `<div class="warn">Failed to load: ${err.message}</div>`;
   }
+  renderRoster(() => show(current)).catch(() => {});
 }
 
 document.querySelectorAll('#nav button').forEach(b => b.onclick = () => show(b.dataset.view));
