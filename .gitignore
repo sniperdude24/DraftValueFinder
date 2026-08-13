@@ -2,4 +2,6 @@ node_modules/
 data/raw/
 data/state.json
 data/history.jsonl
+data/yahoo-tokens.json
+data/yahoo-cert.json
 .env

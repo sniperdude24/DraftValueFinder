@@ -2,6 +2,7 @@ import { renderBoard } from './board.js';
 import { renderRecs, renderSleepers, renderMarket, renderHistory, renderAbout } from './views.js';
 import { renderRoster } from './roster.js';
 import { initChat } from './chat.js';
+import { api } from './api.js';
 
 const VIEWS = {
   board: renderBoard,
@@ -34,6 +35,19 @@ document.querySelectorAll('#nav button').forEach(b => b.onclick = () => show(b.d
 const setTopbarHeight = () => document.documentElement.style.setProperty('--topbar-h', `${document.getElementById('topbar').offsetHeight}px`);
 setTopbarHeight();
 window.addEventListener('resize', setTopbarHeight);
+
+// Yahoo status chip + live board refresh while autosync is running.
+async function pollYahoo() {
+  const chip = document.getElementById('yahoo-chip');
+  try {
+    const y = await api.yahoo.status();
+    chip.className = y.autosync ? 'on sync' : y.connected ? 'on' : '';
+    chip.textContent = !y.configured ? '' : y.autosync ? 'Y! syncing ●' : y.connected ? 'Y! connected' : 'Y! not connected';
+    if (y.autosync && current === 'board') show('board');
+  } catch { /* server briefly unavailable — chip keeps last state */ }
+}
+pollYahoo();
+setInterval(pollYahoo, 10000);
 
 initChat();
 show('board');

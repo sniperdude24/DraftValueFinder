@@ -72,6 +72,19 @@ server/         zero-framework node:http API + static frontend
 public/         vanilla-JS UI (no build step)
 ```
 
-Yahoo integration is deliberately deferred (OAuth setup isn't "reasonably
-simple"); pick tracking is manual-but-fast in the UI, and the draft-state
-module is the seam where a Yahoo sync adapter can plug in later.
+## Yahoo draft sync (optional)
+
+`src/yahoo/` can mirror a live Yahoo draft onto the board automatically —
+polling `draftresults` every 10s, mapping picks to the player database by
+name+position, and marking your team's picks via your team key. Unmatched
+picks are surfaced, never dropped. It is fully credential-gated: without
+Yahoo API access the app works exactly as before (manual pick tracking).
+
+Yahoo now reviews Fantasy Sports API access applications
+(sports.yahoo.com/developer/access — personal/single-league use is an
+accepted category; the app's Data page shows suggested wording). Once
+approved: create a Confidential Client app with Fantasy Sports Read scope
+and redirect URI `https://localhost:8443/yahoo/callback`, put
+`YAHOO_CLIENT_ID`/`YAHOO_CLIENT_SECRET` in `.env`, restart, and use
+Connect on the Data page. The OAuth callback runs on a self-signed
+localhost cert (one-time browser warning is expected).

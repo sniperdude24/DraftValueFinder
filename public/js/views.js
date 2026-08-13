@@ -97,9 +97,79 @@ export async function renderHistory(el) {
     </table>` : '<p class="small">No history yet — visit the Recommendations page or make draft picks.</p>'}`;
 }
 
-export async function renderAbout(el) {
-  const m = await api.meta();
+function yahooSection(y) {
+  if (!y.configured) {
+    return `<div class="panel"><h2>Yahoo draft sync — not configured</h2>
+      <p class="small">Yahoo can track your draft picks automatically, but their Fantasy Sports API now requires an approved application first:</p>
+      <ol class="small mt" style="margin-left:18px">
+        <li>Apply at <a href="https://sports.yahoo.com/developer/access/" target="_blank" style="color:var(--accent)">sports.yahoo.com/developer/access</a>. Suggested wording: <em>"Draft Value Finder — a personal, open-source draft assistant for my own single Yahoo league (github.com/sniperdude24/DraftValueFinder). Needs read-only league settings, draft results, and rosters to track my draft picks automatically. Single user, personal use only."</em> User base: Small (&lt;1,000).</li>
+        <li>Once approved, create the app (Confidential Client → Fantasy Sports, Read) with redirect URI <code class="src">https://localhost:8443/yahoo/callback</code>.</li>
+        <li>Put <code class="src">YAHOO_CLIENT_ID</code> and <code class="src">YAHOO_CLIENT_SECRET</code> in <code class="src">.env</code> and restart the server.</li>
+      </ol>
+      <p class="small mt">Until then, manual pick tracking on the board works exactly as before.</p></div>`;
+  }
+  if (!y.connected) {
+    return `<div class="panel"><h2>Yahoo draft sync — ready to connect</h2>
+      <p class="small">Credentials found. Connecting opens Yahoo's consent page; your browser will warn once about a self-signed localhost certificate on the way back — that's expected, proceed through it.</p>
+      <button class="rowbtn mt" id="yahoo-connect" style="padding:8px 14px">Connect Yahoo</button>
+      <span class="small" id="yahoo-connect-status"></span></div>`;
+  }
+  return `<div class="panel"><h2>Yahoo draft sync — connected</h2>
+    ${y.league?.league_key
+      ? `<p class="small">League: <b>${esc(y.league.league_name ?? y.league.league_key)}</b> (${y.league.num_teams ?? '?'} teams) · Team: ${esc(y.league.team_key ?? '?')}
+           ${y.league.last_sync ? ` · Last sync ${new Date(y.league.last_sync).toLocaleTimeString()} (${y.league.pick_count ?? 0} picks)` : ' · Never synced'}</p>
+         ${(y.league.warnings ?? []).map(w => `<div class="warn mt">${esc(w)}</div>`).join('')}
+         <div class="toolbar mt">
+           <button class="rowbtn" id="yahoo-sync" style="padding:8px 14px">Sync now</button>
+           <label><input type="checkbox" id="yahoo-autosync" ${y.autosync ? 'checked' : ''}> Auto-sync every 10s (during your draft)</label>
+         </div>
+         <p class="small mt">Sync mirrors Yahoo's draft results into the board — it replaces manual pick tracking while active. Personal ranks are never touched.</p>
+         ${(y.league.unmatched ?? []).length ? `<div class="warn mt">Unmatched picks (outside the top-250 universe): ${y.league.unmatched.map(u => `#${u.pick} ${esc(u.name)} (${esc(u.position)})`).join(', ')}</div>` : ''}`
+      : `<p class="small">Connected. Pick which league to track:</p><div id="yahoo-leagues" class="mt small">Loading leagues…</div>`}
+  </div>`;
+}
+
+async function wireYahoo(el, refresh) {
+  const connectBtn = el.querySelector('#yahoo-connect');
+  if (connectBtn) connectBtn.onclick = async () => {
+    const { authorize_url } = await api.yahoo.connect();
+    window.open(authorize_url, '_blank');
+    el.querySelector('#yahoo-connect-status').textContent = ' Waiting for Yahoo…';
+    const poll = setInterval(async () => {
+      const s = await api.yahoo.status();
+      if (s.connected) { clearInterval(poll); refresh(); }
+    }, 2000);
+    setTimeout(() => clearInterval(poll), 5 * 60 * 1000);
+  };
+  const leaguesDiv = el.querySelector('#yahoo-leagues');
+  if (leaguesDiv) {
+    try {
+      const { leagues } = await api.yahoo.leagues();
+      leaguesDiv.innerHTML = leagues.length
+        ? leagues.map(l => `<button class="rowbtn" style="margin:0 6px 6px 0;padding:6px 10px" data-league="${esc(l.league_key)}">${esc(l.name)} (${l.num_teams} teams, ${esc(l.season ?? '')})</button>`).join('')
+        : 'No NFL leagues found on this Yahoo account.';
+      leaguesDiv.querySelectorAll('[data-league]').forEach(b => b.onclick = async () => {
+        await api.yahoo.setLeague(b.dataset.league);
+        refresh();
+      });
+    } catch (err) {
+      leaguesDiv.textContent = `Could not load leagues: ${err.message}`;
+    }
+  }
+  const syncBtn = el.querySelector('#yahoo-sync');
+  if (syncBtn) syncBtn.onclick = async () => {
+    syncBtn.textContent = 'Syncing…';
+    try { await api.yahoo.sync(); } catch (err) { alert(`Sync failed: ${err.message}`); }
+    refresh();
+  };
+  const auto = el.querySelector('#yahoo-autosync');
+  if (auto) auto.onchange = async () => { await api.yahoo.autosync(auto.checked); };
+}
+
+export async function renderAbout(el, refresh) {
+  const [m, y] = await Promise.all([api.meta(), api.yahoo.status()]);
   el.innerHTML = `
+    ${yahooSection(y)}
     <div class="panel"><h2>Data sources & freshness</h2>
       <table class="mt">
         <thead><tr><th>Role</th><th>Source</th><th>Fetched</th><th>Detail</th></tr></thead>
@@ -116,4 +186,5 @@ export async function renderAbout(el) {
       ${m.unmatched.veterans_without_2025_stats.map(p => esc(p.name)).join(', ')}</p>
       ${m.unmatched.ffc_only.length ? `<p class="small mt">In ADP data but not expert rankings: ${m.unmatched.ffc_only.map(p => esc(p.name)).join(', ')}</p>` : ''}
     </div>` : ''}`;
+  await wireYahoo(el, refresh ?? (() => renderAbout(el, refresh)));
 }

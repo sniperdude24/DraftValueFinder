@@ -10,6 +10,10 @@ import { recommendations } from '../src/analyze/recommend.js';
 import { loadState, saveState, markDrafted, undoDraft, setPersonalRank } from '../src/store/state.js';
 import { logRecommendations, logEvent, readHistory } from '../src/store/history.js';
 import { chat } from '../src/ai/chat.js';
+import { isConfigured, isConnected, authorizeUrl, awaitCallback } from '../src/yahoo/oauth.js';
+import { yahooApi } from '../src/yahoo/client.js';
+import { syncOnce, draftComplete } from '../src/yahoo/sync.js';
+import { LEAGUE } from '../src/analyze/roster.js';
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..');
 const PUBLIC = join(ROOT, 'public');
@@ -65,6 +69,8 @@ async function readBody(req) {
   }
   return data ? JSON.parse(data) : {};
 }
+
+const autosync = { timer: null };
 
 const server = createServer(async (req, res) => {
   try {
@@ -147,6 +153,61 @@ const server = createServer(async (req, res) => {
         saveState(setPersonalRank(state, id, r));
         return send(res, 200, { ok: true });
       }
+      // ---- Yahoo draft sync (optional; absent credentials disable it) ----
+      if (req.method === 'GET' && path === '/api/yahoo/status') {
+        return send(res, 200, {
+          configured: isConfigured(),
+          connected: isConfigured() && isConnected(),
+          league: state.yahoo ?? null,
+          autosync: autosync.timer != null,
+        });
+      }
+      if (req.method === 'POST' && path === '/api/yahoo/connect') {
+        if (!isConfigured()) return send(res, 400, { error: 'Set YAHOO_CLIENT_ID and YAHOO_CLIENT_SECRET in .env first' });
+        awaitCallback().then(() => console.log('Yahoo connected'), err => console.error('Yahoo connect:', err.message));
+        return send(res, 200, { authorize_url: authorizeUrl() });
+      }
+      if (req.method === 'GET' && path === '/api/yahoo/leagues') {
+        return send(res, 200, { leagues: await yahooApi.myLeagues() });
+      }
+      if (req.method === 'POST' && path === '/api/yahoo/league') {
+        const { league_key } = await readBody(req);
+        if (!league_key) return send(res, 400, { error: 'league_key required' });
+        const [team_key, settings] = await Promise.all([yahooApi.myTeamKey(), yahooApi.leagueSettings(league_key)]);
+        const warnings = [];
+        if (settings.num_teams && settings.num_teams !== LEAGUE.teams) {
+          warnings.push(`League has ${settings.num_teams} teams; the analyzer is built for ${LEAGUE.teams}. Rankings still work, but pick-value and scarcity math assume ${LEAGUE.teams} teams.`);
+        }
+        if (settings.scoring_type && settings.scoring_type !== 'headpoint' && !/ppr/i.test(settings.scoring_type)) {
+          warnings.push(`League scoring_type is "${settings.scoring_type}"; the analyzer assumes PPR.`);
+        }
+        saveState({ ...state, yahoo: { league_key, team_key, league_name: settings.name, num_teams: settings.num_teams, warnings } });
+        return send(res, 200, { ok: true, team_key, settings, warnings });
+      }
+      if (req.method === 'POST' && path === '/api/yahoo/sync') {
+        return send(res, 200, await syncOnce(db));
+      }
+      if (req.method === 'POST' && path === '/api/yahoo/autosync') {
+        const { on } = await readBody(req);
+        clearInterval(autosync.timer);
+        autosync.timer = null;
+        if (on) {
+          autosync.timer = setInterval(async () => {
+            try {
+              const r = await syncOnce(db);
+              if (draftComplete(r.picks)) {
+                clearInterval(autosync.timer);
+                autosync.timer = null;
+                console.log('Yahoo autosync: draft complete, stopped');
+              }
+            } catch (err) {
+              console.error('Yahoo autosync:', err.message);
+            }
+          }, 10000);
+        }
+        return send(res, 200, { autosync: autosync.timer != null });
+      }
+
       if (req.method === 'POST' && path === '/api/chat') {
         const { message, history = [] } = await readBody(req);
         if (!message || typeof message !== 'string') return send(res, 400, { error: 'message required' });

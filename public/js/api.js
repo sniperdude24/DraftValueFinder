@@ -18,6 +18,14 @@ export const api = {
   resetDraft: () => req('/api/reset-draft', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' }),
   personalRank: (id, rank) => req('/api/personal-rank', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id, rank }) }),
   chat: (message, history) => req('/api/chat', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ message, history }) }),
+  yahoo: {
+    status: () => req('/api/yahoo/status'),
+    connect: () => req('/api/yahoo/connect', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' }),
+    leagues: () => req('/api/yahoo/leagues'),
+    setLeague: league_key => req('/api/yahoo/league', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ league_key }) }),
+    sync: () => req('/api/yahoo/sync', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' }),
+    autosync: on => req('/api/yahoo/autosync', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ on }) }),
+  },
 };
 
 export function esc(s) {
