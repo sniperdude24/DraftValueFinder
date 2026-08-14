@@ -63,7 +63,7 @@ export function computeSignal(player, allPlayers, trend = null) {
   const evidence = {
     snaps: { season: trend.season.snap_pct, last3: trend.recent.snap_pct, direction: directions.snaps },
     opportunities: { season: trend.season.opportunities, last3: trend.recent.opportunities, direction: directions.opportunities },
-    ppr: { season: trend.season.ppr, last3: trend.recent.ppr },
+    points: { season: trend.season.points, last3: trend.recent.points },
     window_weeks: trend.recent.weeks,
   };
 

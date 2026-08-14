@@ -48,7 +48,9 @@ function rangeLabel(range, { statsSeason, baselineSeason }) {
 function gameLine(g) {
   if (!g) return '';
   const r = g.game_result;
-  const matchup = `${r?.at ?? false ? '@' : 'vs'} ${esc(r?.opponent ?? g.opponent ?? '')}`;
+  // `g.opponent` is the single home for who they played; `game_result` adds
+  // only what the schedule alone knows (home/away, the score, the outcome).
+  const matchup = `${r?.at ?? false ? '@' : 'vs'} ${esc(g.opponent ?? '')}`;
   if (!r) return `<span class="aid">wk ${g.week} ${matchup}</span>`;
   const cls = r.outcome === 'W' ? 'trend-up' : r.outcome === 'L' ? 'trend-down' : 'trend-flat';
   return `<span class="aid">Final <span class="${cls}">${r.outcome}</span> ${r.team_score}-${r.opp_score} ${matchup}</span>`;

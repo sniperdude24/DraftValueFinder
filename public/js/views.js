@@ -159,7 +159,7 @@ export async function renderSleepers(el, refresh) {
       ${s.evidence ? `<div class="evidence">
         <b>Snaps:</b> ${pct(s.evidence.snaps.season)} → ${pct(s.evidence.snaps.last3)} (${s.evidence.snaps.direction})<br>
         <b>Opportunities:</b> ${s.evidence.opportunities.season}/g → ${s.evidence.opportunities.last3}/g (${s.evidence.opportunities.direction})<br>
-        <b>PPR:</b> ${s.evidence.ppr.season}/g → ${s.evidence.ppr.last3}/g · weeks ${s.evidence.window_weeks.join(', ')}
+        <b>Pts:</b> ${s.evidence.points.season}/g → ${s.evidence.points.last3}/g · weeks ${s.evidence.window_weeks.join(', ')}
       </div>` : ''}
       ${s.context?.length ? `<ul class="mt">${s.context.map(c => `<li class="small">${esc(c.text)} <span class="aid">(${esc(c.source)})</span></li>`).join('')}</ul>` : ''}
     </div>`;

@@ -97,7 +97,7 @@ export function deterministicAnswer(message, context) {
       lines.push('', `Last-3 window (weeks ${p.trend.last3_weeks.join(', ')}):`,
         `- Snap share: ${pct(p.trend.season_per_game.snap_pct)} season -> ${pct(p.trend.last3_per_game.snap_pct)} last 3`,
         `- Opportunities/g: ${p.trend.season_per_game.opportunities ?? '—'} -> ${p.trend.last3_per_game.opportunities ?? '—'}`,
-        `- PPR/g: ${p.trend.season_per_game.ppr ?? '—'} -> ${p.trend.last3_per_game.ppr ?? '—'}`);
+        `- Pts/g (your scoring): ${p.trend.season_per_game.points ?? '—'} -> ${p.trend.last3_per_game.points ?? '—'}`);
     } else if (typeof p.trend === 'string') {
       lines.push('', `Trend: ${p.trend}`);
     }

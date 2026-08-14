@@ -29,6 +29,40 @@ export function indexSchedule(rows) {
   return index;
 }
 
+// Bye weeks, straight from the fixture list: a team's bye is the week it has
+// no game. This is the authoritative answer to a question the app previously
+// took from FantasyPros and FFC — two market sources that can disagree with
+// each other, and did have a conflict record for exactly that reason.
+//
+// ONLY ANSWERS WHEN EXACTLY ONE WEEK IS MISSING. A schedule published
+// mid-season, or one this function is handed for a season that has not been
+// released, leaves several gaps; picking one of them would be a guess dressed
+// as a fact, and worse than deferring to the market value.
+export function byeWeeks(rows, season) {
+  const played = new Map();
+  let maxWeek = 0;
+  for (const r of rows ?? []) {
+    if (Number(r.season) !== Number(season)) continue;
+    if (r.game_type !== 'REG') continue;
+    const week = Number(r.week);
+    if (!Number.isFinite(week)) continue;
+    if (week > maxWeek) maxWeek = week;
+    for (const t of [normTeam(r.home_team), normTeam(r.away_team)]) {
+      if (!t) continue;
+      if (!played.has(t)) played.set(t, new Set());
+      played.get(t).add(week);
+    }
+  }
+
+  const byes = new Map();
+  for (const [team, weeks] of played) {
+    const missing = [];
+    for (let w = 1; w <= maxWeek; w++) if (!weeks.has(w)) missing.push(w);
+    if (missing.length === 1) byes.set(team, missing[0]);
+  }
+  return byes;
+}
+
 // Resolve one game from one team's point of view.
 //
 // Returns null — never a 0-0 game — when the id is unknown or the game has no

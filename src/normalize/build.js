@@ -20,7 +20,7 @@ import { join } from 'node:path';
 import { loadSnapshot, parseCsv, ROOT, RAW_DIR } from '../ingest/util.js';
 import { nameKey, normPosition, normTeam, samePositionGroup, playerId } from './names.js';
 import { resolveSeason } from './season.js';
-import { indexSchedule, resultFor } from './schedules.js';
+import { indexSchedule, resultFor, byeWeeks } from './schedules.js';
 import { pbpSnapshotName } from '../ingest/sources/nflversePbp.js';
 import { matchTradeMarket } from './tradeMarket.js';
 import { attachProjections } from './projections.js';
@@ -106,19 +106,28 @@ function gamesFor(name, pos, indexes, conflicts) {
     const rzCovered = hasRedZone && rzWeeks.has(num(r.week));
     const rz = rzCovered ? (rzByIdWeek.get(`${r.player_id}|${r.week}`) ?? {}) : null;
     const rzNum = field => (rz ? (rz[field] ?? 0) : null);
+    // Two sources name this game's opponent: the weekly stats file and the
+    // schedule. They agree on all 3,051 rows today, but one fact with two
+    // homes is how they start disagreeing — so the row stores it ONCE,
+    // schedule-first, and `game_result` carries only what the schedule alone
+    // knows. The weekly file remains the fallback for a game the schedule has
+    // no completed entry for, so nothing goes blank.
+    const result = schedule ? resultFor(schedule, r.game_id, r.team) : null;
     return {
       week: num(r.week),
       stats_team: normTeam(r.team),
       // The weekly file's own primary key, and the exact join into the
       // schedules snapshot — no name, date or abbreviation matching.
       game_id: r.game_id || null,
-      // Normalized like every other team code in the app. Left raw, the Rams
-      // read "LA" here while the rest of the app says "LAR" — the same
-      // mismatch that once rendered an empty LAR page.
-      opponent: normTeam(r.opponent_team),
-      // Final score / W-L, or null when the schedule has no completed game
+      // Normalized either way. Left raw, the weekly file's Rams read "LA"
+      // while the rest of the app says "LAR" — the same mismatch that once
+      // rendered an empty LAR page.
+      opponent: result?.opponent ?? normTeam(r.opponent_team),
+      // Final score and W-L, or null when the schedule has no completed game
       // for this id. A game not yet played is not a 0-0 game.
-      game_result: schedule ? resultFor(schedule, r.game_id, r.team) : null,
+      game_result: result
+        ? { at: result.at, outcome: result.outcome, team_score: result.team_score, opp_score: result.opp_score }
+        : null,
       snap_pct: snapOk ? round3(num(snapRow.offense_pct)) : null,
       offense_snaps: snapOk ? num(snapRow.offense_snaps) : null,
       targets: num(r.targets),
@@ -267,7 +276,12 @@ export function buildDatabase() {
   // opponent alone. One file covers every season, so both the active stats
   // season and the baseline season read from it.
   const schedSnap = loadSnapshot('games.csv');
-  const schedule = schedSnap ? indexSchedule(parseCsv(schedSnap.body)) : null;
+  const schedRows = schedSnap ? parseCsv(schedSnap.body) : null;
+  const schedule = schedRows ? indexSchedule(schedRows) : null;
+  // Byes are a fact about the season BEING PLAYED, so they come from sr.season
+  // rather than stats_season — in draft mode those differ by a year, and the
+  // 2025 bye is not the one that matters for a 2026 roster.
+  const schedByes = schedRows ? byeWeeks(schedRows, sr.season) : new Map();
   const indexes = buildLogIndexes(parseCsv(weeklySnap.body), parseCsv(snapsSnap.body), redzone, schedule);
 
   // In season mode, last season's logs feed the early-season baseline.
@@ -358,12 +372,21 @@ export function buildDatabase() {
 
     const fpBye = num(e.fp?.player_bye_week);
     const ffcBye = num(e.ffc?.bye);
-    if (fpBye != null && ffcBye != null && fpBye !== ffcBye) {
-      conflicts.push({ field: 'bye', fantasypros: fpBye, ffc: ffcBye, kept: 'fantasypros' });
-    }
 
     const teams = { sleeper: normTeam(sl?.team), fantasypros: normTeam(e.fp?.player_team_id), ffc: normTeam(e.ffc?.team) };
     const team = teams.sleeper ?? teams.fantasypros ?? teams.ffc ?? null;
+
+    // The schedule settles the bye: it is the week the team has no fixture.
+    // FantasyPros and FFC are kept as the fallback for a season the schedule
+    // has not been published for, and any disagreement is recorded rather
+    // than silently overwritten — the market sources are what the rest of the
+    // fantasy world is reading, so a mismatch is worth seeing.
+    const schedBye = team != null ? (schedByes.get(team) ?? null) : null;
+    if (fpBye != null && ffcBye != null && fpBye !== ffcBye) {
+      conflicts.push({ field: 'bye', schedule: schedBye, fantasypros: fpBye, ffc: ffcBye, kept: schedBye != null ? 'schedule' : 'fantasypros' });
+    } else if (schedBye != null && fpBye != null && schedBye !== fpBye) {
+      conflicts.push({ field: 'bye', schedule: schedBye, fantasypros: fpBye, ffc: ffcBye, kept: 'schedule' });
+    }
     if (teams.sleeper && teams.fantasypros && teams.sleeper !== teams.fantasypros) {
       conflicts.push({ field: 'team', ...teams, kept: 'sleeper' });
     }
@@ -381,7 +404,7 @@ export function buildDatabase() {
       team,
       stats_team: statsTeam,
       changed_team: Boolean(statsTeam && team && statsTeam !== team),
-      bye: fpBye ?? ffcBye ?? null,
+      bye: schedBye ?? fpBye ?? ffcBye ?? null,
       consensus_rank: i + 1,
       tier_group: i < CORE_SIZE ? 'core' : 'watch',
       stats_season: sr.stats_season,

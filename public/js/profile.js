@@ -61,7 +61,7 @@ function tabBody(data, tab) {
         ${statCard('Opportunities/g', t.season.opportunities, t.recent.opportunities, t.deltas.opportunities)}
         ${p.position !== 'QB' ? statCard('Targets/g', t.season.targets, t.recent.targets, null) : ''}
         ${['RB', 'QB'].includes(p.position) ? statCard('Carries/g', t.season.carries, t.recent.carries, null) : ''}
-        ${statCard('Points/g', t.season.ppr, t.recent.ppr, t.deltas.ppr)}
+        ${statCard('Points/g', t.season.points, t.recent.points, t.deltas.points)}
         <div class="stat"><div class="lab">${t.basis.type === 'prior-baseline' ? 'baseline games' : `${esc(String(p.stats_season))} games`}</div><div class="val">${t.season.games}</div></div>
       </div>
       <p class="small">${t.basis.type === 'prior-baseline'
@@ -101,8 +101,8 @@ function tabBody(data, tab) {
       ['Yards per carry', 'yards_per_carry', 'n2'],
       ['RACR', 'racr', 'n2'],
       ['EPA per play', 'epa_per_play', 'n3'],
-      ['Points per opportunity', 'ppr_per_opportunity', 'n2'],
-      ['Points/g', 'ppr_pg', 'n1'],
+      ['Points per opportunity', 'points_per_opportunity', 'n2'],
+      ['Points/g', 'points_pg', 'n1'],
       ['Explosive plays (20+)', 'explosive_total', 'int'],
       ['— Red zone —', null, null],
       ['RZ opportunities (inside 20)', 'rz_opportunities', 'int'],
@@ -135,7 +135,7 @@ function tabBody(data, tab) {
       <div class="evidence">
         <b>Snaps:</b> season ${pct(t.season.snap_pct)} → last 3: ${pct(t.recent.snap_pct)} (${t.directions.snaps})<br>
         <b>Opportunities:</b> season ${t.season.opportunities}/g → last 3: ${t.recent.opportunities}/g (${t.directions.opportunities})<br>
-        <b>Fantasy points:</b> season ${t.season.ppr}/g → last 3: ${t.recent.ppr}/g<br>
+        <b>Fantasy points:</b> season ${t.season.points}/g → last 3: ${t.recent.points}/g<br>
         ${t.season.target_share != null ? `<b>Target share:</b> season ${pct(t.season.target_share)} → last 3: ${pct(t.recent.target_share)}<br>` : ''}
         <b>Window:</b> ${esc(t.basis.window_label)}
       </div>

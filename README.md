@@ -185,6 +185,22 @@ is more than 20 hours old.
 - **Fumbles**: only sack, rushing and receiving fumbles are charged. The raw
   `fumbles_lost_total` also counts special-teams muffs, which fantasy does not
   penalize — using it over-charged return men by 2 points a muff.
+- **"Points" never means PPR.** Every points figure the app computes is scored
+  with *your* rules, so nothing labels it PPR — the internal field is `points`,
+  not `ppr`, precisely because the old name produced the same mislabel on three
+  separate screens. The names that do say PPR mean it: the scoring *preset*,
+  Sleeper's `pts_ppr`, nflverse's `fantasy_points_ppr`, and the PPR-format ADP
+  and expert endpoints. A prior-season baseline with no stored components
+  reports nothing rather than borrowing nflverse's PPR average — putting a
+  differently-scored number under your column is the same error as the label,
+  just where no screen could reveal it.
+- **One fact, one home.** Two sources name a game's opponent; the row stores it
+  once, schedule-first, and `game_result` carries only what the schedule alone
+  knows (home/away, score, outcome). Byes come from the fixture list — the week
+  a team has no game — with FantasyPros and FFC as the fallback, and any
+  disagreement recorded rather than silently resolved. The bye derivation
+  answers only when exactly one week is missing: a partially published schedule
+  leaves several gaps, and picking one would be a guess dressed as a fact.
 - **Game results join on `game_id`.** The weekly stats file and the schedules
   file share nflverse's own primary key (`2025_17_DAL_WAS`), so home/away, the
   final score and the W/L on each roster line attach by exact lookup — no name,

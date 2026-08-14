@@ -46,7 +46,7 @@ test('share stats are means of per-game values, not recomputed from totals', () 
 
 test('zero denominators yield null, never NaN or Infinity', () => {
   const s = windowStats([game(1), game(2)]);
-  for (const k of ['yards_per_target', 'catch_rate', 'yards_per_carry', 'yards_per_reception', 'yac_per_reception', 'yards_per_attempt', 'ppr_per_opportunity']) {
+  for (const k of ['yards_per_target', 'catch_rate', 'yards_per_carry', 'yards_per_reception', 'yac_per_reception', 'yards_per_attempt', 'points_per_opportunity']) {
     assert.equal(s[k], null, `${k} must be null with zero volume`);
     assert.ok(!Number.isNaN(s[k]));
   }
@@ -67,7 +67,7 @@ test('per-game volume divides by games in the window', () => {
   ]);
   assert.equal(s.targets_pg, 8);
   assert.equal(s.opportunities_pg, 9);   // (16 targets + 2 carries) / 2
-  assert.equal(s.ppr_pg, 15);
+  assert.equal(s.points_pg, 15);
 });
 
 test('opportunity is position-aware and matches the trend engine', () => {

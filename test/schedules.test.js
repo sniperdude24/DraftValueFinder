@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { indexSchedule, resultFor } from '../src/normalize/schedules.js';
+import { indexSchedule, resultFor, byeWeeks } from '../src/normalize/schedules.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -101,11 +101,87 @@ test('every stored game row agrees with the schedule snapshot', (t) => {
       const expected = other === 'LA' ? 'LAR' : other;
       if (g.opponent !== expected) mismatches.push(`${p.name} wk${g.week}: opponent ${g.opponent} vs schedule ${expected}`);
       if (!g.game_result) mismatches.push(`${p.name} wk${g.week}: no result for a completed game`);
-      else if (g.game_result.opponent !== g.opponent) {
-        mismatches.push(`${p.name} wk${g.week}: result opponent ${g.game_result.opponent} != row opponent ${g.opponent}`);
+      // The opponent has ONE home on the row. `game_result` must not grow a
+      // second copy: that duplication is what this de-duplication removed.
+      else if ('opponent' in g.game_result) {
+        mismatches.push(`${p.name} wk${g.week}: game_result carries a duplicate opponent`);
       }
     }
   }
   assert.ok(checked > 500, `expected a substantial sample, checked ${checked}`);
   assert.deepEqual(mismatches.slice(0, 10), [], `${mismatches.length} of ${checked} game rows disagree`);
+});
+
+// ---- bye weeks ----
+
+const seasonRows = (missingByTeam = {}) => {
+  // 4 teams, 3 weeks, round-robin-ish: enough to leave controlled gaps.
+  const teams = ['ATL', 'BUF', 'CHI', 'LA'];
+  const rows = [];
+  for (let week = 1; week <= 3; week++) {
+    for (let i = 0; i < teams.length; i += 2) {
+      const home = teams[i], away = teams[i + 1];
+      const skip = (missingByTeam[home] ?? []).includes(week) || (missingByTeam[away] ?? []).includes(week);
+      if (skip) continue;
+      rows.push({ game_id: `2026_${week}_${away}_${home}`, season: '2026', week: String(week),
+        game_type: 'REG', home_team: home, away_team: away, home_score: '10', away_score: '7' });
+    }
+    teams.push(teams.shift());       // rotate so pairings vary
+  }
+  return rows;
+};
+
+test('a bye is the week a team has no fixture', () => {
+  const byes = byeWeeks(seasonRows({ ATL: [2] }), 2026);
+  assert.equal(byes.get('ATL'), 2);
+});
+
+test('byeWeeks normalizes team codes like the rest of the module', () => {
+  // The schedule writes the Rams as "LA"; every other surface says "LAR".
+  const byes = byeWeeks(seasonRows({ LA: [3] }), 2026);
+  assert.equal(byes.get('LAR'), 3);
+  assert.equal(byes.has('LA'), false, 'the raw code never escapes');
+});
+
+test('an incomplete schedule yields NO bye rather than guessing one', () => {
+  // Two gaps means the fixtures are not fully published. Picking the first is
+  // a guess dressed as a fact, and worse than deferring to the market value.
+  const byes = byeWeeks(seasonRows({ ATL: [1, 3] }), 2026);
+  assert.equal(byes.has('ATL'), false);
+});
+
+test('byeWeeks ignores other seasons and the postseason', () => {
+  const rows = [
+    ...seasonRows({ ATL: [2] }),
+    { game_id: '2025_02_X_ATL', season: '2025', week: '2', game_type: 'REG', home_team: 'ATL', away_team: 'BUF', home_score: '1', away_score: '0' },
+    { game_id: '2026_02_P_ATL', season: '2026', week: '2', game_type: 'POST', home_team: 'ATL', away_team: 'BUF', home_score: '1', away_score: '0' },
+  ];
+  assert.equal(byeWeeks(rows, 2026).get('ATL'), 2, 'neither the 2025 game nor the playoff game fills the bye');
+});
+
+test('every player bye agrees with the schedule', (t) => {
+  const dbPath = join(ROOT, 'data', 'players.json');
+  const csvPath = join(ROOT, 'data', 'raw', 'games.csv');
+  if (!existsSync(dbPath) || !existsSync(csvPath)) return t.skip('database or schedule snapshot not built');
+
+  const db = JSON.parse(readFileSync(dbPath, 'utf8'));
+  const lines = readFileSync(csvPath, 'utf8').split(/\r?\n/);
+  const header = lines[0].split(',');
+  const rows = lines.slice(1).filter(Boolean).map(l => {
+    const c = l.split(',');
+    return Object.fromEntries(header.map((h, i) => [h, c[i]]));
+  });
+  const byes = byeWeeks(rows, db.season);
+  assert.ok(byes.size >= 30, `expected a full league of byes, got ${byes.size}`);
+
+  const mismatches = [];
+  let checked = 0;
+  for (const p of db.players) {
+    const expected = p.team ? byes.get(p.team) : null;
+    if (expected == null) continue;
+    checked++;
+    if (p.bye !== expected) mismatches.push(`${p.name} (${p.team}): stored ${p.bye} vs schedule ${expected}`);
+  }
+  assert.ok(checked > 200, `expected most of the universe, checked ${checked}`);
+  assert.deepEqual(mismatches.slice(0, 10), [], `${mismatches.length} of ${checked} byes disagree`);
 });

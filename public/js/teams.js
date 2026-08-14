@@ -39,7 +39,7 @@ function distributionTable(rows, { title, note }) {
             <td style="width:110px">${bar(r.target_share)}</td>
             <td>${r.carries}</td>
             <td>${pct(r.carry_share)}</td>
-            <td>${r.ppr_pg ?? '—'}</td>
+            <td>${r.points_pg ?? '—'}</td>
             <td>${trendArrow(r.usage_trend)}</td>
           </tr>`).join('')}
         </tbody>

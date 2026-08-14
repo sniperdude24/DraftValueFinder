@@ -49,14 +49,14 @@ function assemble({ base, recent, weeks, basis, notes, games }) {
     ? round(recent.opportunities - base.opportunities) : null;
   const oppDeltaPct = oppDelta != null && base.opportunities > 0
     ? round(oppDelta / base.opportunities, 3) : null;
-  const pprDelta = base.ppr != null && recent.ppr != null ? round(recent.ppr - base.ppr) : null;
+  const pointsDelta = base.points != null && recent.points != null ? round(recent.points - base.points) : null;
 
   const { snaps: snapDir, opps: oppDir } = classify(snapDelta, oppDelta, oppDeltaPct);
 
-  const unsustainableSpike = pprDelta != null && base.ppr > 0
-    && pprDelta / base.ppr >= 0.35 && snapDir !== 'rising' && oppDir !== 'rising';
+  const unsustainableSpike = pointsDelta != null && base.points > 0
+    && pointsDelta / base.points >= 0.35 && snapDir !== 'rising' && oppDir !== 'rising';
   const quietUsageRise = snapDir === 'rising' && oppDir === 'rising'
-    && (pprDelta == null || base.ppr <= 0 || pprDelta / base.ppr < 0.20);
+    && (pointsDelta == null || base.points <= 0 || pointsDelta / base.points < 0.20);
 
   const usage = snapDir === 'rising' && oppDir === 'rising' ? 'rising'
     : snapDir === 'falling' && oppDir === 'falling' ? 'falling'
@@ -69,7 +69,7 @@ function assemble({ base, recent, weeks, basis, notes, games }) {
     basis,
     season: { ...base, games: games ?? base.games },
     recent: { ...recent, weeks },
-    deltas: { snap_pct: snapDelta, opportunities: oppDelta, opportunities_pct: oppDeltaPct, ppr: pprDelta },
+    deltas: { snap_pct: snapDelta, opportunities: oppDelta, opportunities_pct: oppDeltaPct, points: pointsDelta },
     directions: { snaps: snapDir, opportunities: oppDir },
     usage,
     flags: { unsustainable_spike: Boolean(unsustainableSpike), quiet_usage_rise: Boolean(quietUsageRise) },
@@ -96,7 +96,7 @@ export function computeTrend(player) {
       carries: round(avg(seasonG, 'carries')),
       opportunities: round(avg(seasonG, 'opp')),
       target_share: round(avg(seasonG, 'target_share'), 3),
-      ppr: round(avg(seasonG, 'fantasy_points')),
+      points: round(avg(seasonG, 'fantasy_points')),
     };
     const recent = {
       snap_pct: round(avg(last3G, 'snap_pct'), 3),
@@ -104,7 +104,7 @@ export function computeTrend(player) {
       carries: round(avg(last3G, 'carries')),
       opportunities: round(avg(last3G, 'opp')),
       target_share: round(avg(last3G, 'target_share'), 3),
-      ppr: round(avg(last3G, 'fantasy_points')),
+      points: round(avg(last3G, 'fantasy_points')),
     };
     const notes = [];
     const lastGame = games[games.length - 1];
@@ -133,10 +133,14 @@ export function computeTrend(player) {
       carries: baseline.carries,
       opportunities: round(baseOpp),
       target_share: null,
-      // Re-scored under the active rules when the database loads. `ppr` is
-      // the frozen PPR figure, kept only as a fallback for records built
-      // before scoring components were stored on the baseline.
-      ppr: baseline.points ?? baseline.ppr,
+      // Re-scored under the active rules when the database loads. There is
+      // deliberately NO fallback to `baseline.ppr`: that figure is nflverse's
+      // PPR average, and substituting it here would put a differently-scored
+      // number under a column labelled with the user's own scoring — the same
+      // category error as calling custom points "PPR", but at the value level,
+      // where nothing on screen could reveal it. A baseline built before
+      // components were stored reports nothing, and the UI prints "—".
+      points: baseline.points ?? null,
     };
     const recent = {
       snap_pct: round(avg(curG, 'snap_pct'), 3),
@@ -144,7 +148,7 @@ export function computeTrend(player) {
       carries: round(avg(curG, 'carries')),
       opportunities: round(avg(curG, 'opp')),
       target_share: round(avg(curG, 'target_share'), 3),
-      ppr: round(avg(curG, 'fantasy_points')),
+      points: round(avg(curG, 'fantasy_points')),
     };
     return assemble({
       base, recent,

@@ -42,7 +42,11 @@ function seasonPlayer(games, baseline) {
   };
 }
 
-const modestBaseline = { season: 2025, games: 15, snap_pct: 0.45, targets: 4.0, carries: 0, attempts: 0, ppr: 7.5 };
+// `points` is the baseline re-scored under the active rules — what
+// scorePlayers sets from the stored components, and the only figure the trend
+// engine reads. `ppr` is nflverse's own average, kept as the frozen reference.
+// Equal here because these fixtures are PPR-shaped; they are different facts.
+const modestBaseline = { season: 2025, games: 15, snap_pct: 0.45, targets: 4.0, carries: 0, attempts: 0, points: 7.5, ppr: 7.5 };
 
 test('week-1 role jump vs prior-season baseline → rising, basis labeled', () => {
   const t = computeTrend(seasonPlayer([[0.85, 9, 14]], modestBaseline));

@@ -35,8 +35,8 @@ const METRICS = {
   epa_per_play: ['EPA/play', 'n3', 'Expected points added per play'],
   // Labelled "Pts", not "PPR": scoring is configurable on the Data page, so
   // naming the format here would be wrong for anyone who changed it.
-  ppr_pg: ['Pts/g', 'n1', 'Fantasy points per game under your scoring settings'],
-  ppr_per_opportunity: ['Pts/Opp', 'n2', 'Fantasy points per target or carry — efficiency of usage'],
+  points_pg: ['Pts/g', 'n1', 'Fantasy points per game under your scoring settings'],
+  points_per_opportunity: ['Pts/Opp', 'n2', 'Fantasy points per target or carry — efficiency of usage'],
   racr: ['RACR', 'n2', 'Receiving yards ÷ air yards'],
   tds_total: ['TD', 'int', 'Total touchdowns in the window'],
 
@@ -55,17 +55,17 @@ const METRICS = {
 };
 
 const PRESETS = {
-  Overview: ['games', 'snap_pct', 'opportunities_pg', 'wopr', 'ppr_pg', 'ppr_per_opportunity', 'epa_per_play'],
+  Overview: ['games', 'snap_pct', 'opportunities_pg', 'wopr', 'points_pg', 'points_per_opportunity', 'epa_per_play'],
   Receiving: ['games', 'targets_pg', 'target_share', 'air_yards_share', 'wopr', 'air_yards_pg', 'rec_pg', 'rec_yards_pg', 'yards_per_target', 'catch_rate', 'yac_per_reception'],
-  Rushing: ['games', 'carries_pg', 'rush_yards_pg', 'yards_per_carry', 'first_downs_pg', 'explosive_total', 'ppr_pg'],
+  Rushing: ['games', 'carries_pg', 'rush_yards_pg', 'yards_per_carry', 'first_downs_pg', 'explosive_total', 'points_pg'],
   'Red zone': ['games', 'rz_opportunities', 'rz_opportunities_pg', 'rz_targets', 'rz_carries', 'gl_opportunities', 'gl_carries', 'rz_tds', 'rz_td_rate', 'rz_share_of_own_opportunities'],
-  Passing: ['games', 'pass_yards_pg', 'yards_per_attempt', 'cpoe', 'epa_per_play', 'tds_total', 'ppr_pg'],
-  Efficiency: ['games', 'yards_per_target', 'yards_per_carry', 'catch_rate', 'ppr_per_opportunity', 'epa_per_play', 'racr', 'yac_per_reception'],
+  Passing: ['games', 'pass_yards_pg', 'yards_per_attempt', 'cpoe', 'epa_per_play', 'tds_total', 'points_pg'],
+  Efficiency: ['games', 'yards_per_target', 'yards_per_carry', 'catch_rate', 'points_per_opportunity', 'epa_per_play', 'racr', 'yac_per_reception'],
 };
 
 const WINDOWS = [['season', 'Full season'], ['last3', 'Last 3 games'], ['last1', 'Last game']];
 
-const state = { pos: 'ALL', search: '', preset: 'Overview', window: null, minGames: 3, sort: 'ppr_pg', dir: -1 };
+const state = { pos: 'ALL', search: '', preset: 'Overview', window: null, minGames: 3, sort: 'points_pg', dir: -1 };
 
 function fmt(v, kind) {
   if (v == null) return '<span class="aid">—</span>';

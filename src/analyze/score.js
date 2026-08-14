@@ -51,7 +51,7 @@ export function assessPlayer(player, allPlayers) {
     }
     if (trend.flags.unsustainable_spike) {
       mult *= 1.10;
-      factors.push({ effect: 'down', text: `Recent point spike (${trend.season.ppr} → ${trend.recent.ppr} PPR/g) came WITHOUT usage growth — treated as noise, not opportunity` });
+      factors.push({ effect: 'down', text: `Recent point spike (${trend.season.points} → ${trend.recent.points} pts/g) came WITHOUT usage growth — treated as noise, not opportunity` });
     }
     if (trend.flags.quiet_usage_rise) {
       factors.push({ effect: 'context', text: 'Usage rose faster than production — the kind of gap fantasy markets are slow to price in' });

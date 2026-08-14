@@ -65,7 +65,7 @@ export function windowStats(games, position = null) {
   const opportunities = position
     ? games.reduce((t, g) => t + (opportunity(g, position) ?? 0), 0)
     : (targets ?? 0) + (carries ?? 0);
-  const ppr = sum(games, 'fantasy_points');
+  const points = sum(games, 'fantasy_points');
   const epaTotal = (sum(games, 'receiving_epa') ?? 0) + (sum(games, 'rushing_epa') ?? 0) + (sum(games, 'passing_epa') ?? 0);
   // QB opportunities already include pass attempts; don't double-count.
   const plays = position === 'QB' ? opportunities : opportunities + (attempts ?? 0);
@@ -99,7 +99,7 @@ export function windowStats(games, position = null) {
     air_yards_pg: r1(perGame(recAirYards, n)),
 
     // Production (per game, plus counting stats over the window).
-    ppr_pg: r1(perGame(ppr, n)),
+    points_pg: r1(perGame(points, n)),
     rec_pg: r1(perGame(receptions, n)),
     rec_yards_pg: r1(perGame(recYards, n)),
     rush_yards_pg: r1(perGame(rushYards, n)),
@@ -115,7 +115,7 @@ export function windowStats(games, position = null) {
     yards_per_reception: r2(rate(recYards, receptions)),
     yac_per_reception: r2(rate(recYac, receptions)),
     yards_per_attempt: r2(rate(passYards, attempts)),
-    ppr_per_opportunity: r2(rate(ppr, opportunities)),
+    points_per_opportunity: r2(rate(points, opportunities)),
     epa_per_play: r3(rate(epaTotal, plays)),
     racr: r2(mean(games, 'racr')),
     cpoe: r2(mean(games, 'passing_cpoe')),

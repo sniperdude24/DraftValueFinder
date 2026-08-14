@@ -10,14 +10,14 @@ const P = (id, position, projected, over = {}) => ({
 });
 
 // A game log with a controllable snap/opportunity profile.
-const games = (weeks, { snap, carries, targets, ppr }) => weeks.map((w, i) => ({
+const games = (weeks, { snap, carries, targets, points }) => weeks.map((w, i) => ({
   week: w,
   snap_pct: Array.isArray(snap) ? snap[i] : snap,
   offense_snaps: 40,
   carries: Array.isArray(carries) ? carries[i] : carries,
   targets: Array.isArray(targets) ? targets[i] : targets,
-  fantasy_points: Array.isArray(ppr) ? ppr[i] : ppr,
-  fantasy_points_ppr: Array.isArray(ppr) ? ppr[i] : ppr,
+  fantasy_points: Array.isArray(points) ? points[i] : points,
+  fantasy_points_ppr: Array.isArray(points) ? points[i] : points,
 }));
 
 // ---- start / sit ----
@@ -68,7 +68,7 @@ test('both snaps and opportunities falling is fading', () => {
     stats_season: 2025,
     games: games([1, 2, 3, 4, 5, 6], {
       snap: [0.80, 0.80, 0.80, 0.55, 0.50, 0.48],
-      carries: [18, 18, 18, 6, 5, 4], targets: 2, ppr: [16, 16, 16, 5, 4, 4],
+      carries: [18, 18, 18, 6, 5, 4], targets: 2, points: [16, 16, 16, 5, 4, 4],
     }),
   });
   const rows = fading([p]);
@@ -83,7 +83,7 @@ test('a points collapse with steady usage is NOISE, not a fading player', () => 
     stats_season: 2025,
     games: games([1, 2, 3, 4, 5, 6], {
       snap: 0.85, carries: 0, targets: 9,
-      ppr: [20, 22, 21, 4, 3, 5],           // points cratered, usage identical
+      points: [20, 22, 21, 4, 3, 5],           // points cratered, usage identical
     }),
   });
   const rows = fading([p]);
@@ -95,7 +95,7 @@ test('a points collapse with steady usage is NOISE, not a fading player', () => 
 test('a steady player is not reported at all', () => {
   const p = P('wr', 'WR', 10, {
     stats_season: 2025,
-    games: games([1, 2, 3, 4, 5, 6], { snap: 0.8, carries: 0, targets: 8, ppr: 14 }),
+    games: games([1, 2, 3, 4, 5, 6], { snap: 0.8, carries: 0, targets: 8, points: 14 }),
   });
   assert.deepEqual(fading([p]), []);
 });

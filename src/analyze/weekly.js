@@ -132,8 +132,8 @@ export function fading(myPlayers) {
 
     // The mirror of trends.js's unsustainable_spike: points collapsed but
     // usage did not. That is variance, and saying so is the point.
-    const pointsDropNoise = t.deltas.ppr != null && t.season.ppr > 0
-      && t.deltas.ppr / t.season.ppr <= -0.35
+    const pointsDropNoise = t.deltas.points != null && t.season.points > 0
+      && t.deltas.points / t.season.points <= -0.35
       && t.directions.snaps !== 'falling' && t.directions.opportunities !== 'falling';
 
     if (pointsDropNoise) {
@@ -167,7 +167,7 @@ export function fading(myPlayers) {
 const evidenceOf = t => ({
   snaps: { season: t.season.snap_pct, recent: t.recent.snap_pct, direction: t.directions.snaps },
   opportunities: { season: t.season.opportunities, recent: t.recent.opportunities, direction: t.directions.opportunities },
-  points: { season: t.season.ppr, recent: t.recent.ppr },
+  points: { season: t.season.points, recent: t.recent.points },
   weeks: t.recent.weeks,
   basis: t.basis,
 });

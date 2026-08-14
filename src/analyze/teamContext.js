@@ -73,7 +73,7 @@ function distribution(players, team, weeks, weeklyTargets) {
       carries_pg: r1(carries / games.length),
       target_share: teamTargets > 0 ? r3(targets / teamTargets) : null,
       air_yards: sumBy(games, g => g.receiving_air_yards),
-      ppr_pg: r1(sumBy(games, g => g.fantasy_points) / games.length),
+      points_pg: r1(sumBy(games, g => g.fantasy_points) / games.length),
     };
   }).filter(Boolean);
 

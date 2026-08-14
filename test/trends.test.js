@@ -2,14 +2,14 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { computeTrend, opportunity } from '../src/analyze/trends.js';
 
-// Build a WR game log: [snap_pct, targets, ppr] per week.
+// Build a WR game log: [snap_pct, targets, points] per week.
 function wr(games) {
   return {
     position: 'WR',
     meta: { years_exp: 3 },
-    games: games.map(([snap, tgt, ppr], i) => ({
+    games: games.map(([snap, tgt, points], i) => ({
       week: i + 1, snap_pct: snap, targets: tgt, receptions: Math.round(tgt * 0.7),
-      carries: 0, attempts: 0, fantasy_points: ppr, target_share: null,
+      carries: 0, attempts: 0, fantasy_points: points, target_share: null,
     })),
   };
 }
@@ -67,4 +67,27 @@ test('opportunity metric is position-aware', () => {
 test('rest-game caveat noted when final week snap share collapses', () => {
   const t = computeTrend(wr([[0.8, 8, 15], [0.8, 8, 15], [0.8, 8, 15], [0.8, 8, 15], [0.85, 9, 16], [0.85, 9, 17], [0.15, 1, 2]]));
   assert.ok(t.notes.some(n => /rest or injury/i.test(n)), 'week-18 rest game should be surfaced');
+});
+
+// ---- the baseline must not borrow a differently-scored number ----
+
+test('a baseline with no scored points reports null, not nflverse\'s PPR average', () => {
+  // `baseline.ppr` is nflverse's PPR figure. Falling back to it here would put
+  // a PPR number under a column labelled with the user's own scoring — the same
+  // category error as calling custom points "PPR", but at the value level,
+  // where nothing on screen could reveal it.
+  const legacy = { season: 2025, games: 15, snap_pct: 0.45, targets: 4.0, carries: 0, attempts: 0, ppr: 7.5 };
+  const player = {
+    position: 'WR', stats_season: 2026, meta: { years_exp: 4 },
+    games: [{ week: 1, snap_pct: 0.85, targets: 9, receptions: 6, carries: 0, attempts: 0, fantasy_points: 14, target_share: null }],
+    baseline: legacy,
+  };
+  const t = computeTrend(player);
+  assert.equal(t.basis.type, 'prior-baseline');
+  assert.equal(t.season.points, null, 'no stored components means no number, not a borrowed one');
+  assert.equal(t.deltas.points, null, 'and no delta computed against one');
+
+  // With components scored, the same baseline reports the custom figure.
+  const scored = computeTrend({ ...player, baseline: { ...legacy, points: 6.2 } });
+  assert.equal(scored.season.points, 6.2);
 });
