@@ -131,6 +131,11 @@ function yahooSection(y) {
          <p class="small mt">Sync mirrors Yahoo's draft results into the board — it replaces manual pick tracking while active. Personal ranks are never touched.</p>
          ${(y.league.unmatched ?? []).length ? `<div class="warn mt">Unmatched picks (outside the top-250 universe): ${y.league.unmatched.map(u => `#${u.pick} ${esc(u.name)} (${esc(u.position)})`).join(', ')}</div>` : ''}`
       : `<p class="small">Connected. Pick which league to track:</p><div id="yahoo-leagues" class="mt small">Loading leagues…</div>`}
+    <p class="small mt" style="border-top:1px solid var(--line);padding-top:8px;color:var(--dim)">
+      Yahoo attaches permissions at consent time, so a newly granted scope needs a fresh authorization.
+      <button class="rowbtn" id="yahoo-reconnect" style="margin-left:6px">Re-authorize</button>
+      <span id="yahoo-reconnect-status"></span>
+    </p>
   </div>`;
 }
 
@@ -146,6 +151,27 @@ async function wireYahoo(el, refresh) {
     }, 2000);
     setTimeout(() => clearInterval(poll), 5 * 60 * 1000);
   };
+  // Re-authorize: needed whenever Yahoo grants a new scope, since scopes are
+  // attached at consent time and an existing token never inherits them.
+  // Success is polled against the leagues call — the only real proof of scope.
+  const reconnectBtn = el.querySelector('#yahoo-reconnect');
+  if (reconnectBtn) reconnectBtn.onclick = async () => {
+    const status = el.querySelector('#yahoo-reconnect-status');
+    const { authorize_url } = await api.yahoo.connect();
+    window.open(authorize_url, '_blank');
+    status.textContent = ' Approve in the new tab (click through the localhost certificate warning)…';
+    const started = Date.now();
+    const poll = setInterval(async () => {
+      if (Date.now() - started > 5 * 60 * 1000) { clearInterval(poll); status.textContent = ' Timed out — try Re-authorize again.'; return; }
+      try {
+        await api.yahoo.leagues();
+        clearInterval(poll);
+        status.textContent = ' Fantasy access granted ✓';
+        refresh();
+      } catch { /* still pending — keep waiting */ }
+    }, 3000);
+  };
+
   const leaguesDiv = el.querySelector('#yahoo-leagues');
   if (leaguesDiv) {
     try {
@@ -158,7 +184,17 @@ async function wireYahoo(el, refresh) {
         refresh();
       });
     } catch (err) {
-      leaguesDiv.textContent = `Could not load leagues: ${err.message}`;
+      // Yahoo returns this when the token is valid but the app was never
+      // granted the Fantasy Sports scope — i.e. the access review is pending.
+      const scopePending = /additional_authorization_required/.test(err.message);
+      leaguesDiv.innerHTML = scopePending
+        ? `<div class="warn">Connected to Yahoo, but this app has <b>not been granted the Fantasy Sports scope</b> yet — that is the access review at
+             <a href="https://sports.yahoo.com/developer/access/" target="_blank" style="color:var(--accent)">sports.yahoo.com/developer/access</a>, not a problem with the setup here.
+             When it is approved, click <b>Re-authorize</b> below and then check again.</div>
+           <button class="rowbtn mt" id="yahoo-recheck" style="padding:6px 12px">Check again</button>`
+        : `Could not load leagues: ${esc(err.message)}`;
+      const recheck = leaguesDiv.querySelector('#yahoo-recheck');
+      if (recheck) recheck.onclick = () => refresh();
     }
   }
   const syncBtn = el.querySelector('#yahoo-sync');
