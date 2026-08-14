@@ -1,11 +1,16 @@
-# Draft Value Finder — Phase 1
+# Fantasy Value Finder
 
-Fantasy football draft assistant for a 10-team PPR league (2026 draft).
+Season-long fantasy football player analysis for a 10-team PPR league.
 **Numbers first. Team context second. AI connects the dots.**
 
 The point is not to rank players — the market already does that. The point is to
-find value the market is late on: players whose snap share AND opportunities
-were rising over their last 3 games of 2025 while their draft price hasn't moved.
+find value the market is late on: players whose snap share AND opportunities are
+rising while their price hasn't moved.
+
+The app leads with a **Players explorer** built on real game logs — WOPR,
+target and air-yards share, EPA per play, yards per target, catch rate, YAC,
+first downs, explosive plays — sliceable by season / last 3 games / last game.
+A draft board is still included for draft day, but the focus is the season.
 
 ## Run it
 
@@ -66,13 +71,31 @@ sources are recorded on the player record, not silently resolved.
 ```
 src/ingest/     fetch raw snapshots (each source independent, none blocking)
 src/normalize/  name/team matching, mode resolution → data/players.json
-src/analyze/    trends, signals, scoring, market comparison, recommendations
+src/analyze/    playerStats (windowed metrics), trends, signals, scoring,
+                market comparison, recommendations
 src/ai/         chat grounded in structured data (Claude + fallback)
-src/store/      draft state, personal ranks, history log
+src/store/      roster/draft state, personal ranks, history log
 src/yahoo/      dormant Yahoo draft sync (credential-gated)
 server/         zero-framework node:http API + static frontend
-public/         vanilla-JS UI (no build step)
+public/         vanilla-JS UI (no build step); table.js is the shared
+                sort/filter machinery, players.js the explorer
 ```
+
+`data/players.json` is a **generated build artifact and is not committed** —
+the server builds it automatically on first run and refreshes it whenever it
+is more than 20 hours old.
+
+### Stat conventions (they change the numbers)
+
+- **Rate stats** (yards per target, per carry, catch rate) are computed from
+  window **totals**, never as a mean of per-game ratios — one 1-target game
+  should not weigh as much as a 10-target game.
+- **Share stats** (target share, air-yards share, WOPR) *are* per-game
+  averages, which is what "per-game usage" means and how the source reports
+  them.
+- **Opportunity** is position-aware and shared with the trend engine:
+  RB = carries + targets, WR/TE = targets, QB = attempts + carries.
+- Undefined rates render as `—`, never as `0`.
 
 ### Data pipeline
 

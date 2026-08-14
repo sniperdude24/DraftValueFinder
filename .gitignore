@@ -1,5 +1,6 @@
 node_modules/
 data/raw/
+data/players.json
 data/state.json
 data/history.jsonl
 data/yahoo-tokens.json

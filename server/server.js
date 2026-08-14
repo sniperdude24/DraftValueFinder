@@ -17,6 +17,7 @@ import { LEAGUE, rosterSummary } from '../src/analyze/roster.js';
 import { runIngest } from '../src/ingest/fetchAll.js';
 import { buildDatabase } from '../src/normalize/build.js';
 import { isStale } from '../src/ingest/freshness.js';
+import { computeWindows } from '../src/analyze/playerStats.js';
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..');
 const PUBLIC = join(ROOT, 'public');
@@ -24,16 +25,20 @@ const PORT = Number(process.env.PORT ?? 3210);
 
 // ---- load database & precompute assessments (hot-reloadable via /api/admin/refresh) ----
 const dbPath = join(ROOT, 'data', 'players.json');
-if (!existsSync(dbPath)) {
-  console.error('data/players.json missing — run `npm run refresh` first.');
-  process.exit(1);
-}
 let db, assessments, byId;
 function loadDb() {
   db = JSON.parse(readFileSync(dbPath, 'utf8'));
   assessments = assessAll(db.players);
   byId = new Map(db.players.map(p => [p.id, p]));
   console.log(`Loaded ${db.players.length} players (${db.mode ?? 'draft'} mode, stats ${db.stats_season ?? '?'}, built ${db.built_at})`);
+}
+
+// The player database is a build artifact, not source — on a fresh clone
+// there is nothing to load, so build it rather than refusing to start.
+if (!existsSync(dbPath)) {
+  console.log('data/players.json missing — building it from scratch (first run)…');
+  await runIngest();
+  buildDatabase();
 }
 loadDb();
 
@@ -144,6 +149,7 @@ const server = createServer(async (req, res) => {
         const a = assessments.get(id);
         return send(res, 200, {
           player: p,
+          windows: computeWindows(p),
           assessment: {
             ai_rank: a.ai_rank, verdict: a.verdict, confidence: a.confidence,
             factors: a.factors, trend: a.trend, signal: a.signal,
@@ -151,6 +157,26 @@ const server = createServer(async (req, res) => {
           personal_rank: state.personalRanks[id] ?? null,
           drafted: state.drafted.includes(id),
           mine: state.mine.includes(id),
+        });
+      }
+      if (req.method === 'GET' && path === '/api/players') {
+        return send(res, 200, {
+          mode: db.mode, week: db.week, stats_season: db.stats_season,
+          players: db.players.map(p => {
+            const a = assessments.get(p.id);
+            return {
+              id: p.id, name: p.name, position: p.position, team: p.team, bye: p.bye,
+              ai_rank: a.ai_rank, confidence: a.confidence,
+              usage_trend: a.trend.available ? a.trend.usage : null,
+              sleeper_state: a.signal.state,
+              injury_status: p.meta?.injury_status ?? null,
+              changed_team: p.changed_team,
+              expert_rank: p.expert?.rank ?? null,
+              rostered: state.drafted.includes(p.id),
+              mine: state.mine.includes(p.id),
+              windows: computeWindows(p),
+            };
+          }),
         });
       }
       if (req.method === 'GET' && path === '/api/team') {

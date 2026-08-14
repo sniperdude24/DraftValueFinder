@@ -98,7 +98,6 @@ function gamesFor(name, pos, indexes, conflicts) {
       receptions: num(r.receptions),
       receiving_yards: num(r.receiving_yards),
       receiving_tds: num(r.receiving_tds),
-      target_share: round3(num(r.target_share)),
       carries: num(r.carries),
       rushing_yards: num(r.rushing_yards),
       rushing_tds: num(r.rushing_tds),
@@ -108,6 +107,31 @@ function gamesFor(name, pos, indexes, conflicts) {
       passing_tds: num(r.passing_tds),
       interceptions: num(r.passing_interceptions),
       fantasy_points_ppr: round1(num(r.fantasy_points_ppr)),
+
+      // ---- opportunity / advanced (nflverse-computed, per game) ----
+      // Shares and WOPR are already per-game rates in the source; WOPR is
+      // 1.5*target_share + 0.7*air_yards_share, the standard composite
+      // opportunity metric for pass catchers.
+      target_share: round3(num(r.target_share)),
+      air_yards_share: round3(num(r.air_yards_share)),
+      wopr: round3(num(r.wopr)),
+      racr: round3(num(r.racr)),
+      receiving_air_yards: num(r.receiving_air_yards),
+      receiving_yac: num(r.receiving_yards_after_catch),
+      receiving_first_downs: num(r.receiving_first_downs),
+      receiving_epa: round3(num(r.receiving_epa)),
+      receiving_20: num(r.receiving_20),
+      receiving_40: num(r.receiving_40),
+      rushing_first_downs: num(r.rushing_first_downs),
+      rushing_epa: round3(num(r.rushing_epa)),
+      rushing_20: num(r.rushing_20),
+      rushing_40: num(r.rushing_40),
+      passing_air_yards: num(r.passing_air_yards),
+      passing_first_downs: num(r.passing_first_downs),
+      passing_epa: round3(num(r.passing_epa)),
+      passing_cpoe: round3(num(r.passing_cpoe)),
+      pacr: round3(num(r.pacr)),
+      fumbles_lost: num(r.fumbles_lost_total),
     };
   });
 }

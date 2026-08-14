@@ -9,6 +9,7 @@ export const api = {
   meta: () => req('/api/meta'),
   board: () => req('/api/board'),
   team: () => req('/api/team'),
+  players: () => req('/api/players'),
   player: id => req(`/api/player/${encodeURIComponent(id)}`),
   market: () => req('/api/market'),
   recommendations: () => req('/api/recommendations'),

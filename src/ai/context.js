@@ -3,6 +3,7 @@
 // guarantee it cannot invent statistics or rankings.
 import { recommendations } from '../analyze/recommend.js';
 import { rosterSummary } from '../analyze/roster.js';
+import { computeWindows } from '../analyze/playerStats.js';
 import { nameKey } from '../normalize/names.js';
 
 function compactRow(p, a, state) {
@@ -22,8 +23,14 @@ function compactRow(p, a, state) {
 }
 
 function detailedPlayer(p, a, state) {
+  const w = computeWindows(p);
   return {
     ...compactRow(p, a, state),
+    advanced_stats: w.season ? {
+      note: 'Measured from game logs. Rate stats from window totals; share stats are per-game averages. WOPR = 1.5*target_share + 0.7*air_yards_share.',
+      season: w.season,
+      last3: w.last3,
+    } : 'no game data',
     changed_team: p.changed_team ? `2025 team was ${p.team_2025}` : false,
     ai_factors: a.factors.map(f => `[${f.effect}] ${f.text}`),
     trend: a.trend.available ? {

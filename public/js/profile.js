@@ -1,6 +1,6 @@
 import { api, esc, pct, signalBadge } from './api.js';
 
-const TABS = ['Overview', 'Game Log', 'Trends', 'AI Analysis'];
+const TABS = ['Overview', 'Game Log', 'Advanced', 'Trends', 'AI Analysis'];
 
 export async function openProfile(id, onChange) {
   const root = document.getElementById('modal-root');
@@ -83,6 +83,38 @@ function tabBody(data, tab) {
         <td>${g.carries ?? 0}</td><td>${g.rushing_yards ?? 0}</td><td>${g.rushing_tds ?? 0}</td><td><b>${g.fantasy_points_ppr ?? '—'}</b></td>
       </tr>`).join('')}</tbody></table>
       <p class="small mt">${esc(String(p.stats_season))} regular season, games played. Source: nflverse.</p>`;
+  }
+  if (tab === 'Advanced') {
+    const w = data.windows;
+    if (!w?.season) return `<p>No ${esc(String(p.stats_season))} game data available.</p>`;
+    const rows = [
+      ['Snap share', 'snap_pct', 'pct'],
+      ['Target share', 'target_share', 'pct'],
+      ['Air-yards share', 'air_yards_share', 'pct'],
+      ['WOPR', 'wopr', 'n2'],
+      ['Opportunities/g', 'opportunities_pg', 'n1'],
+      ['Air yards/g', 'air_yards_pg', 'n1'],
+      ['First downs/g', 'first_downs_pg', 'n1'],
+      ['Yards per target', 'yards_per_target', 'n2'],
+      ['Catch rate', 'catch_rate', 'pct'],
+      ['YAC per reception', 'yac_per_reception', 'n2'],
+      ['Yards per carry', 'yards_per_carry', 'n2'],
+      ['RACR', 'racr', 'n2'],
+      ['EPA per play', 'epa_per_play', 'n3'],
+      ['PPR per opportunity', 'ppr_per_opportunity', 'n2'],
+      ['PPR/g', 'ppr_pg', 'n1'],
+      ['Explosive plays (20+)', 'explosive_total', 'int'],
+    ];
+    const f = (v, kind) => v == null ? '<span class="aid">—</span>'
+      : kind === 'pct' ? `${Math.round(v * 100)}%`
+      : kind === 'int' ? String(v)
+      : v.toFixed(kind === 'n1' ? 1 : kind === 'n2' ? 2 : 3);
+    return `
+      <table><thead><tr><th>Metric</th><th>Season (${w.season.games} g)</th><th>Last 3</th><th>Last game</th></tr></thead>
+      <tbody>${rows.map(([label, key, kind]) => `<tr>
+        <td>${label}</td><td>${f(w.season[key], kind)}</td><td>${f(w.last3?.[key] ?? null, kind)}</td><td>${f(w.last1?.[key] ?? null, kind)}</td>
+      </tr>`).join('')}</tbody></table>
+      <p class="small mt">Measured from ${esc(String(p.stats_season))} game logs (nflverse). Rate stats are computed from window totals; share stats are per-game averages. WOPR = 1.5×target share + 0.7×air-yards share.</p>`;
   }
   if (tab === 'Trends') {
     const t = a.trend;
