@@ -36,12 +36,26 @@ const METRICS = {
   ppr_per_opportunity: ['PPR/Opp', 'n2', 'PPR points per target or carry — efficiency of usage'],
   racr: ['RACR', 'n2', 'Receiving yards ÷ air yards'],
   tds_total: ['TD', 'int', 'Total touchdowns in the window'],
+
+  // Red zone (nflverse play-by-play). Counting stats lead and rates follow,
+  // because red-zone samples are small enough that a rate without its
+  // denominator beside it is misleading.
+  rz_opportunities: ['RZ Opp', 'int', 'Targets + carries inside the 20'],
+  rz_opportunities_pg: ['RZ Opp/g', 'n1', 'Red-zone targets + carries per game'],
+  rz_targets: ['RZ Tgt', 'int', 'Targets inside the 20'],
+  rz_carries: ['RZ Car', 'int', 'Carries inside the 20'],
+  gl_opportunities: ['GL Opp', 'int', 'Targets + carries inside the 5 — the highest-leverage touches on the field'],
+  gl_carries: ['GL Car', 'int', 'Carries inside the 5'],
+  rz_tds: ['RZ TD', 'int', 'Touchdowns scored from inside the 20'],
+  rz_td_rate: ['RZ TD%', 'pct', 'Touchdowns ÷ red-zone opportunities — read it next to RZ Opp, small samples swing wildly'],
+  rz_share_of_own_opportunities: ['RZ%Own', 'pct', 'Share of this player\'s own touches that come inside the 20'],
 };
 
 const PRESETS = {
   Overview: ['games', 'snap_pct', 'opportunities_pg', 'wopr', 'ppr_pg', 'ppr_per_opportunity', 'epa_per_play'],
   Receiving: ['games', 'targets_pg', 'target_share', 'air_yards_share', 'wopr', 'air_yards_pg', 'rec_pg', 'rec_yards_pg', 'yards_per_target', 'catch_rate', 'yac_per_reception'],
   Rushing: ['games', 'carries_pg', 'rush_yards_pg', 'yards_per_carry', 'first_downs_pg', 'explosive_total', 'ppr_pg'],
+  'Red zone': ['games', 'rz_opportunities', 'rz_opportunities_pg', 'rz_targets', 'rz_carries', 'gl_opportunities', 'gl_carries', 'rz_tds', 'rz_td_rate', 'rz_share_of_own_opportunities'],
   Passing: ['games', 'pass_yards_pg', 'yards_per_attempt', 'cpoe', 'epa_per_play', 'tds_total', 'ppr_pg'],
   Efficiency: ['games', 'yards_per_target', 'yards_per_carry', 'catch_rate', 'ppr_per_opportunity', 'epa_per_play', 'racr', 'yac_per_reception'],
 };
@@ -113,7 +127,8 @@ export async function renderPlayers(el, refresh) {
         }).join('')}
       </tbody>
     </table>
-    <p class="small mt">Measured from ${stats_season} game logs (nflverse) — nothing here is projected. Rate stats (Y/Tgt, Y/Car, Catch%) come from window totals; share stats (Tgt Sh, AY Sh, WOPR) are per-game averages. Hover a column header for its definition. Click a player for the full profile.</p>`;
+    <p class="small mt">Measured from ${stats_season} game logs (nflverse) — nothing here is projected. Rate stats (Y/Tgt, Y/Car, Catch%) come from window totals; share stats (Tgt Sh, AY Sh, WOPR) are per-game averages. Hover a column header for its definition. Click a player for the full profile.
+      ${state.preset === 'Red zone' ? '<br>Red-zone columns are counted from nflverse play-by-play: inside the 20 for RZ, inside the 5 for GL. A blank means the play-by-play source has not covered those games, not a zero.' : ''}</p>`;
 
   // Column tooltips
   el.querySelectorAll('th[data-sort]').forEach(th => {
@@ -123,7 +138,17 @@ export async function renderPlayers(el, refresh) {
 
   el.querySelectorAll('.posbtn').forEach(b => b.onclick = () => { state.pos = b.dataset.pos; refresh(); });
   el.querySelector('#pl-window').onchange = e => { state.window = e.target.value; refresh(); };
-  el.querySelector('#pl-preset').onchange = e => { state.preset = e.target.value; refresh(); };
+  el.querySelector('#pl-preset').onchange = e => {
+    state.preset = e.target.value;
+    // Sorting by a column the new preset doesn't show leaves the table in a
+    // seemingly arbitrary order — fall back to its leading metric.
+    const keys = PRESETS[state.preset];
+    if (!keys.includes(state.sort) && state.sort !== 'name') {
+      state.sort = keys.find(k => k !== 'games') ?? 'name';
+      state.dir = -1;
+    }
+    refresh();
+  };
   el.querySelector('#pl-mingames').onchange = e => { state.minGames = Math.max(1, Number(e.target.value) || 1); refresh(); };
   wireSearch(el.querySelector('#pl-search'), state, el);
   wireSort(el, state, refresh);

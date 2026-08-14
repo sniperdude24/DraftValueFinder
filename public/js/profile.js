@@ -104,6 +104,15 @@ function tabBody(data, tab) {
       ['PPR per opportunity', 'ppr_per_opportunity', 'n2'],
       ['PPR/g', 'ppr_pg', 'n1'],
       ['Explosive plays (20+)', 'explosive_total', 'int'],
+      ['— Red zone —', null, null],
+      ['RZ opportunities (inside 20)', 'rz_opportunities', 'int'],
+      ['RZ opportunities/g', 'rz_opportunities_pg', 'n1'],
+      ['RZ targets', 'rz_targets', 'int'],
+      ['RZ carries', 'rz_carries', 'int'],
+      ['Goal-line touches (inside 5)', 'gl_opportunities', 'int'],
+      ['RZ touchdowns', 'rz_tds', 'int'],
+      ['RZ TD rate', 'rz_td_rate', 'pct'],
+      ['Share of own touches in RZ', 'rz_share_of_own_opportunities', 'pct'],
     ];
     const f = (v, kind) => v == null ? '<span class="aid">—</span>'
       : kind === 'pct' ? `${Math.round(v * 100)}%`
@@ -111,10 +120,12 @@ function tabBody(data, tab) {
       : v.toFixed(kind === 'n1' ? 1 : kind === 'n2' ? 2 : 3);
     return `
       <table><thead><tr><th>Metric</th><th>Season (${w.season.games} g)</th><th>Last 3</th><th>Last game</th></tr></thead>
-      <tbody>${rows.map(([label, key, kind]) => `<tr>
+      <tbody>${rows.map(([label, key, kind]) => key == null
+        ? `<tr><td colspan="4" class="small" style="padding-top:14px;opacity:.7">${label}</td></tr>`
+        : `<tr>
         <td>${label}</td><td>${f(w.season[key], kind)}</td><td>${f(w.last3?.[key] ?? null, kind)}</td><td>${f(w.last1?.[key] ?? null, kind)}</td>
       </tr>`).join('')}</tbody></table>
-      <p class="small mt">Measured from ${esc(String(p.stats_season))} game logs (nflverse). Rate stats are computed from window totals; share stats are per-game averages. WOPR = 1.5×target share + 0.7×air-yards share.</p>`;
+      <p class="small mt">Measured from ${esc(String(p.stats_season))} game logs (nflverse). Rate stats are computed from window totals; share stats are per-game averages. WOPR = 1.5×target share + 0.7×air-yards share. Red-zone counts come from nflverse play-by-play (inside the 20; goal line is inside the 5) — a blank means the source has not covered those games, not a zero.</p>`;
   }
   if (tab === 'Trends') {
     const t = a.trend;

@@ -19,6 +19,12 @@ players vacated, and — in the *ripple watch* — which teammates gained usage
 alongside an absence. Ripple links are labeled as observed co-movement, never
 as proven causation.
 
+The same page carries the **red-zone pie**: touches inside the 20 and inside
+the 5, which is where touchdowns actually get decided and where the pecking
+order is often not the one between the 20s. Red-zone shares need no
+reconstruction — the play-by-play source sees every snap in the league, so
+the denominator is exact.
+
 ## Run it
 
 ```bash
@@ -41,6 +47,7 @@ Then restart the server. Run tests with `npm test`.
 | Expert rankings | FantasyPros expert consensus (PPR cheat sheet page) |
 | Weekly stats 2025 | nflverse `stats_player_week_2025.csv` |
 | Snap counts 2025 | nflverse `snap_counts_2025.csv` |
+| Red-zone usage 2025 | nflverse `play_by_play_2025.csv.gz`, reduced at ingest |
 | Player metadata | Sleeper API (teams, depth charts, injury status) |
 | Trade-market values | [Stats Guy Fantasy](https://statsguyfantasy.com) (free API; values from >1M real Sleeper-league trades, non-SF redraft format) |
 
@@ -57,6 +64,10 @@ sources are recorded on the player record, not silently resolved.
   (ADP + expert average) adjusted only for evidence in the data (usage trends,
   unsustainable spikes, injury designations). Every adjustment is emitted as a
   readable factor. Confidence % measures evidence strength, not win probability.
+- **Red-zone usage** — a Players-explorer preset and a Teams panel covering
+  touches inside the 20 and inside the 5, red-zone TDs, and each player's
+  share of the team's scoring chances. Counts lead, rates follow: a 50% TD
+  rate on two touches is not a finding, so the denominator is always shown.
 - **Trend detection** — last 3 games played vs season average. A sleeper signal
   requires snaps AND opportunities both rising; point spikes without usage
   growth are flagged as noise.
@@ -79,8 +90,8 @@ sources are recorded on the player record, not silently resolved.
 src/ingest/     fetch raw snapshots (each source independent, none blocking)
 src/normalize/  name/team matching, mode resolution → data/players.json
 src/analyze/    playerStats (windowed metrics), teamContext (opportunity
-                distribution + ripple), trends, signals, scoring,
-                market comparison, recommendations
+                distribution + red-zone pie + ripple), trends, signals,
+                scoring, market comparison, recommendations
 src/ai/         chat grounded in structured data (Claude + fallback)
 src/store/      roster/draft state, personal ranks, history log
 src/yahoo/      dormant Yahoo draft sync (credential-gated)
@@ -103,7 +114,18 @@ is more than 20 hours old.
   them.
 - **Opportunity** is position-aware and shared with the trend engine:
   RB = carries + targets, WR/TE = targets, QB = attempts + carries.
-- Undefined rates render as `—`, never as `0`.
+- **Red zone** is inside the 20; **goal line** is inside the 5, a strict
+  subset of it. Both are counted from play-by-play with the same rules
+  nflverse uses for its weekly totals — applied without a yardline filter
+  those rules reproduce the published season targets and carries for every
+  player exactly, which is what makes the red-zone subset trustworthy.
+  Two-point conversions are excluded, as nflverse excludes them.
+- **Red-zone shares divide by the true team total**, not by the tracked
+  players — the play-by-play file has every snap, so nothing is inferred.
+  The share that went to players outside the top-250 universe is displayed.
+- Undefined rates render as `—`, never as `0`. A red-zone blank means the
+  play-by-play source has not covered those games; `0` means the player was
+  genuinely shut out. The two are never conflated.
 
 ### Data pipeline
 
@@ -111,6 +133,7 @@ is more than 20 hours old.
 |---|---|---|---|---|
 | Sleeper `state/nfl` | `sleeper_state.json` | Decides the mode + current week | Every refresh | Last snapshot kept |
 | nflverse weekly stats + snaps | `stats_player_week_<yr>.csv`, `snap_counts_<yr>.csv` | Trends/game logs; prior year doubles as the in-season baseline | Weekly in-season; completed seasons cached | Last snapshot kept |
+| nflverse play-by-play | `redzone_<yr>.json` | Red-zone / goal-line usage and exact team red-zone totals | Weekly in-season; completed seasons cached | Red-zone columns read `—`, app unaffected |
 | FFC ADP | `ffc_adp.json` | Draft market / stale artifact | Daily | Last snapshot kept |
 | FantasyPros cheat sheet | `fantasypros_ecr.json` | Expert ranks (draft mode) | Daily | Last snapshot kept |
 | FantasyPros rest-of-season | `fantasypros_ros.json` | Expert ranks (season mode) | Weekly in-season | Last snapshot kept |

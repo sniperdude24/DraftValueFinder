@@ -13,6 +13,7 @@ import { RAW_DIR } from './util.js';
 import { ingestFfcAdp } from './sources/ffcAdp.js';
 import { ingestFantasyPros, ingestFantasyProsROS } from './sources/fantasyPros.js';
 import { ingestWeeklyStats, ingestSnapCounts } from './sources/nflverse.js';
+import { ingestRedZone } from './sources/nflversePbp.js';
 import { ingestSleeperPlayers, ingestSleeperState } from './sources/sleeper.js';
 import { ingestStatsGuy } from './sources/statsGuy.js';
 import { ingestSleeperProjections } from './sources/sleeperProjections.js';
@@ -43,11 +44,14 @@ export async function runIngest({ log = console } = {}) {
       existsSync(join(RAW_DIR, `stats_player_week_${prevSeason}.csv`))],
     [`nflverse snap counts ${prevSeason}`, () => ingestSnapCounts(prevSeason),
       existsSync(join(RAW_DIR, `snap_counts_${prevSeason}.csv`))],
+    [`nflverse red-zone usage ${prevSeason}`, () => ingestRedZone(prevSeason),
+      existsSync(join(RAW_DIR, `redzone_${prevSeason}.json`))],
   ];
   if (inSeason) {
     sources.push(
       [`nflverse weekly stats ${season}`, () => ingestWeeklyStats(season)],
       [`nflverse snap counts ${season}`, () => ingestSnapCounts(season)],
+      [`nflverse red-zone usage ${season}`, () => ingestRedZone(season)],
     );
   }
 

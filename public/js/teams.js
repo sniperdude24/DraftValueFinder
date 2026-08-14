@@ -47,6 +47,54 @@ function distributionTable(rows, { title, note }) {
     </div>`;
 }
 
+// Red-zone panel. The denominator here is exact — the play-by-play source
+// sees every red-zone snap in the league — so unlike the target pie these
+// shares are of the whole thing, not of the part we happen to track.
+function redZoneTable(rz, recent, stats_season) {
+  if (!rz || !rz.rows.length) {
+    return `<div class="panel"><h2>Red-zone opportunity</h2>
+      <p class="small">Data unavailable — no play-by-play snapshot for ${stats_season}.</p></div>`;
+  }
+  const recentById = new Map((recent?.rows ?? []).map(r => [r.id, r]));
+  const outside = rz.accounted_share != null ? 1 - rz.accounted_share : null;
+  return `
+    <div class="panel">
+      <h2>Red-zone opportunity</h2>
+      <p class="small">
+        <b>${rz.team_rz_opportunities}</b> touches inside the 20 across ${rz.weeks.length} games
+        (<b>${rz.team_rz_opportunities_pg}</b>/g) — ${rz.team_rz_targets} targets, ${rz.team_rz_carries} carries —
+        and <b>${rz.team_gl_opportunities}</b> inside the 5.
+        Shares are of the team's <b>full</b> red-zone workload: play-by-play counts every snap, so this denominator
+        needs no reconstruction${outside > 0.005 ? `, and the <b>${pct(outside)}</b> not listed below went to players outside the top-250 universe` : ''}.
+      </p>
+      <table class="mt">
+        <thead><tr><th>Player</th><th>RZ Opp</th><th>Share</th><th></th><th>Tgt</th><th>Car</th><th>Inside 5</th><th>GL Share</th><th>RZ TD</th><th>Last 3</th></tr></thead>
+        <tbody>
+          ${rz.rows.map(r => {
+            const rec = recentById.get(r.id);
+            return `<tr class="${r.still_on_team ? '' : 'departed-row'}">
+            <td class="name" data-id="${esc(r.id)}">${esc(r.name)}<span class="team">${esc(r.position)}</span>
+              ${r.still_on_team ? '' : '<span class="badge inj">GONE</span>'}
+              ${r.injury_status ? `<span class="badge inj">${esc(r.injury_status)}</span>` : ''}</td>
+            <td>${r.rz_opportunities}</td>
+            <td>${pct(r.rz_opportunity_share)}</td>
+            <td style="width:110px">${bar(r.rz_opportunity_share)}</td>
+            <td>${r.rz_targets}</td>
+            <td>${r.rz_carries}</td>
+            <td>${r.gl_opportunities}</td>
+            <td>${pct(r.gl_opportunity_share)}</td>
+            <td>${r.rz_tds}</td>
+            <td>${rec ? `${rec.rz_opportunities}` : '<span class="aid">0</span>'}</td>
+          </tr>`; }).join('')}
+        </tbody>
+      </table>
+      <p class="small mt">Inside-5 touches are the ones that actually decide touchdowns, and the pecking order there
+        is often not the pecking order between the 20s. The last column is raw red-zone touches over the last
+        ${recent?.weeks.length ?? 3} games — a count, not a rate, because three games is far too small a red-zone
+        sample to express as a percentage.</p>
+    </div>`;
+}
+
 export async function renderTeams(el, refresh) {
   const { teams, stats_season } = await api.teams();
   if (!state.team) {
@@ -82,7 +130,9 @@ export async function renderTeams(el, refresh) {
         <b>Vacated opportunity:</b> players no longer on this team accounted for
         <b>${pct(rc.vacated_target_share)}</b> of ${stats_season} targets${rc.vacated_carries ? ` and <b>${rc.vacated_carries}</b> carries` : ''} —
         ${rc.departed.map(d => `${esc(d.name)} (${esc(d.position)} → ${esc(d.now_with ?? '?')})`).join(', ')}.
-        That work has to go somewhere.
+        That work has to go somewhere.${rc.vacated_rz_opportunity_share > 0.01 ? `
+        They also took <b>${pct(rc.vacated_rz_opportunity_share)}</b> of the team's red-zone touches with them — the
+        scoring share and the target share are rarely the same number, and it is the red-zone one that moves touchdowns.` : ''}
       </div>` : ''}
       ${rc.arrived.length ? `<div class="warn mt" style="border-color:var(--accent);color:var(--accent);background:rgba(77,163,255,.08)">
         <b>New arrivals</b> competing for it: ${rc.arrived.map(a => `${esc(a.name)} (${esc(a.position)}, from ${esc(a.came_from ?? '?')})`).join(', ')}.
@@ -98,6 +148,8 @@ export async function renderTeams(el, refresh) {
       title: `Recent distribution — last ${ctx.recent.weeks.length} games (weeks ${ctx.recent.weeks.join(', ')})`,
       note: 'The same pie over the most recent games. Compare against the full season to see who is taking over.',
     }) : ''}
+
+    ${redZoneTable(ctx.redzone, ctx.redzone_recent, stats_season)}
 
     ${ctx.movement.length ? `<div class="panel">
       <h2>Share movement — recent vs full season</h2>

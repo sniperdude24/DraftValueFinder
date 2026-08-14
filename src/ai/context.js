@@ -6,9 +6,23 @@ import { rosterSummary } from '../analyze/roster.js';
 import { computeWindows } from '../analyze/playerStats.js';
 import { nameKey } from '../normalize/names.js';
 
+// Season red-zone totals, cheap enough to include on every row so the
+// assistant can answer "who owns the goal line" without a full profile.
+function redZoneTotals(p) {
+  const games = p.games ?? [];
+  if (!games.some(g => g.rz_targets != null || g.rz_carries != null)) return null;
+  const t = (field) => games.reduce((s, g) => s + (g[field] ?? 0), 0);
+  return {
+    rz_opportunities: t('rz_targets') + t('rz_carries'),
+    goal_line_opportunities: t('gl_targets') + t('gl_carries'),
+    rz_tds: t('rz_tds'),
+  };
+}
+
 function compactRow(p, a, state) {
   return {
     name: p.name, pos: p.position, team: p.team, bye: p.bye,
+    red_zone_season: redZoneTotals(p),
     adp: p.adp?.overall ?? null, adp_rank: p.adp?.rank ?? null,
     expert_rank: p.expert?.rank ?? null, expert_tier: p.expert?.tier ?? null,
     trade_market_rank: p.trade_market?.rank ?? null,
@@ -43,7 +57,8 @@ function detailedPlayer(p, a, state) {
     } : a.trend.reason,
     sleeper_signal: { state: a.signal.state, reason: a.signal.reason, context: a.signal.context.map(c => c.text) },
     game_log: (p.games ?? []).map(g =>
-      `wk${g.week} vs ${g.opponent}: snaps ${g.snap_pct != null ? Math.round(g.snap_pct * 100) + '%' : '?'}, tgt ${g.targets ?? '-'}, rec ${g.receptions ?? '-'}, car ${g.carries ?? '-'}, ppr ${g.fantasy_points_ppr ?? '-'}`),
+      `wk${g.week} vs ${g.opponent}: snaps ${g.snap_pct != null ? Math.round(g.snap_pct * 100) + '%' : '?'}, tgt ${g.targets ?? '-'}, rec ${g.receptions ?? '-'}, car ${g.carries ?? '-'}, ppr ${g.fantasy_points_ppr ?? '-'}`
+      + ((g.rz_targets ?? g.rz_carries) != null ? `, red zone ${(g.rz_targets ?? 0) + (g.rz_carries ?? 0)} (inside 5: ${(g.gl_targets ?? 0) + (g.gl_carries ?? 0)})` : '')),
   };
 }
 

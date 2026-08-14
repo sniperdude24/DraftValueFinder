@@ -92,7 +92,55 @@ function distribution(players, team, weeks, weeklyTargets) {
   };
 }
 
-export function buildTeamContext(allPlayers, teamCode, { lastN = 3 } = {}) {
+// Red-zone distribution. Unlike the target pie, this needs no
+// reconstruction: the play-by-play source counts every red-zone play in the
+// league, so `teamRzWeekly` is a complete, exact denominator and the shares
+// below sum to the whole pie rather than to our tracked subset.
+function redZoneDistribution(players, team, weeks, teamRzWeekly) {
+  if (!teamRzWeekly) return null;
+  const weekSet = new Set(weeks);
+  const team_rz_targets = weeks.reduce((t, w) => t + (teamRzWeekly[w]?.rz_targets ?? 0), 0);
+  const team_rz_carries = weeks.reduce((t, w) => t + (teamRzWeekly[w]?.rz_carries ?? 0), 0);
+  const team_gl_targets = weeks.reduce((t, w) => t + (teamRzWeekly[w]?.gl_targets ?? 0), 0);
+  const team_gl_carries = weeks.reduce((t, w) => t + (teamRzWeekly[w]?.gl_carries ?? 0), 0);
+  const team_rz_opportunities = team_rz_targets + team_rz_carries;
+  const team_gl_opportunities = team_gl_targets + team_gl_carries;
+
+  const rows = players.map(p => {
+    const games = gamesForTeam(p, team).filter(g => weekSet.has(g.week));
+    if (!games.length) return null;
+    const rz_targets = sumBy(games, g => g.rz_targets);
+    const rz_carries = sumBy(games, g => g.rz_carries);
+    const gl_opportunities = sumBy(games, g => g.gl_targets) + sumBy(games, g => g.gl_carries);
+    const rz_opportunities = rz_targets + rz_carries;
+    if (!rz_opportunities) return null;
+    return {
+      id: p.id, name: p.name, position: p.position,
+      still_on_team: p.team === team,
+      injury_status: p.meta?.injury_status ?? null,
+      games: games.length,
+      rz_targets, rz_carries, rz_opportunities, gl_opportunities,
+      rz_tds: sumBy(games, g => g.rz_tds),
+      rz_opportunity_share: team_rz_opportunities > 0 ? r3(rz_opportunities / team_rz_opportunities) : null,
+      gl_opportunity_share: team_gl_opportunities > 0 ? r3(gl_opportunities / team_gl_opportunities) : null,
+    };
+  }).filter(Boolean).sort((a, b) => b.rz_opportunities - a.rz_opportunities);
+
+  return {
+    weeks,
+    team_rz_targets, team_rz_carries, team_rz_opportunities,
+    team_gl_opportunities,
+    team_rz_opportunities_pg: weeks.length ? r1(team_rz_opportunities / weeks.length) : null,
+    // Reported for symmetry with the target pie, but this one is exact by
+    // construction: it only falls short if a red-zone touch went to a player
+    // outside our universe, which the number then makes visible.
+    accounted_share: team_rz_opportunities > 0
+      ? r3(sumBy(rows, r => r.rz_opportunities) / team_rz_opportunities) : null,
+    rows,
+  };
+}
+
+export function buildTeamContext(allPlayers, teamCode, { lastN = 3, teamRedzone = null } = {}) {
   const team = normTeam(teamCode);
 
   // Anyone who logged a game for this team, plus anyone currently rostered
@@ -103,6 +151,8 @@ export function buildTeamContext(allPlayers, teamCode, { lastN = 3 } = {}) {
 
   const season = distribution(contributors, team, weeks, weeklyTargets);
   const recent = distribution(contributors, team, weeks.slice(-lastN), weeklyTargets);
+  const redzone = redZoneDistribution(contributors, team, weeks, teamRedzone);
+  const redzone_recent = redZoneDistribution(contributors, team, weeks.slice(-lastN), teamRedzone);
 
   // Share movement: recent window vs the full window, in percentage points.
   const seasonById = new Map(season.rows.map(r => [r.id, r]));
@@ -129,6 +179,13 @@ export function buildTeamContext(allPlayers, teamCode, { lastN = 3 } = {}) {
   const vacated_target_share = departed.length
     ? r3(sumBy(departed, d => d.target_share)) : 0;
   const vacated_carries = sumBy(departed, d => d.carries);
+
+  // Vacated scoring chances — the most fantasy-relevant vacancy of all,
+  // since red-zone touches convert to touchdowns at many times the rate of
+  // touches between the 20s.
+  const departedIds = new Set(departed.map(d => d.id));
+  const vacated_rz_opportunity_share = redzone
+    ? r3(sumBy(redzone.rows.filter(r => departedIds.has(r.id)), r => r.rz_opportunity_share)) : null;
 
   // Ripple: pair each disruption with teammates whose usage rose. Observed
   // co-movement only — the numbers are shown so the user can judge.
@@ -161,8 +218,10 @@ export function buildTeamContext(allPlayers, teamCode, { lastN = 3 } = {}) {
     games: weeks.length,
     season,
     recent,
+    redzone,
+    redzone_recent,
     movement,
-    roster_changes: { departed, arrived, vacated_target_share, vacated_carries },
+    roster_changes: { departed, arrived, vacated_target_share, vacated_carries, vacated_rz_opportunity_share },
     ripple,
   };
 }

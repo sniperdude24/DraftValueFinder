@@ -70,6 +70,20 @@ export function windowStats(games, position = null) {
   // QB opportunities already include pass attempts; don't double-count.
   const plays = position === 'QB' ? opportunities : opportunities + (attempts ?? 0);
 
+  // Red zone. These stay null (not 0) when the play-by-play source hasn't
+  // covered these weeks, so "no red-zone work" and "no red-zone data" stay
+  // distinguishable. rz opportunities are targets + carries at every
+  // position: inside the 20 a QB keeper is a scoring chance like any other.
+  const rzTargets = sum(games, 'rz_targets');
+  const rzCarries = sum(games, 'rz_carries');
+  const rzTds = sum(games, 'rz_tds');
+  const glTargets = sum(games, 'gl_targets');
+  const glCarries = sum(games, 'gl_carries');
+  const rzOpps = rzTargets == null && rzCarries == null
+    ? null : (rzTargets ?? 0) + (rzCarries ?? 0);
+  const glOpps = glTargets == null && glCarries == null
+    ? null : (glTargets ?? 0) + (glCarries ?? 0);
+
   return {
     games: n,
     weeks: games.map(g => g.week),
@@ -105,6 +119,24 @@ export function windowStats(games, position = null) {
     epa_per_play: r3(rate(epaTotal, plays)),
     racr: r2(mean(games, 'racr')),
     cpoe: r2(mean(games, 'passing_cpoe')),
+
+    // Red zone — counting stats over the window, plus per-game rates. The
+    // raw counts are kept alongside every rate because red-zone samples are
+    // small: a 50% TD rate on 2 touches is not a finding.
+    rz_targets: rzTargets,
+    rz_carries: rzCarries,
+    rz_opportunities: rzOpps,
+    rz_tds: rzTds,
+    gl_targets: glTargets,
+    gl_carries: glCarries,
+    gl_opportunities: glOpps,
+    rz_opportunities_pg: r1(perGame(rzOpps, n)),
+    gl_opportunities_pg: r2(perGame(glOpps, n)),
+    rz_td_rate: r3(rate(rzTds, rzOpps)),
+    // What fraction of this player's own workload happens inside the 20 —
+    // a possession receiver and a goal-line back can post identical target
+    // counts with completely different scoring leverage.
+    rz_share_of_own_opportunities: r3(rate(rzOpps, opportunities)),
   };
 }
 

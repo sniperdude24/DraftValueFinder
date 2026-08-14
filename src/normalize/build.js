@@ -45,7 +45,7 @@ const round3 = v => (v == null ? null : Math.round(v * 1000) / 1000);
 
 // ---- weekly-stats CSV → per-player game logs (used for the active stats
 // season AND, in season mode, the prior-season baseline) ----
-function buildLogIndexes(weekly, snaps) {
+function buildLogIndexes(weekly, snaps, redzone) {
   const logsByKey = new Map();
   const logsByName = new Map();
   for (const r of weekly) {
@@ -64,11 +64,19 @@ function buildLogIndexes(weekly, snaps) {
     if (r.game_type !== 'REG') continue;
     snapByNameWeek.set(`${nameKey(r.player)}|${r.week}`, r);
   }
-  return { logsByKey, logsByName, snapByNameWeek };
+  // Red-zone usage joins on the nflverse GSIS player id, which both the
+  // weekly stats file and the play-by-play file carry — an exact join, so
+  // no name matching and no ambiguity.
+  const rzByIdWeek = new Map();
+  const rzWeeks = new Set(redzone?.weeks ?? []);
+  for (const [playerId, weeks] of Object.entries(redzone?.players ?? {})) {
+    for (const [week, v] of Object.entries(weeks)) rzByIdWeek.set(`${playerId}|${week}`, v);
+  }
+  return { logsByKey, logsByName, snapByNameWeek, rzByIdWeek, rzWeeks, hasRedZone: !!redzone };
 }
 
 function gamesFor(name, pos, indexes, conflicts) {
-  const { logsByKey, logsByName, snapByNameWeek } = indexes;
+  const { logsByKey, logsByName, snapByNameWeek, rzByIdWeek, rzWeeks, hasRedZone } = indexes;
   let rawLog = logsByKey.get(`${pos}|${nameKey(name)}`) ?? [];
   if (!rawLog.length && !['K', 'DST'].includes(pos)) {
     // Fallback: same name, different listed position, but with real
@@ -88,6 +96,13 @@ function gamesFor(name, pos, indexes, conflicts) {
     // Accept the snap row when its position matches the player OR matches
     // the stats row's own listed position (two-way / mislabeled players).
     const snapOk = snapRow && (samePositionGroup(snapRow.position, pos) || normPosition(snapRow.position) === normPosition(r.position));
+    // A week the red-zone source covers but where the player does not appear
+    // is a genuine zero. A week it does not cover (no snapshot, or the
+    // play-by-play lagging the weekly file) stays null so the UI shows "—"
+    // rather than implying the player was shut out of the red zone.
+    const rzCovered = hasRedZone && rzWeeks.has(num(r.week));
+    const rz = rzCovered ? (rzByIdWeek.get(`${r.player_id}|${r.week}`) ?? {}) : null;
+    const rzNum = field => (rz ? (rz[field] ?? 0) : null);
     return {
       week: num(r.week),
       stats_team: normTeam(r.team),
@@ -132,6 +147,13 @@ function gamesFor(name, pos, indexes, conflicts) {
       passing_cpoe: round3(num(r.passing_cpoe)),
       pacr: round3(num(r.pacr)),
       fumbles_lost: num(r.fumbles_lost_total),
+
+      // ---- red-zone usage (nflverse play-by-play, joined on GSIS id) ----
+      rz_targets: rzNum('rz_targets'),
+      rz_carries: rzNum('rz_carries'),
+      rz_tds: rzNum('rz_tds'),
+      gl_targets: rzNum('gl_targets'),
+      gl_carries: rzNum('gl_carries'),
     };
   });
 }
@@ -171,14 +193,34 @@ export function buildDatabase() {
   const ffc = JSON.parse(ffcSnap.body);
   const fp = JSON.parse(fpSnap.body);
   const sleeper = JSON.parse(sleeperSnap.body);
-  const indexes = buildLogIndexes(parseCsv(weeklySnap.body), parseCsv(snapsSnap.body));
+  // Red zone is optional: if the play-by-play snapshot is missing the rest
+  // of the build proceeds and the red-zone fields simply read as unavailable.
+  const rzSnap = loadSnapshot(`redzone_${sr.stats_season}.json`);
+  const redzone = rzSnap ? JSON.parse(rzSnap.body) : null;
+  // Play-by-play spells the Rams "LA" where the rest of the app says "LAR"
+  // (and historically JAC/WSH); without this the Rams' red-zone panel would
+  // come back silently empty rather than visibly broken. Merge rather than
+  // overwrite in case both spellings appear in one season.
+  const teamRedzone = redzone ? Object.entries(redzone.teams).reduce((acc, [team, weeks]) => {
+    const key = normTeam(team);
+    acc[key] = acc[key] ?? {};
+    for (const [week, v] of Object.entries(weeks)) {
+      const prev = acc[key][week];
+      acc[key][week] = prev
+        ? Object.fromEntries(Object.keys(v).map(f => [f, (prev[f] ?? 0) + v[f]]))
+        : v;
+    }
+    return acc;
+  }, {}) : null;
+  const indexes = buildLogIndexes(parseCsv(weeklySnap.body), parseCsv(snapsSnap.body), redzone);
 
   // In season mode, last season's logs feed the early-season baseline.
   let baselineIndexes = null;
   if (sr.mode === 'season' && sr.baseline_season) {
     const bw = loadSnapshot(`stats_player_week_${sr.baseline_season}.csv`);
     const bs = loadSnapshot(`snap_counts_${sr.baseline_season}.csv`);
-    if (bw && bs) baselineIndexes = buildLogIndexes(parseCsv(bw.body), parseCsv(bs.body));
+    const brz = loadSnapshot(`redzone_${sr.baseline_season}.json`);
+    if (bw && bs) baselineIndexes = buildLogIndexes(parseCsv(bw.body), parseCsv(bs.body), brz ? JSON.parse(brz.body) : null);
   }
 
   // ---- index market sources by nameKey ----
@@ -348,8 +390,13 @@ export function buildDatabase() {
       projections: projSnap?.meta ?? null,
       weekly_stats: weeklySnap.meta,
       snap_counts: snapsSnap.meta,
+      red_zone: rzSnap?.meta ?? null,
       player_meta: sleeperSnap.meta,
     },
+    // Every red-zone play in the league, not just our top-250 universe — so
+    // red-zone shares divide by a complete, exact denominator, unlike the
+    // target pie which has to be reconstructed from player shares.
+    team_redzone: teamRedzone,
     counts: {
       players: players.length,
       core: players.filter(p => p.tier_group === 'core').length,
@@ -358,6 +405,7 @@ export function buildDatabase() {
       with_stats: players.filter(p => p.games.length).length,
       with_trade_market: players.filter(p => p.trade_market).length,
       with_projection: projResult.attached,
+      with_red_zone: players.filter(p => p.games.some(g => (g.rz_targets ?? 0) + (g.rz_carries ?? 0) > 0)).length,
     },
     unmatched: { ffc_only: unmatchedFfc, veterans_without_stats: suspiciousNoStats, trade_market: tradeMatch.unmatched },
     players,

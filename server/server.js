@@ -165,7 +165,7 @@ const server = createServer(async (req, res) => {
       }
       if (req.method === 'GET' && path.startsWith('/api/teams/')) {
         const code = decodeURIComponent(path.slice('/api/teams/'.length)).toUpperCase();
-        const ctx = buildTeamContext(db.players, code);
+        const ctx = buildTeamContext(db.players, code, { teamRedzone: db.team_redzone?.[code] ?? null });
         // Attach each player's assessment so the UI can show trend/AI/signal
         // alongside the distribution without a second round trip.
         const enrich = row => {
@@ -174,6 +174,7 @@ const server = createServer(async (req, res) => {
         };
         ctx.season.rows = ctx.season.rows.map(enrich);
         ctx.recent.rows = ctx.recent.rows.map(enrich);
+        if (ctx.redzone) ctx.redzone.rows = ctx.redzone.rows.map(enrich);
         return send(res, 200, { mode: db.mode, stats_season: db.stats_season, week: db.week, ...ctx });
       }
       if (req.method === 'GET' && path === '/api/players') {
