@@ -18,6 +18,7 @@ import { runIngest } from '../src/ingest/fetchAll.js';
 import { buildDatabase } from '../src/normalize/build.js';
 import { isStale } from '../src/ingest/freshness.js';
 import { computeWindows } from '../src/analyze/playerStats.js';
+import { buildTeamContext, teamSummaries } from '../src/analyze/teamContext.js';
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..');
 const PUBLIC = join(ROOT, 'public');
@@ -158,6 +159,22 @@ const server = createServer(async (req, res) => {
           drafted: state.drafted.includes(id),
           mine: state.mine.includes(id),
         });
+      }
+      if (req.method === 'GET' && path === '/api/teams') {
+        return send(res, 200, { mode: db.mode, stats_season: db.stats_season, teams: teamSummaries(db.players) });
+      }
+      if (req.method === 'GET' && path.startsWith('/api/teams/')) {
+        const code = decodeURIComponent(path.slice('/api/teams/'.length)).toUpperCase();
+        const ctx = buildTeamContext(db.players, code);
+        // Attach each player's assessment so the UI can show trend/AI/signal
+        // alongside the distribution without a second round trip.
+        const enrich = row => {
+          const a = assessments.get(row.id);
+          return a ? { ...row, ai_rank: a.ai_rank, usage_trend: a.trend.available ? a.trend.usage : null, sleeper_state: a.signal.state } : row;
+        };
+        ctx.season.rows = ctx.season.rows.map(enrich);
+        ctx.recent.rows = ctx.recent.rows.map(enrich);
+        return send(res, 200, { mode: db.mode, stats_season: db.stats_season, week: db.week, ...ctx });
       }
       if (req.method === 'GET' && path === '/api/players') {
         return send(res, 200, {

@@ -118,6 +118,10 @@ td .team { color: var(--dim); font-weight: 400; margin-left: 6px; }
 .badge.inj { background: rgba(255, 107, 107, .15); color: var(--red); }
 .badge.newteam { background: rgba(77, 163, 255, .15); color: var(--accent); }
 .stale-col { opacity: .45; }
+.sharebar { display: block; height: 7px; background: var(--panel2); border-radius: 4px; overflow: hidden; min-width: 60px; }
+.sharebar span { display: block; height: 100%; border-radius: 4px; }
+.bar-tgt { background: var(--accent); }
+tr.departed-row td { opacity: .5; }
 .trend-up { color: var(--green); }
 .trend-down { color: var(--red); }
 .trend-flat { color: var(--dim); }

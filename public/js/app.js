@@ -1,5 +1,6 @@
 import { renderBoard } from './board.js';
 import { renderPlayers } from './players.js';
+import { renderTeams } from './teams.js';
 import { renderTeam } from './team.js';
 import { renderRecs, renderSleepers, renderMarket, renderHistory, renderAbout } from './views.js';
 import { renderRoster } from './roster.js';
@@ -8,6 +9,7 @@ import { api } from './api.js';
 
 const VIEWS = {
   players: renderPlayers,
+  teams: renderTeams,
   board: renderBoard,
   team: renderTeam,
   recs: renderRecs,

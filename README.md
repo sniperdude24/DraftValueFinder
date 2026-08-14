@@ -12,6 +12,13 @@ target and air-yards share, EPA per play, yards per target, catch rate, YAC,
 first downs, explosive plays — sliceable by season / last 3 games / last game.
 A draft board is still included for draft day, but the focus is the season.
 
+A **Teams** page covers the other half: opportunity is a fixed pie, so the
+page reconstructs each offense's weekly target total from player shares and
+shows how that pie is divided, how the division is moving, what departed
+players vacated, and — in the *ripple watch* — which teammates gained usage
+alongside an absence. Ripple links are labeled as observed co-movement, never
+as proven causation.
+
 ## Run it
 
 ```bash
@@ -71,7 +78,8 @@ sources are recorded on the player record, not silently resolved.
 ```
 src/ingest/     fetch raw snapshots (each source independent, none blocking)
 src/normalize/  name/team matching, mode resolution → data/players.json
-src/analyze/    playerStats (windowed metrics), trends, signals, scoring,
+src/analyze/    playerStats (windowed metrics), teamContext (opportunity
+                distribution + ripple), trends, signals, scoring,
                 market comparison, recommendations
 src/ai/         chat grounded in structured data (Claude + fallback)
 src/store/      roster/draft state, personal ranks, history log
