@@ -61,7 +61,7 @@ function tabBody(data, tab) {
         ${statCard('Opportunities/g', t.season.opportunities, t.recent.opportunities, t.deltas.opportunities)}
         ${p.position !== 'QB' ? statCard('Targets/g', t.season.targets, t.recent.targets, null) : ''}
         ${['RB', 'QB'].includes(p.position) ? statCard('Carries/g', t.season.carries, t.recent.carries, null) : ''}
-        ${statCard('PPR pts/g', t.season.ppr, t.recent.ppr, t.deltas.ppr)}
+        ${statCard('Points/g', t.season.ppr, t.recent.ppr, t.deltas.ppr)}
         <div class="stat"><div class="lab">${t.basis.type === 'prior-baseline' ? 'baseline games' : `${esc(String(p.stats_season))} games`}</div><div class="val">${t.season.games}</div></div>
       </div>
       <p class="small">${t.basis.type === 'prior-baseline'
@@ -75,12 +75,12 @@ function tabBody(data, tab) {
     if (!p.games?.length) return `<p>No ${esc(String(p.stats_season))} game data available.</p>`;
     const isQB = p.position === 'QB';
     return `<table><thead><tr>
-      <th>Wk</th><th>Opp</th><th>Snap%</th>${isQB ? '<th>Cmp/Att</th><th>Pass Yd</th><th>Pass TD</th><th>INT</th>' : '<th>Tgt</th><th>Rec</th><th>Rec Yd</th><th>Rec TD</th>'}<th>Car</th><th>Rush Yd</th><th>Rush TD</th><th>PPR</th></tr></thead>
+      <th>Wk</th><th>Opp</th><th>Snap%</th>${isQB ? '<th>Cmp/Att</th><th>Pass Yd</th><th>Pass TD</th><th>INT</th>' : '<th>Tgt</th><th>Rec</th><th>Rec Yd</th><th>Rec TD</th>'}<th>Car</th><th>Rush Yd</th><th>Rush TD</th><th>Pts</th></tr></thead>
       <tbody>${p.games.map(g => `<tr>
         <td>${g.week}</td><td>${esc(g.opponent ?? '')}</td><td>${g.snap_pct != null ? Math.round(g.snap_pct * 100) + '%' : '—'}</td>
         ${isQB ? `<td>${g.completions ?? 0}/${g.attempts ?? 0}</td><td>${g.passing_yards ?? 0}</td><td>${g.passing_tds ?? 0}</td><td>${g.interceptions ?? 0}</td>`
                : `<td>${g.targets ?? 0}</td><td>${g.receptions ?? 0}</td><td>${g.receiving_yards ?? 0}</td><td>${g.receiving_tds ?? 0}</td>`}
-        <td>${g.carries ?? 0}</td><td>${g.rushing_yards ?? 0}</td><td>${g.rushing_tds ?? 0}</td><td><b>${g.fantasy_points_ppr ?? '—'}</b></td>
+        <td>${g.carries ?? 0}</td><td>${g.rushing_yards ?? 0}</td><td>${g.rushing_tds ?? 0}</td><td><b>${g.fantasy_points ?? '—'}</b></td>
       </tr>`).join('')}</tbody></table>
       <p class="small mt">${esc(String(p.stats_season))} regular season, games played. Source: nflverse.</p>`;
   }
@@ -101,8 +101,8 @@ function tabBody(data, tab) {
       ['Yards per carry', 'yards_per_carry', 'n2'],
       ['RACR', 'racr', 'n2'],
       ['EPA per play', 'epa_per_play', 'n3'],
-      ['PPR per opportunity', 'ppr_per_opportunity', 'n2'],
-      ['PPR/g', 'ppr_pg', 'n1'],
+      ['Points per opportunity', 'ppr_per_opportunity', 'n2'],
+      ['Points/g', 'ppr_pg', 'n1'],
       ['Explosive plays (20+)', 'explosive_total', 'int'],
       ['— Red zone —', null, null],
       ['RZ opportunities (inside 20)', 'rz_opportunities', 'int'],
@@ -135,7 +135,7 @@ function tabBody(data, tab) {
       <div class="evidence">
         <b>Snaps:</b> season ${pct(t.season.snap_pct)} → last 3: ${pct(t.recent.snap_pct)} (${t.directions.snaps})<br>
         <b>Opportunities:</b> season ${t.season.opportunities}/g → last 3: ${t.recent.opportunities}/g (${t.directions.opportunities})<br>
-        <b>PPR points:</b> season ${t.season.ppr}/g → last 3: ${t.recent.ppr}/g<br>
+        <b>Fantasy points:</b> season ${t.season.ppr}/g → last 3: ${t.recent.ppr}/g<br>
         ${t.season.target_share != null ? `<b>Target share:</b> season ${pct(t.season.target_share)} → last 3: ${pct(t.recent.target_share)}<br>` : ''}
         <b>Window:</b> ${esc(t.basis.window_label)}
       </div>

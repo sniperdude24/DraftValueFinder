@@ -128,7 +128,7 @@ test('fields are extracted past quoted commas in the play description', () => {
 
 const game = over => ({
   week: 1, targets: 5, carries: 10, receptions: 3, receiving_yards: 30,
-  rushing_yards: 40, fantasy_points_ppr: 10,
+  rushing_yards: 40, fantasy_points: 10,
   rz_targets: 1, rz_carries: 3, rz_tds: 1, gl_targets: 0, gl_carries: 2, ...over,
 });
 
@@ -172,7 +172,7 @@ function rzPlayer(id, position, team, lines, extra = {}) {
     id, name: id, position, team, stats_team: team, meta: { injury_status: null }, ...extra,
     games: lines.map(([week, rz_targets, rz_carries, gl_carries = 0]) => ({
       week, stats_team: team, targets: rz_targets * 2, target_share: 0.2, carries: rz_carries * 2,
-      receiving_air_yards: 0, fantasy_points_ppr: 10,
+      receiving_air_yards: 0, fantasy_points: 10,
       rz_targets, rz_carries, rz_tds: 0, gl_targets: 0, gl_carries,
     })),
   };

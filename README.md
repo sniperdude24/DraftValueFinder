@@ -1,6 +1,6 @@
 # Fantasy Value Finder
 
-Season-long fantasy football player analysis for a 10-team PPR league.
+Season-long fantasy football player analysis for a 10-team league.
 **Numbers first. Team context second. AI connects the dots.**
 
 The point is not to rank players — the market already does that. The point is to
@@ -64,6 +64,11 @@ sources are recorded on the player record, not silently resolved.
   (ADP + expert average) adjusted only for evidence in the data (usage trends,
   unsustainable spikes, injury designations). Every adjustment is emitted as a
   readable factor. Confidence % measures evidence strength, not win probability.
+- **Custom scoring** — PPR, half-PPR, standard, or a per-stat rule set, edited on
+  the Data page. Points are computed from each game's components rather than taken
+  from a precomputed total, so a change re-scores every game log and flows through
+  trends, the AI rank, team pages and the chat. Changing it re-scores in memory and
+  downloads nothing.
 - **Red-zone usage** — a Players-explorer preset and a Teams panel covering
   touches inside the 20 and inside the 5, red-zone TDs, and each player's
   share of the team's scoring chances. Counts lead, rates follow: a 50% TD
@@ -89,9 +94,10 @@ sources are recorded on the player record, not silently resolved.
 ```
 src/ingest/     fetch raw snapshots (each source independent, none blocking)
 src/normalize/  name/team matching, mode resolution → data/players.json
-src/analyze/    playerStats (windowed metrics), teamContext (opportunity
-                distribution + red-zone pie + ripple), trends, signals,
-                scoring, market comparison, recommendations
+src/analyze/    fantasyPoints (configurable scoring), playerStats (windowed
+                metrics), teamContext (opportunity distribution + red-zone pie
+                + ripple), trends, signals, score (AI rank), market
+                comparison, recommendations
 src/ai/         chat grounded in structured data (Claude + fallback)
 src/store/      roster/draft state, personal ranks, history log
 src/yahoo/      dormant Yahoo draft sync (credential-gated)
@@ -123,9 +129,22 @@ is more than 20 hours old.
 - **Red-zone shares divide by the true team total**, not by the tracked
   players — the play-by-play file has every snap, so nothing is inferred.
   The share that went to players outside the top-250 universe is displayed.
+- **Fantasy points** are computed by `analyze/fantasyPoints.js` from component
+  stats, never read from a precomputed total. Under PPR rules the engine
+  reproduces nflverse's own `fantasy_points_ppr` for every one of the 18,539
+  regular-season player-weeks in the source file, which is what makes the
+  custom rule sets trustworthy — they are the same arithmetic with different
+  coefficients. nflverse's figure is kept on each game row untouched, as the
+  reference the engine is checked against.
+- **Fumbles**: only sack, rushing and receiving fumbles are charged. The raw
+  `fumbles_lost_total` also counts special-teams muffs, which fantasy does not
+  penalize — using it over-charged return men by 2 points a muff.
 - Undefined rates render as `—`, never as `0`. A red-zone blank means the
   play-by-play source has not covered those games; `0` means the player was
   genuinely shut out. The two are never conflated.
+- **ADP and expert ranks stay PPR** whatever your scoring is set to: both come
+  from PPR-specific endpoints and cannot be converted. Under non-PPR scoring the
+  app says so rather than implying the comparison is like-for-like.
 
 ### Data pipeline
 

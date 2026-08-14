@@ -2,6 +2,60 @@
 import { api, esc, pct, trendArrow, signalBadge } from './api.js';
 import { openProfile } from './profile.js';
 
+// Human labels for the scoring rules. Yardage rules are stored per yard, so
+// they are shown as "1 point per N yards" — nobody thinks in 0.04.
+const RULE_LABELS = {
+  passing_yards: ['Passing yards', 'per yard (0.04 = 1 per 25)'],
+  passing_tds: ['Passing TD', ''],
+  interceptions: ['Interception', ''],
+  rushing_yards: ['Rushing yards', 'per yard (0.1 = 1 per 10)'],
+  rushing_tds: ['Rushing TD', ''],
+  receptions: ['Reception', 'the only difference between PPR, half and standard'],
+  receiving_yards: ['Receiving yards', 'per yard (0.1 = 1 per 10)'],
+  receiving_tds: ['Receiving TD', ''],
+  two_point_conversions: ['Two-point conversion', ''],
+  fumbles_lost: ['Fumble lost', 'offensive fumbles only — special-teams muffs are not charged'],
+  special_teams_tds: ['Special-teams TD', ''],
+};
+
+const PRESET_LABELS = { ppr: 'PPR', half_ppr: 'Half PPR', standard: 'Standard', custom: 'Custom' };
+
+function scoringSection(s) {
+  const active = s.preset;
+  return `
+    <div class="panel"><h2>Scoring</h2>
+      <p class="small">Points are computed from each game's component stats, not taken from a
+        precomputed total — so changing these values re-scores every game log and flows through
+        trends, the AI rank, team pages and the chat. Changing scoring re-scores in memory; it does
+        not re-download anything.</p>
+      <div class="toolbar mt">
+        ${Object.keys(PRESET_LABELS).filter(p => p !== 'custom').map(p =>
+          `<button class="posbtn ${active === p ? 'active' : ''}" data-preset="${p}">${PRESET_LABELS[p]}</button>`).join('')}
+        <span class="small">Active: <b>${PRESET_LABELS[active] ?? esc(active)}</b></span>
+      </div>
+      <table class="mt">
+        <thead><tr><th>Stat</th><th>Points</th><th>Note</th></tr></thead>
+        <tbody>${s.fields.map(f => `<tr>
+          <td>${esc(RULE_LABELS[f]?.[0] ?? f)}</td>
+          <td><input type="number" step="any" class="score-rule" data-field="${f}" value="${s.rules[f] ?? 0}" style="width:80px"></td>
+          <td class="small" style="white-space:normal">${esc(RULE_LABELS[f]?.[1] ?? '')}</td>
+        </tr>`).join('')}</tbody>
+      </table>
+      <button class="rowbtn mt" id="scoring-apply" style="padding:8px 14px">Apply custom scoring</button>
+      <span class="small" id="scoring-status"></span>
+      ${active !== 'ppr' ? `<div class="warn mt">
+        <b>ADP and expert ranks are still PPR.</b> Those columns come from PPR-specific sources
+        (Fantasy Football Calculator and FantasyPros) and cannot be converted to ${esc(PRESET_LABELS[active] ?? active)}
+        scoring. The app's own numbers — points, trends, AI rank — now use your scoring, so any
+        disagreement with the market partly reflects the format difference, not just opinion.
+        This is shown rather than silently corrected.
+      </div>` : ''}
+      <p class="small mt">The engine is checked against nflverse's own PPR figure: under PPR rules it
+        reproduces their number for every game log in the database, so the arithmetic here is
+        verified rather than assumed.</p>
+    </div>`;
+}
+
 export async function renderRecs(el, refresh) {
   const r = await api.recommendations();
   const season = r.mode === 'season';
@@ -208,8 +262,9 @@ async function wireYahoo(el, refresh) {
 }
 
 export async function renderAbout(el, refresh) {
-  const [m, y] = await Promise.all([api.meta(), api.yahoo.status()]);
+  const [m, y, s] = await Promise.all([api.meta(), api.yahoo.status(), api.scoring()]);
   el.innerHTML = `
+    ${scoringSection(s)}
     ${yahooSection(y)}
     <div class="panel"><h2>Mode: ${m.mode === 'season' ? `Season · Week ${m.week ?? '?'} of ${m.season}` : `Draft prep for ${m.season}`}</h2>
       <p class="small">${m.mode === 'season'
@@ -262,5 +317,24 @@ export async function renderAbout(el, refresh) {
   };
   refreshBtn.onclick = () => runRefresh(false);
   forceBtn.onclick = () => runRefresh(true);
+
+  const scoringStatus = el.querySelector('#scoring-status');
+  const applyScoring = async (body, label) => {
+    scoringStatus.textContent = ' Re-scoring…';
+    try {
+      const r = await api.setScoring(body);
+      scoringStatus.textContent = ` Now scoring as ${PRESET_LABELS[r.preset] ?? r.preset}${label ? '' : ''}.`;
+      setTimeout(() => refresh?.(), 900);
+    } catch (err) {
+      scoringStatus.textContent = ` Failed: ${err.message}`;
+    }
+  };
+  el.querySelectorAll('[data-preset]').forEach(b =>
+    b.onclick = () => applyScoring({ preset: b.dataset.preset }));
+  el.querySelector('#scoring-apply').onclick = () => {
+    const rules = {};
+    el.querySelectorAll('.score-rule').forEach(i => { rules[i.dataset.field] = Number(i.value); });
+    applyScoring({ preset: 'custom', rules });
+  };
   await wireYahoo(el, refresh ?? (() => renderAbout(el, refresh)));
 }

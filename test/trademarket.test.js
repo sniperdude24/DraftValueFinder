@@ -13,7 +13,7 @@ function mkPlayer(id, name, pos, { adpRank = 50, expertRank = 50 } = {}) {
     expert: { rank: expertRank, tier: 3, stdev: 4 },
     games: Array.from({ length: 8 }, (_, i) => ({
       week: i + 1, snap_pct: 0.6, targets: 6, receptions: 4, carries: 0, attempts: 0,
-      fantasy_points_ppr: 12, target_share: null,
+      fantasy_points: 12, target_share: null,
     })),
     baseline: null,
   };

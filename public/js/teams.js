@@ -26,7 +26,7 @@ function distributionTable(rows, { title, note }) {
       <h2>${esc(title)}</h2>
       <p class="small">${note}</p>
       <table class="mt">
-        <thead><tr><th>Player</th><th>G</th><th>Tgt</th><th>Tgt Share</th><th></th><th>Car</th><th>Car Share</th><th>PPR/g</th><th>Trend</th></tr></thead>
+        <thead><tr><th>Player</th><th>G</th><th>Tgt</th><th>Tgt Share</th><th></th><th>Car</th><th>Car Share</th><th>Pts/g</th><th>Trend</th></tr></thead>
         <tbody>
           ${rows.map(r => `<tr class="${r.still_on_team ? '' : 'departed-row'}">
             <td class="name" data-id="${esc(r.id)}">${esc(r.name)}<span class="team">${esc(r.position)}</span>

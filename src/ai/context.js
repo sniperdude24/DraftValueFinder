@@ -57,7 +57,7 @@ function detailedPlayer(p, a, state) {
     } : a.trend.reason,
     sleeper_signal: { state: a.signal.state, reason: a.signal.reason, context: a.signal.context.map(c => c.text) },
     game_log: (p.games ?? []).map(g =>
-      `wk${g.week} vs ${g.opponent}: snaps ${g.snap_pct != null ? Math.round(g.snap_pct * 100) + '%' : '?'}, tgt ${g.targets ?? '-'}, rec ${g.receptions ?? '-'}, car ${g.carries ?? '-'}, ppr ${g.fantasy_points_ppr ?? '-'}`
+      `wk${g.week} vs ${g.opponent}: snaps ${g.snap_pct != null ? Math.round(g.snap_pct * 100) + '%' : '?'}, tgt ${g.targets ?? '-'}, rec ${g.receptions ?? '-'}, car ${g.carries ?? '-'}, pts ${g.fantasy_points ?? '-'}`
       + ((g.rz_targets ?? g.rz_carries) != null ? `, red zone ${(g.rz_targets ?? 0) + (g.rz_carries ?? 0)} (inside 5: ${(g.gl_targets ?? 0) + (g.gl_carries ?? 0)})` : '')),
   };
 }

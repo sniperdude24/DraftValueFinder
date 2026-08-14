@@ -96,7 +96,7 @@ export function computeTrend(player) {
       carries: round(avg(seasonG, 'carries')),
       opportunities: round(avg(seasonG, 'opp')),
       target_share: round(avg(seasonG, 'target_share'), 3),
-      ppr: round(avg(seasonG, 'fantasy_points_ppr')),
+      ppr: round(avg(seasonG, 'fantasy_points')),
     };
     const recent = {
       snap_pct: round(avg(last3G, 'snap_pct'), 3),
@@ -104,7 +104,7 @@ export function computeTrend(player) {
       carries: round(avg(last3G, 'carries')),
       opportunities: round(avg(last3G, 'opp')),
       target_share: round(avg(last3G, 'target_share'), 3),
-      ppr: round(avg(last3G, 'fantasy_points_ppr')),
+      ppr: round(avg(last3G, 'fantasy_points')),
     };
     const notes = [];
     const lastGame = games[games.length - 1];
@@ -133,7 +133,10 @@ export function computeTrend(player) {
       carries: baseline.carries,
       opportunities: round(baseOpp),
       target_share: null,
-      ppr: baseline.ppr,
+      // Re-scored under the active rules when the database loads. `ppr` is
+      // the frozen PPR figure, kept only as a fallback for records built
+      // before scoring components were stored on the baseline.
+      ppr: baseline.points ?? baseline.ppr,
     };
     const recent = {
       snap_pct: round(avg(curG, 'snap_pct'), 3),
@@ -141,7 +144,7 @@ export function computeTrend(player) {
       carries: round(avg(curG, 'carries')),
       opportunities: round(avg(curG, 'opp')),
       target_share: round(avg(curG, 'target_share'), 3),
-      ppr: round(avg(curG, 'fantasy_points_ppr')),
+      ppr: round(avg(curG, 'fantasy_points')),
     };
     return assemble({
       base, recent,

@@ -19,6 +19,7 @@ import { buildDatabase } from '../src/normalize/build.js';
 import { isStale } from '../src/ingest/freshness.js';
 import { computeWindows } from '../src/analyze/playerStats.js';
 import { buildTeamContext, teamSummaries } from '../src/analyze/teamContext.js';
+import { scoreGame, rulesFor, describeRules, PRESETS, SCORING_FIELDS, DEFAULT_RULES } from '../src/analyze/fantasyPoints.js';
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..');
 const PUBLIC = join(ROOT, 'public');
@@ -26,12 +27,39 @@ const PORT = Number(process.env.PORT ?? 3210);
 
 // ---- load database & precompute assessments (hot-reloadable via /api/admin/refresh) ----
 const dbPath = join(ROOT, 'data', 'players.json');
-let db, assessments, byId;
+let db, assessments, byId, activeRules = DEFAULT_RULES;
+
+// Score every game row under the active rules. Everything downstream —
+// trends, the unsustainable-spike test, the AI rank, team pages, the chat —
+// reads `fantasy_points`, so this one pass is what makes a scoring change
+// flow through the whole app instead of being a cosmetic column.
+//
+// It walks the in-memory database only. Changing scoring must never trigger
+// a re-ingest or a rebuild: the components are already on disk, and the
+// arithmetic over ~3k rows is instant.
+function applyScoring(rules) {
+  activeRules = rules;
+  for (const p of db.players) {
+    for (const g of p.games ?? []) g.fantasy_points = scoreGame(g, rules);
+    // The baseline season's rows aren't retained, but its per-game component
+    // averages are — and scoring is linear, so scoring the averages gives
+    // exactly the average of the scores.
+    if (p.baseline?.components) {
+      p.baseline.points = scoreGame(p.baseline.components, rules);
+    }
+  }
+  assessments = assessAll(db.players);
+}
+
+function currentRules(state) {
+  return rulesFor(state?.scoring);
+}
+
 function loadDb() {
   db = JSON.parse(readFileSync(dbPath, 'utf8'));
-  assessments = assessAll(db.players);
   byId = new Map(db.players.map(p => [p.id, p]));
-  console.log(`Loaded ${db.players.length} players (${db.mode ?? 'draft'} mode, stats ${db.stats_season ?? '?'}, built ${db.built_at})`);
+  applyScoring(currentRules(loadState()));
+  console.log(`Loaded ${db.players.length} players (${db.mode ?? 'draft'} mode, stats ${db.stats_season ?? '?'}, scoring ${describeRules(activeRules)}, built ${db.built_at})`);
 }
 
 // The player database is a build artifact, not source — on a fresh clone
@@ -131,7 +159,7 @@ const server = createServer(async (req, res) => {
       const state = loadState();
 
       if (req.method === 'GET' && path === '/api/meta') {
-        return send(res, 200, { built_at: db.built_at, mode: db.mode, season: db.season, stats_season: db.stats_season, baseline_season: db.baseline_season, week: db.week, sources: db.sources, counts: db.counts, unmatched: db.unmatched, auto_refresh: autoRefresh });
+        return send(res, 200, { built_at: db.built_at, mode: db.mode, season: db.season, stats_season: db.stats_season, baseline_season: db.baseline_season, week: db.week, sources: db.sources, counts: db.counts, unmatched: db.unmatched, auto_refresh: autoRefresh, scoring: describeRules(activeRules) });
       }
       if (req.method === 'GET' && path === '/api/board') {
         return send(res, 200, { mode: db.mode, week: db.week, stats_season: db.stats_season, players: db.players.map(p => boardRow(p, state)) });
@@ -164,6 +192,40 @@ const server = createServer(async (req, res) => {
           mine: state.mine.includes(id),
         });
       }
+      if (req.method === 'GET' && path === '/api/scoring') {
+        return send(res, 200, {
+          preset: describeRules(activeRules),
+          rules: activeRules,
+          presets: PRESETS,
+          fields: SCORING_FIELDS,
+          // The market columns come from PPR-specific endpoints and cannot
+          // follow custom scoring; the UI must say so rather than imply the
+          // comparison is like-for-like.
+          market_is_ppr: true,
+        });
+      }
+      if (req.method === 'PUT' && path === '/api/scoring') {
+        const body = await readBody(req);
+        const preset = body?.preset ?? 'custom';
+        if (preset !== 'custom' && !PRESETS[preset]) {
+          return send(res, 400, { error: `unknown preset "${preset}"` });
+        }
+        // Reject non-numeric rule values rather than letting them become NaN
+        // and quietly poison every score downstream.
+        const rules = {};
+        if (preset === 'custom') {
+          for (const [k, v] of Object.entries(body?.rules ?? {})) {
+            if (!SCORING_FIELDS.includes(k)) continue;
+            const n = Number(v);
+            if (!Number.isFinite(n)) return send(res, 400, { error: `rule "${k}" must be a number` });
+            rules[k] = n;
+          }
+        }
+        const scoring = preset === 'custom' ? { preset: 'custom', rules } : { preset, rules: null };
+        saveState({ ...state, scoring });
+        applyScoring(rulesFor(scoring));
+        return send(res, 200, { ok: true, preset: describeRules(activeRules), rules: activeRules });
+      }
       if (req.method === 'GET' && path === '/api/teams') {
         return send(res, 200, { mode: db.mode, stats_season: db.stats_season, teams: teamSummaries(db.players) });
       }
@@ -184,6 +246,7 @@ const server = createServer(async (req, res) => {
       if (req.method === 'GET' && path === '/api/players') {
         return send(res, 200, {
           mode: db.mode, week: db.week, stats_season: db.stats_season,
+          scoring: describeRules(activeRules),
           players: db.players.map(p => {
             const a = assessments.get(p.id);
             return {

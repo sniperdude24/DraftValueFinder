@@ -9,7 +9,7 @@ function wr(games) {
     meta: { years_exp: 3 },
     games: games.map(([snap, tgt, ppr], i) => ({
       week: i + 1, snap_pct: snap, targets: tgt, receptions: Math.round(tgt * 0.7),
-      carries: 0, attempts: 0, fantasy_points_ppr: ppr, target_share: null,
+      carries: 0, attempts: 0, fantasy_points: ppr, target_share: null,
     })),
   };
 }

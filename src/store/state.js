@@ -6,7 +6,10 @@ import { ROOT } from '../ingest/util.js';
 
 const STATE_PATH = join(ROOT, 'data', 'state.json');
 
-const DEFAULT = { drafted: [], mine: [], personalRanks: {} };
+// `scoring` holds a preset name, or 'custom' plus a full rule set. loadState
+// spreads DEFAULT underneath the saved object, so a state.json written
+// before scoring existed picks up PPR without needing a migration step.
+const DEFAULT = { drafted: [], mine: [], personalRanks: {}, scoring: { preset: 'ppr', rules: null } };
 
 export function loadState() {
   if (!existsSync(STATE_PATH)) return structuredClone(DEFAULT);

@@ -65,7 +65,7 @@ export function windowStats(games, position = null) {
   const opportunities = position
     ? games.reduce((t, g) => t + (opportunity(g, position) ?? 0), 0)
     : (targets ?? 0) + (carries ?? 0);
-  const ppr = sum(games, 'fantasy_points_ppr');
+  const ppr = sum(games, 'fantasy_points');
   const epaTotal = (sum(games, 'receiving_epa') ?? 0) + (sum(games, 'rushing_epa') ?? 0) + (sum(games, 'passing_epa') ?? 0);
   // QB opportunities already include pass attempts; don't double-count.
   const plays = position === 'QB' ? opportunities : opportunities + (attempts ?? 0);

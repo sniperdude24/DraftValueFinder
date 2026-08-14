@@ -36,7 +36,7 @@ function seasonPlayer(games, baseline) {
     position: 'WR', stats_season: 2026, meta: { years_exp: 4 },
     games: games.map(([snap, tgt, ppr], i) => ({
       week: i + 1, snap_pct: snap, targets: tgt, receptions: Math.round(tgt * 0.7),
-      carries: 0, attempts: 0, fantasy_points_ppr: ppr, target_share: null,
+      carries: 0, attempts: 0, fantasy_points: ppr, target_share: null,
     })),
     baseline,
   };
@@ -95,7 +95,7 @@ function mkPlayer(id, pos, rank) {
     expert: { rank, tier: Math.ceil(rank / 4), stdev: 4, scope: 'rest-of-season' },
     games: Array.from({ length: 8 }, (_, i) => ({
       week: i + 1, snap_pct: 0.6, targets: 6, receptions: 4, carries: pos === 'RB' ? 12 : 0,
-      attempts: pos === 'QB' ? 30 : 0, fantasy_points_ppr: 12, target_share: null,
+      attempts: pos === 'QB' ? 30 : 0, fantasy_points: 12, target_share: null,
     })),
     baseline: null,
   };

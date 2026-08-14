@@ -86,7 +86,7 @@ export async function renderTeam(el, refresh) {
       ${!t.players.length ? '<p class="small mt">No players yet — mark picks as "My pick" on the draft board and they\'ll appear here.</p>' : ''}
     </div>
     <table>
-      <thead><tr><th>Slot</th><th>Player</th><th>Bye</th><th>Proj Pts<span class="aid"> wk ${projWeekLabel?.week ?? '?'}</span></th><th>${season ? 'PPR (last / avg)' : `PPR/g ${t.stats_season}`}</th><th>Stat line</th><th>Trend · AI</th><th>My Rank</th></tr></thead>
+      <thead><tr><th>Slot</th><th>Player</th><th>Bye</th><th>Proj Pts<span class="aid"> wk ${projWeekLabel?.week ?? '?'}</span></th><th>${season ? 'Pts (last / avg)' : `Pts/g ${t.stats_season}`}</th><th>Stat line</th><th>Trend · AI</th><th>My Rank</th></tr></thead>
       <tbody>
         ${filled.map(s => row(s.label, s.pos, s.player)).join('')}
         ${bench.length ? `<tr><td colspan="8" class="bench-label" style="border-bottom:none">Bench</td></tr>` : ''}

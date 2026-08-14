@@ -32,8 +32,10 @@ const METRICS = {
   first_downs_pg: ['1D/g', 'n1', 'First downs generated per game'],
   explosive_total: ['20+', 'int', 'Plays of 20+ yards in the window'],
   epa_per_play: ['EPA/play', 'n3', 'Expected points added per play'],
-  ppr_pg: ['PPR/g', 'n1', 'PPR fantasy points per game'],
-  ppr_per_opportunity: ['PPR/Opp', 'n2', 'PPR points per target or carry — efficiency of usage'],
+  // Labelled "Pts", not "PPR": scoring is configurable on the Data page, so
+  // naming the format here would be wrong for anyone who changed it.
+  ppr_pg: ['Pts/g', 'n1', 'Fantasy points per game under your scoring settings'],
+  ppr_per_opportunity: ['Pts/Opp', 'n2', 'Fantasy points per target or carry — efficiency of usage'],
   racr: ['RACR', 'n2', 'Receiving yards ÷ air yards'],
   tds_total: ['TD', 'int', 'Total touchdowns in the window'],
 

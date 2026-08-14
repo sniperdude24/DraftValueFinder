@@ -6,7 +6,7 @@ function game(week, o = {}) {
   return {
     week, snap_pct: 0.7, targets: 0, receptions: 0, receiving_yards: 0, receiving_tds: 0,
     carries: 0, rushing_yards: 0, rushing_tds: 0, attempts: 0, passing_yards: 0, passing_tds: 0,
-    fantasy_points_ppr: 0, target_share: null, air_yards_share: null, wopr: null,
+    fantasy_points: 0, target_share: null, air_yards_share: null, wopr: null,
     receiving_air_yards: null, receiving_yac: null, receiving_first_downs: 0, receiving_epa: null,
     receiving_20: 0, rushing_first_downs: 0, rushing_epa: null, rushing_20: 0, racr: null,
     ...o,
@@ -62,8 +62,8 @@ test('absent advanced fields degrade to null rather than zero', () => {
 
 test('per-game volume divides by games in the window', () => {
   const s = windowStats([
-    game(1, { targets: 10, carries: 2, fantasy_points_ppr: 20 }),
-    game(2, { targets: 6, carries: 0, fantasy_points_ppr: 10 }),
+    game(1, { targets: 10, carries: 2, fantasy_points: 20 }),
+    game(2, { targets: 6, carries: 0, fantasy_points: 10 }),
   ]);
   assert.equal(s.targets_pg, 8);
   assert.equal(s.opportunities_pg, 9);   // (16 targets + 2 carries) / 2

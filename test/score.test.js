@@ -10,7 +10,7 @@ function mkPlayer(games, { adpRank = 50, expertRank = 50, injury = null, id = 'W
     expert: { rank: expertRank, tier: 3, stdev: 5 },
     games: games.map(([snap, tgt], i) => ({
       week: i + 1, snap_pct: snap, targets: tgt, receptions: Math.round(tgt * 0.7),
-      carries: 0, attempts: 0, fantasy_points_ppr: tgt * 1.8, target_share: null,
+      carries: 0, attempts: 0, fantasy_points: tgt * 1.8, target_share: null,
     })),
   };
 }

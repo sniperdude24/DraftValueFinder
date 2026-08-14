@@ -22,6 +22,7 @@ import { nameKey, normPosition, normTeam, samePositionGroup, playerId } from './
 import { resolveSeason } from './season.js';
 import { matchTradeMarket } from './tradeMarket.js';
 import { attachProjections } from './projections.js';
+import { SCORING_FIELDS } from '../analyze/fantasyPoints.js';
 import { loadState } from '../store/state.js';
 
 const FANTASY_POSITIONS = new Set(['QB', 'RB', 'WR', 'TE', 'K', 'DST']);
@@ -121,7 +122,19 @@ function gamesFor(name, pos, indexes, conflicts) {
       passing_yards: num(r.passing_yards),
       passing_tds: num(r.passing_tds),
       interceptions: num(r.passing_interceptions),
+      // nflverse's own PPR number, kept untouched. It is not what the app
+      // scores with — it is the reference the scoring engine is checked
+      // against, so overwriting it would destroy the only independent
+      // answer we have.
       fantasy_points_ppr: round1(num(r.fantasy_points_ppr)),
+
+      // ---- remaining scoring components (see analyze/fantasyPoints.js) ----
+      // The three two-point varieties are always worth the same and no
+      // scoring system separates them, so they are summed here.
+      two_point_conversions: (num(r.passing_2pt_conversions) ?? 0)
+        + (num(r.rushing_2pt_conversions) ?? 0)
+        + (num(r.receiving_2pt_conversions) ?? 0),
+      special_teams_tds: num(r.special_teams_tds),
 
       // ---- opportunity / advanced (nflverse-computed, per game) ----
       // Shares and WOPR are already per-game rates in the source; WOPR is
@@ -146,7 +159,14 @@ function gamesFor(name, pos, indexes, conflicts) {
       passing_epa: round3(num(r.passing_epa)),
       passing_cpoe: round3(num(r.passing_cpoe)),
       pacr: round3(num(r.pacr)),
-      fumbles_lost: num(r.fumbles_lost_total),
+      // OFFENSIVE fumbles only. `fumbles_lost_total` also counts special-teams
+      // muffs, which fantasy scoring does not charge to the player — using it
+      // over-penalized return men by exactly 2 points a muff, which is what
+      // made 36 player-weeks disagree with nflverse's own PPR figure.
+      fumbles_lost: (num(r.sack_fumbles_lost) ?? 0)
+        + (num(r.rushing_fumbles_lost) ?? 0)
+        + (num(r.receiving_fumbles_lost) ?? 0),
+      fumbles_lost_all: num(r.fumbles_lost_total),
 
       // ---- red-zone usage (nflverse play-by-play, joined on GSIS id) ----
       rz_targets: rzNum('rz_targets'),
@@ -165,6 +185,15 @@ function avg(games, pick) {
 
 function baselineFrom(games, season) {
   if (!games.length) return null;
+  // The baseline season's game rows are not kept on the player record, so
+  // its points would be frozen at PPR forever unless the scoring components
+  // come along too. Scoring is linear, so storing per-game AVERAGES of each
+  // component is enough: the score of the averages equals the average of the
+  // scores, and the baseline re-scores exactly under any rule set.
+  const components = {};
+  for (const field of SCORING_FIELDS) {
+    components[field] = round3(avg(games, g => g[field]));
+  }
   return {
     season,
     games: games.length,
@@ -173,6 +202,7 @@ function baselineFrom(games, season) {
     carries: round1(avg(games, g => g.carries)),
     attempts: round1(avg(games, g => g.attempts)),
     ppr: round1(avg(games, g => g.fantasy_points_ppr)),
+    components,
   };
 }
 

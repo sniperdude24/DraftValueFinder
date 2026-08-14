@@ -10,7 +10,7 @@ function player(id, position, team, lines, extra = {}) {
     meta: { injury_status: null }, ...extra,
     games: lines.map(([week, stats_team, targets, target_share, carries = 0]) => ({
       week, stats_team, targets, target_share, carries,
-      receiving_air_yards: 0, fantasy_points_ppr: targets * 1.5 + carries,
+      receiving_air_yards: 0, fantasy_points: targets * 1.5 + carries,
     })),
   };
 }
