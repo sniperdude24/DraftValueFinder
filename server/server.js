@@ -9,6 +9,8 @@ import { marketComparison } from '../src/analyze/market.js';
 import { recommendations } from '../src/analyze/recommend.js';
 import { loadState, saveState, markDrafted, undoDraft, setPersonalRank, setOwner, setTeams, clearRosters, myTeamId, UNKNOWN_OWNER } from '../src/store/state.js';
 import { leagueView, resolveNames } from '../src/analyze/league.js';
+import { weeklyReport } from '../src/analyze/weekly.js';
+import { applyFreeAgentList } from '../src/store/state.js';
 import { logRecommendations, logEvent, readHistory } from '../src/store/history.js';
 import { chat } from '../src/ai/chat.js';
 import { isConfigured, isConnected, authorizeUrl, awaitCallback } from '../src/yahoo/oauth.js';
@@ -23,7 +25,7 @@ import { buildTeamContext, teamSummaries } from '../src/analyze/teamContext.js';
 import {
   scoreGame, scorePlayers, rulesFor, describeRules, normalizeRules, copyPosition,
   PRESETS, DEFAULT_RULES, POSITIONS, CATEGORIES, categoriesFor,
-  primaryCategoriesFor, rareCategoriesFor,
+  primaryCategoriesFor, rareCategoriesFor, metaFor, fieldFor, isMilestone,
 } from '../src/analyze/fantasyPoints.js';
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..');
@@ -73,6 +75,14 @@ const MIME = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8', '.json': 'application/json',
   '.svg': 'image/svg+xml', '.png': 'image/png', '.ico': 'image/x-icon',
+};
+
+// Pure modules the frontend shares with the server. See the /shared/ route.
+const SHARED_MODULES = {
+  '/shared/rosterTable.js': 'src/analyze/rosterTable.js',
+  '/shared/fantasyPoints.js': 'src/analyze/fantasyPoints.js',
+  '/shared/lineup.js': 'src/analyze/lineup.js',
+  '/shared/roster.js': 'src/analyze/roster.js',
 };
 
 function send(res, status, body, type = 'application/json') {
@@ -192,13 +202,19 @@ const server = createServer(async (req, res) => {
         });
       }
       if (req.method === 'GET' && path === '/api/league') {
-        return send(res, 200, { mode: db.mode, week: db.week, ...leagueView(db.players, state) });
+        return send(res, 200, {
+          mode: db.mode, week: db.week, stats_season: db.stats_season, baseline_season: db.baseline_season,
+          // NOT `free_agents` — leagueView already returns that as a count,
+          // and spreading it after would silently overwrite this object.
+          free_agent_pool: state.freeAgents ?? null,
+          ...leagueView(db.players, state),
+        });
       }
       if (req.method === 'PUT' && path === '/api/league/teams') {
         const { teams } = await readBody(req);
         if (!Array.isArray(teams) || !teams.length) return send(res, 400, { error: 'teams array required' });
         saveState(setTeams(state, teams));
-        return send(res, 200, { ok: true, ...leagueView(db.players, loadState()) });
+        return send(res, 200, { ok: true, mode: db.mode, week: db.week, stats_season: db.stats_season, baseline_season: db.baseline_season, ...leagueView(db.players, loadState()) });
       }
       if (req.method === 'POST' && path === '/api/league/owner') {
         const { id, team_id = null } = await readBody(req);
@@ -225,6 +241,37 @@ const server = createServer(async (req, res) => {
         }
         return send(res, 200, { ok: true, committed: !!commit, ...resolved });
       }
+      if (req.method === 'POST' && path === '/api/league/free-agents') {
+        // Same two-step contract as bulk roster paste: resolve and report,
+        // write only on confirm. The difference is what a match MEANS here —
+        // everything NOT in this list becomes "rostered by somebody", so a
+        // careless commit is far more consequential than a roster paste.
+        const { text, commit = false } = await readBody(req);
+        const resolved = resolveNames(text, db.players);
+        if (commit) {
+          if (!resolved.matched.length) {
+            return send(res, 400, { error: 'nothing matched — refusing to mark all 250 players as rostered' });
+          }
+          saveState(applyFreeAgentList(state, resolved.matched.map(m => m.id), {
+            allIds: db.players.map(p => p.id),      // the complement needs the whole universe
+            week: db.week,
+          }));
+          logEvent({ trigger: 'free_agents', matched: resolved.matched.length, unmatched: resolved.unmatched.length });
+        }
+        const after = loadState();
+        return send(res, 200, {
+          ok: true, committed: !!commit, ...resolved,
+          free_agents: after.freeAgents ?? null,
+          // What the commit would do / did to the rest of the universe.
+          would_mark_rostered: db.players.length - resolved.matched.length,
+        });
+      }
+      if (req.method === 'GET' && path === '/api/weekly') {
+        const preview = db.mode !== 'season';
+        return send(res, 200, weeklyReport(db.players, assessments, state, {
+          week: db.week, mode: db.mode, statsSeason: db.stats_season, preview,
+        }));
+      }
       if (req.method === 'POST' && path === '/api/league/reset') {
         const { team_id = null } = await readBody(req);
         saveState(clearRosters(state, { teamId: team_id }));
@@ -241,7 +288,14 @@ const server = createServer(async (req, res) => {
           // settings screen is built from the engine's own definitions
           // rather than a second list that could drift out of step.
           categories: Object.fromEntries(
-            Object.entries(CATEGORIES).map(([k, [label, short]]) => [k, { label, short }])),
+            Object.entries(CATEGORIES).map(([k, [label, short]]) => [k, {
+              label, short,
+              // 'rate' or 'milestone' — the editor labels the second column
+              // differently for each, because for a milestone it is a
+              // threshold, not a divisor.
+              kind: metaFor(k)?.kind ?? 'rate',
+              field: fieldFor(k),
+            }])),
           primary: Object.fromEntries(POSITIONS.map(p => [p, primaryCategoriesFor(p)])),
           rare: Object.fromEntries(POSITIONS.map(p => [p, rareCategoriesFor(p)])),
           // The market columns come from PPR-specific endpoints and cannot
@@ -270,7 +324,16 @@ const server = createServer(async (req, res) => {
               const [pts, per] = Array.isArray(raw) ? raw : [raw, 1];
               const p = Number(pts), u = Number(per);
               if (!Number.isFinite(p)) return send(res, 400, { error: `${pos} ${key}: points must be a number` });
-              if (!Number.isFinite(u) || u === 0) return send(res, 400, { error: `${pos} ${key}: per-unit must be a non-zero number` });
+              // The second number is a divisor for a rate rule and a threshold
+              // for a milestone, so the rejection differs and so must the
+              // message — "per-unit" means nothing on a 100-yard-game bonus.
+              if (isMilestone(key)) {
+                if (!Number.isFinite(u) || u <= 0) {
+                  return send(res, 400, { error: `${pos} ${key}: the threshold must be a positive number` });
+                }
+              } else if (!Number.isFinite(u) || u === 0) {
+                return send(res, 400, { error: `${pos} ${key}: per-unit must be a non-zero number` });
+              }
               rules[pos][key] = [p, u];
             }
           }
@@ -351,6 +414,7 @@ const server = createServer(async (req, res) => {
           });
         return send(res, 200, {
           mode: db.mode, week: db.week, stats_season: db.stats_season,
+          baseline_season: db.baseline_season,
           projection_meta: db.sources.projections,
           roster: rosterSummary(minePlayers),
           players: minePlayers,
@@ -469,6 +533,16 @@ const server = createServer(async (req, res) => {
         return send(res, 200, reply);
       }
       return send(res, 404, { error: 'not found' });
+    }
+
+    // ---- shared pure modules ----
+    // A named allow-list, deliberately not a second static root: these two
+    // files are the single definition of the scoring categories and the
+    // roster grid's columns, and the browser must read the same copy the
+    // server and the tests do rather than keep a second one that can drift.
+    // They import each other by relative path, which resolves inside /shared/.
+    if (SHARED_MODULES[path]) {
+      return send(res, 200, readFileSync(join(ROOT, SHARED_MODULES[path])), MIME['.js']);
     }
 
     // ---- static files ----

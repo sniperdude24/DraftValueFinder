@@ -39,11 +39,15 @@ export function recommendations(players, assessments, state, { count = 8, mode =
   const round = Math.floor(drafted.size / LEAGUE.teams) + 1;
   const scarcity = tierScarcity(available);
 
+  const draftMode = mode === 'draft';
   const starterNeedPositions = new Set(roster.needs.filter(n => n.kind === 'starter').map(n => n.position));
+  // Picks in hand is a draft notion. In season there is no pick budget, and
+  // this goes NEGATIVE the moment a roster passes fifteen players — which
+  // silently inverted the endgame boost and the K/DST penalty below.
   const roundsLeft = LEAGUE.rounds - roster.picksUsed;
   const positionWarnings = [];
   const starterSlotsUnfilled = roster.needs.reduce((a, n) => a + n.missing, 0);
-  if (starterSlotsUnfilled >= roundsLeft && starterSlotsUnfilled > 0) {
+  if (draftMode && starterSlotsUnfilled >= roundsLeft && starterSlotsUnfilled > 0) {
     positionWarnings.push(`You have ${roundsLeft} picks left and ${starterSlotsUnfilled} unfilled starting slots (${roster.needs.map(n => `${n.missing} ${n.position}`).join(', ')}) — prioritize starters.`);
   } else {
     for (const n of roster.needs) {
@@ -64,8 +68,9 @@ export function recommendations(players, assessments, state, { count = 8, mode =
   const surplusPenalty = pos => Math.max(0, (roster.counts[pos] ?? 0) - lineupSlots[pos] + 1) * 12;
 
   // Endgame: once every remaining pick is needed for an unfilled starting
-  // slot, players at those positions must top the list.
-  const mustFillNow = starterSlotsUnfilled >= roundsLeft && starterSlotsUnfilled > 0;
+  // slot, players at those positions must top the list. Draft-only — there is
+  // no last chance on a waiver wire.
+  const mustFillNow = draftMode && starterSlotsUnfilled >= roundsLeft && starterSlotsUnfilled > 0;
 
   const scored = available
     .filter(p => assessments.get(p.id)?.ai_rank != null)
@@ -80,8 +85,9 @@ export function recommendations(players, assessments, state, { count = 8, mode =
         || (starterNeedPositions.has('FLEX') && LEAGUE.flexEligible.includes(p.position));
       // Late-round K/DST convention: don't recommend them while the user
       // still has several picks in hand (keyed to MY remaining picks, not
-      // league-wide pick count — others' picks may not be tracked).
-      const kdstPenalty = ['K', 'DST'].includes(p.position) && roundsLeft > 3 ? 1000 : 0;
+      // league-wide pick count — others' picks may not be tracked). In season
+      // a kicker pickup is a legitimate move, so the penalty lifts.
+      const kdstPenalty = draftMode && ['K', 'DST'].includes(p.position) && roundsLeft > 3 ? 1000 : 0;
       const mustFillBoost = mustFillNow && starterNeedPositions.has(p.position) ? 1000 : 0;
       const draftScore = a.ai_rank_score
         - Math.max(0, Math.min(value ?? 0, 25)) * 0.8   // falling players get a push
@@ -134,8 +140,10 @@ export function recommendations(players, assessments, state, { count = 8, mode =
 
   return {
     mode,
-    current_pick: currentPick,
-    round,
+    // Pick position is a draft fact. Reporting "pick #17, round 2" mid-season
+    // is not just useless, it is wrong — so it is absent rather than stale.
+    current_pick: draftMode ? currentPick : null,
+    round: draftMode ? round : null,
     roster,
     scarcity,
     position_warnings: positionWarnings,

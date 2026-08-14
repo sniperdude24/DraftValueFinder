@@ -3,12 +3,14 @@ import { renderPlayers } from './players.js';
 import { renderTeams } from './teams.js';
 import { renderTeam } from './team.js';
 import { renderLeague } from './league.js';
+import { renderWeekly } from './weekly.js';
 import { renderRecs, renderSleepers, renderMarket, renderHistory, renderAbout } from './views.js';
 import { renderRoster } from './roster.js';
 import { initChat } from './chat.js';
 import { api } from './api.js';
 
 const VIEWS = {
+  weekly: renderWeekly,
   players: renderPlayers,
   teams: renderTeams,
   board: renderBoard,
@@ -21,6 +23,8 @@ const VIEWS = {
   about: renderAbout,
 };
 
+// In season the app is a roster-management tool, so it opens on the week.
+// Out of season there is no week to open on, so the explorer leads.
 let current = 'players';
 const viewEl = document.getElementById('view');
 
@@ -61,4 +65,7 @@ pollYahoo();
 setInterval(pollYahoo, 10000);
 
 initChat();
-show('players');
+
+api.meta()
+  .then(m => show(m.mode === 'season' ? 'weekly' : 'players'))
+  .catch(() => show('players'));

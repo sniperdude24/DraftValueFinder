@@ -11,6 +11,7 @@
 //  - Names that cannot be matched are SURFACED, never silently dropped —
 //    the same rule src/yahoo/sync.js applies to unmatched picks.
 import { LEAGUE, rosterSummary } from './roster.js';
+import { STAT_FIELDS } from './rosterTable.js';
 import { nameKey, normPosition } from '../normalize/names.js';
 import { UNKNOWN_OWNER } from '../store/state.js';
 
@@ -69,12 +70,33 @@ export function leagueView(players, state) {
   };
 }
 
+// Ten rosters' worth of full game logs would be a needlessly heavy response
+// (150 players × ~17 weeks × 40 fields), so the log is slimmed to exactly what
+// the roster grid draws. It is still the whole log rather than one week's
+// worth: that is what lets the grid switch weeks and ranges without a round
+// trip back to the server.
+const GAME_FIELDS = ['week', 'opponent', 'game_result', 'fantasy_points', ...STAT_FIELDS];
+
+function slimGame(g) {
+  const out = {};
+  for (const f of GAME_FIELDS) if (g[f] !== undefined) out[f] = g[f];
+  return out;
+}
+
 function rosterRow(p, state) {
   const idx = (state.picks ?? []).indexOf(p.id);
   return {
     id: p.id, name: p.name, position: p.position, team: p.team, bye: p.bye,
     injury_status: p.meta?.injury_status ?? null,
+    sleeper_id: p.meta?.sleeper_id ?? null,
     pick_number: idx === -1 ? null : idx + 1,
+    projection: p.projection ?? null,
+    games: (p.games ?? []).map(slimGame),
+    // Components only — the grid re-scores nothing, it just reads the
+    // averages the build already stored for the baseline season.
+    baseline: p.baseline
+      ? { season: p.baseline.season, games: p.baseline.games, points: p.baseline.points, components: p.baseline.components }
+      : null,
   };
 }
 

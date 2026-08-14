@@ -16,7 +16,59 @@ const DETAIL_KEYS = [
   'rush_att', 'rush_yd', 'rush_td',
   'rec_tgt', 'rec', 'rec_yd', 'rec_td',
   'fga', 'fgm', 'xpm',
+  // Carried because the scoring engine can price them, not because the UI
+  // shows them: a league with a 40+ yard bonus or a fumble penalty would
+  // otherwise have its projections quietly understate every player.
+  'fum_lost', 'pass_2pt', 'rush_2pt', 'rec_2pt',
+  'pass_cmp_40p', 'rush_40p', 'rec_40p',
 ];
+
+// Sleeper's field names → the component names this app scores with. Only the
+// components a projection actually carries appear here; fumbles, two-point
+// conversions and the long-play bonuses are not projected by anyone, so they
+// contribute nothing rather than being invented as zero.
+const COMPONENT_MAP = {
+  pass_cmp: 'completions',
+  pass_att: 'attempts',
+  pass_yd: 'passing_yards',
+  pass_td: 'passing_tds',
+  pass_int: 'interceptions',
+  rush_att: 'carries',
+  rush_yd: 'rushing_yards',
+  rush_td: 'rushing_tds',
+  rec_tgt: 'targets',
+  rec: 'receptions',
+  rec_yd: 'receiving_yards',
+  rec_td: 'receiving_tds',
+  fum_lost: 'fumbles_lost',
+  // Sleeper projects plays of 40+ yards, same as the weekly stats file does.
+  // It does not project which of them score, so the 40+ yard TD categories
+  // stay absent rather than being estimated.
+  pass_cmp_40p: 'passing_40',
+  rush_40p: 'rushing_40',
+  rec_40p: 'receiving_40',
+};
+
+// The three two-point varieties are one scoring category, exactly as
+// normalize/build.js treats them on a real game row.
+const TWO_POINT_KEYS = ['pass_2pt', 'rush_2pt', 'rec_2pt'];
+
+// Turn a projection's detail into a component row the scoring engine can read.
+// Returns null when nothing maps, so callers show "—" rather than a zero.
+export function projectionComponents(detail) {
+  if (!detail) return null;
+  const out = {};
+  let any = false;
+  for (const [from, to] of Object.entries(COMPONENT_MAP)) {
+    if (detail[from] != null) { out[to] = detail[from]; any = true; }
+  }
+  const twoPoint = TWO_POINT_KEYS.filter(k => detail[k] != null);
+  if (twoPoint.length) {
+    out.two_point_conversions = Math.round(twoPoint.reduce((t, k) => t + detail[k], 0) * 100) / 100;
+    any = true;
+  }
+  return any ? out : null;
+}
 
 // snapshot: { season, week, projections: { <sleeper_id>: {stat: value} } }
 // Join is by meta.sleeper_id — exact, no name matching.
@@ -31,8 +83,14 @@ export function attachProjections(players, snapshot) {
       p.projection = {
         season: snapshot.season ?? null,
         week: snapshot.week ?? null,
+        // Sleeper's own number, PPR, kept untouched — the external figure.
         pts_ppr: Math.round(proj.pts_ppr * 10) / 10,
         detail,
+        // The same components in this app's vocabulary, so scoring can price
+        // the projection under the user's rules. Stored the way the baseline
+        // stores its components, which is what lets analyze/ score it without
+        // knowing anything about Sleeper's field names.
+        components: projectionComponents(detail),
       };
       attached++;
     } else {

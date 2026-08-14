@@ -4,8 +4,9 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  scoreGame, scorePlayers, rulesFor, describeRules, normalizeRules, migrateFlatRules,
-  copyPosition, PRESETS, POSITIONS, SCORING_FIELDS, primaryCategoriesFor,
+  scoreGame, scoreAverages, scorePlayers, rulesFor, describeRules, normalizeRules,
+  migrateFlatRules, copyPosition, PRESETS, POSITIONS, SCORING_FIELDS, CATEGORY_KEYS,
+  primaryCategoriesFor, isMilestone, fieldFor,
 } from '../src/analyze/fantasyPoints.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -25,10 +26,10 @@ test('PPR scores a receiving line the standard way', () => {
 test('the stock presets differ only in what a catch is worth', () => {
   assert.equal(scoreGame(receivingGame, PRESETS.half_ppr.WR), 20);
   assert.equal(scoreGame(receivingGame, PRESETS.standard.WR), 16);
-  for (const field of SCORING_FIELDS) {
-    if (field === 'receptions') continue;
-    assert.deepEqual(PRESETS.half_ppr.WR[field], PRESETS.ppr.WR[field], field);
-    assert.deepEqual(PRESETS.standard.WR[field], PRESETS.ppr.WR[field], field);
+  for (const key of CATEGORY_KEYS) {
+    if (key === 'receptions') continue;
+    assert.deepEqual(PRESETS.half_ppr.WR[key], PRESETS.ppr.WR[key], key);
+    assert.deepEqual(PRESETS.standard.WR[key], PRESETS.ppr.WR[key], key);
   }
 });
 
@@ -78,12 +79,26 @@ test('every position can score every category', () => {
   // Receivers throw touchdowns on trick plays and quarterbacks catch passes.
   // Dropping non-native categories silently lost points on real game logs.
   for (const pos of POSITIONS) {
-    for (const field of SCORING_FIELDS) {
-      assert.ok(PRESETS.ppr[pos][field], `${pos} must have a rule for ${field}`);
+    for (const key of CATEGORY_KEYS) {
+      assert.ok(PRESETS.ppr[pos][key], `${pos} must have a rule for ${key}`);
     }
   }
   const wrTdPass = { passing_tds: 1, passing_yards: 5 };
   assert.equal(scoreGame(wrTdPass, PRESETS.ppr.WR), 4.2, 'a receiver TD pass still scores');
+});
+
+test('rule keys and game-row fields are different lists once milestones exist', () => {
+  // The trap: SCORING_FIELDS used to be Object.keys(CATEGORIES), which worked
+  // only while every rule key WAS a game-row field. build.js averages
+  // SCORING_FIELDS onto the baseline — feeding it milestone keys would store
+  // undefined for a stat no game row has.
+  assert.ok(CATEGORY_KEYS.includes('rushing_100_game'));
+  assert.ok(!SCORING_FIELDS.includes('rushing_100_game'), 'not a game-row field');
+  assert.ok(SCORING_FIELDS.includes('rushing_yards'), 'the field it reads is');
+  assert.equal(fieldFor('rushing_100_game'), 'rushing_yards');
+  assert.equal(fieldFor('rushing_yards'), 'rushing_yards', 'a rate rule is its own field');
+  assert.ok(isMilestone('rushing_100_game') && !isMilestone('rushing_yards'));
+  assert.equal(new Set(SCORING_FIELDS).size, SCORING_FIELDS.length, 'no duplicate fields');
 });
 
 test('primary categories are a layout hint, not a scoring restriction', () => {
@@ -186,6 +201,98 @@ test('copying one position onto another leaves the source alone', () => {
   assert.deepEqual(copied.WR.carries, [0.1, 1]);
   assert.deepEqual(copied.RB.carries, [0.1, 1]);
   assert.deepEqual(rules.WR.carries, [0, 1], 'the original object is not mutated');
+});
+
+// ---- long-play bonuses ----
+
+test('a long-TD bonus is additive on top of the touchdown\'s own points', () => {
+  // The evidence this whole feature came from: Bijan's week 17 was 22/195/1
+  // rushing plus 5/34/1 receiving, which is 39.9 under PPR. Yahoo showed
+  // 42.90 — a 3-point bonus for the 40+ yard score, not a replacement for it.
+  const game = {
+    carries: 22, rushing_yards: 195, rushing_tds: 1, rushing_40: 1, rushing_40_tds: 1,
+    targets: 8, receptions: 5, receiving_yards: 34, receiving_tds: 1,
+  };
+  assert.equal(scoreGame(game, PRESETS.ppr.RB), 39.9);
+  const rules = normalizeRules({ RB: { ...PRESETS.ppr.RB, rushing_40_tds: [3, 1] } });
+  assert.equal(scoreGame(game, rules.RB), 42.9);
+});
+
+test('the stock presets pay nothing for long plays or milestones', () => {
+  // This is what keeps the PPR preset reproducing nflverse exactly after nine
+  // categories were added to the table.
+  for (const preset of Object.values(PRESETS)) {
+    for (const pos of POSITIONS) {
+      for (const key of ['passing_40', 'passing_40_tds', 'rushing_40', 'rushing_40_tds',
+        'receiving_40', 'receiving_40_tds', 'passing_300_game', 'rushing_100_game', 'receiving_100_game']) {
+        assert.equal(preset[pos][key][0], 0, `${pos} ${key} must default to zero points`);
+      }
+    }
+  }
+});
+
+// ---- milestones ----
+
+// These use bare rule tables rather than normalizeRules, so the milestone is
+// the only thing scoring — otherwise the filled-in per-yard default pays too
+// and the assertion stops being about the threshold.
+const milestoneOnly = { rushing_yards: [0, 1], rushing_100_game: [10, 100] };
+
+test('a milestone pays once at the mark and nothing below it', () => {
+  assert.equal(scoreGame({ rushing_yards: 99 }, milestoneOnly), 0);
+  assert.equal(scoreGame({ rushing_yards: 100 }, milestoneOnly), 10, 'the mark itself pays');
+  assert.equal(scoreGame({ rushing_yards: 101 }, milestoneOnly), 10);
+});
+
+test('a milestone is not prorated — 195 yards is one 100-yard game, not two', () => {
+  assert.equal(scoreGame({ rushing_yards: 195 }, milestoneOnly), 10);
+  assert.equal(scoreGame({ rushing_yards: 240 }, milestoneOnly), 10);
+});
+
+test('the threshold is editable, so a 150-yard league can say so', () => {
+  const rules = { rushing_yards: [0, 1], rushing_100_game: [5, 150] };
+  assert.equal(scoreGame({ rushing_yards: 120 }, rules), 0);
+  assert.equal(scoreGame({ rushing_yards: 150 }, rules), 5);
+});
+
+test('a milestone reads the same stat its rate rule does, without double-naming it', () => {
+  // Both rules fire on one game: 12 points of yardage plus the bonus.
+  const rules = normalizeRules({ RB: { rushing_yards: [1, 10], rushing_100_game: [3, 100] } });
+  assert.equal(scoreGame({ rushing_yards: 120 }, rules.RB), 15);
+});
+
+test('a row of nothing but milestone stats does not become a confident zero', () => {
+  // Milestones read a field another rule owns, so they must not be what makes
+  // a row count as having data.
+  const rules = normalizeRules({ RB: { rushing_100_game: [10, 100] } });
+  assert.equal(scoreGame({ snap_pct: 0.8 }, rules.RB), null);
+});
+
+test('scoreAverages leaves milestones out, because a threshold is not linear', () => {
+  // A back averaging 95 yards may well have had six 100-yard games; scoring
+  // the average pays zero. A back averaging 105 would be paid on every game
+  // including the ones he missed. Both answers are wrong and invisible.
+  const rules = normalizeRules({ RB: { rushing_yards: [1, 10], rushing_100_game: [10, 100] } });
+  const averages = { rushing_yards: 105 };
+  assert.equal(scoreGame(averages, rules.RB), 20.5, 'a real game would be paid the bonus');
+  assert.equal(scoreAverages(averages, rules.RB), 10.5, 'per-game averages are not');
+});
+
+test('the prior-season baseline is re-scored without milestone bonuses', () => {
+  const players = [{
+    position: 'RB', games: [],
+    baseline: { season: 2024, games: 16, components: { rushing_yards: 110 } },
+  }];
+  scorePlayers(players, normalizeRules({ RB: { rushing_yards: [1, 10], rushing_100_game: [10, 100] } }));
+  assert.equal(players[0].baseline.points, 11, 'yardage only — no bonus off an average');
+});
+
+test('describeRules ignores a milestone threshold when the bonus is worth nothing', () => {
+  const rules = normalizeRules(PRESETS.ppr);
+  rules.RB.rushing_100_game = [0, 150];        // a different mark, still worth 0
+  assert.equal(describeRules(rules), 'ppr');
+  rules.RB.rushing_100_game = [5, 150];        // now it pays
+  assert.equal(describeRules(rules), 'custom');
 });
 
 // ---- linearity (what lets a baseline re-score from averages) ----

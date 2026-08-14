@@ -112,6 +112,32 @@ tr.mine td { opacity: 1; text-decoration: none; background: rgba(63, 214, 143, .
 td.name { cursor: pointer; font-weight: 600; color: var(--accent); }
 td .team { color: var(--dim); font-weight: 400; margin-left: 6px; }
 
+/* ---- roster stat grid (My Team + League team cards) ---- */
+.grid-controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.grid-controls .posbtn { background: var(--panel); border: 1px solid var(--line); color: var(--dim); padding: 5px 10px; border-radius: 8px; font-size: 12px; }
+.grid-controls .posbtn.active { color: var(--text); border-color: var(--accent); }
+.grid-controls .posbtn:disabled { opacity: .4; }
+.weeknav { display: flex; align-items: center; gap: 6px; margin-right: 6px; font-size: 13px; }
+.weeknav .rowbtn:disabled { opacity: .35; }
+/* ~20 columns: the grid scrolls sideways inside its own box so the page
+   never does. This is also why the header cells below are NOT sticky — an
+   overflow ancestor would pin them inside this box rather than the viewport
+   (see the note above `table`), which looks broken rather than helpful. */
+.grid-scroll { overflow-x: auto; border-radius: 10px; }
+.roster-grid th { position: static; cursor: default; text-align: center; }
+.roster-grid thead tr:first-child th { border-bottom: 1px solid var(--line); }
+.roster-grid thead tr:first-child th[colspan] { color: var(--text); }
+.roster-grid td { text-align: center; }
+.roster-grid th:nth-child(-n+3), .roster-grid td:nth-child(-n+3) { text-align: left; }
+.roster-grid td.offense { min-width: 210px; }
+.roster-grid .headshot { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; background: var(--panel2); vertical-align: middle; margin-right: 7px; }
+.roster-grid .offense .who { display: inline-block; vertical-align: middle; }
+.roster-grid .offense .clickable { cursor: pointer; color: var(--accent); font-weight: 600; }
+.roster-grid .gameline { margin-left: 37px; line-height: 1.2; }
+.roster-grid tr.no-line td { opacity: .65; }
+.roster-grid .drop { background: none; border: none; color: var(--dim); cursor: pointer; font-size: 13px; }
+.roster-grid .drop:hover { color: var(--red); }
+
 .badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
 .badge.signal { background: rgba(181, 140, 255, .18); color: var(--purple); }
 .badge.emerging { background: rgba(255, 200, 87, .15); color: var(--amber); }

@@ -20,6 +20,8 @@ import { join } from 'node:path';
 import { loadSnapshot, parseCsv, ROOT, RAW_DIR } from '../ingest/util.js';
 import { nameKey, normPosition, normTeam, samePositionGroup, playerId } from './names.js';
 import { resolveSeason } from './season.js';
+import { indexSchedule, resultFor } from './schedules.js';
+import { pbpSnapshotName } from '../ingest/sources/nflversePbp.js';
 import { matchTradeMarket } from './tradeMarket.js';
 import { attachProjections } from './projections.js';
 import { SCORING_FIELDS } from '../analyze/fantasyPoints.js';
@@ -46,7 +48,7 @@ const round3 = v => (v == null ? null : Math.round(v * 1000) / 1000);
 
 // ---- weekly-stats CSV → per-player game logs (used for the active stats
 // season AND, in season mode, the prior-season baseline) ----
-function buildLogIndexes(weekly, snaps, redzone) {
+function buildLogIndexes(weekly, snaps, redzone, schedule = null) {
   const logsByKey = new Map();
   const logsByName = new Map();
   for (const r of weekly) {
@@ -73,11 +75,11 @@ function buildLogIndexes(weekly, snaps, redzone) {
   for (const [playerId, weeks] of Object.entries(redzone?.players ?? {})) {
     for (const [week, v] of Object.entries(weeks)) rzByIdWeek.set(`${playerId}|${week}`, v);
   }
-  return { logsByKey, logsByName, snapByNameWeek, rzByIdWeek, rzWeeks, hasRedZone: !!redzone };
+  return { logsByKey, logsByName, snapByNameWeek, rzByIdWeek, rzWeeks, hasRedZone: !!redzone, schedule };
 }
 
 function gamesFor(name, pos, indexes, conflicts) {
-  const { logsByKey, logsByName, snapByNameWeek, rzByIdWeek, rzWeeks, hasRedZone } = indexes;
+  const { logsByKey, logsByName, snapByNameWeek, rzByIdWeek, rzWeeks, hasRedZone, schedule } = indexes;
   let rawLog = logsByKey.get(`${pos}|${nameKey(name)}`) ?? [];
   if (!rawLog.length && !['K', 'DST'].includes(pos)) {
     // Fallback: same name, different listed position, but with real
@@ -107,7 +109,16 @@ function gamesFor(name, pos, indexes, conflicts) {
     return {
       week: num(r.week),
       stats_team: normTeam(r.team),
-      opponent: r.opponent_team,
+      // The weekly file's own primary key, and the exact join into the
+      // schedules snapshot — no name, date or abbreviation matching.
+      game_id: r.game_id || null,
+      // Normalized like every other team code in the app. Left raw, the Rams
+      // read "LA" here while the rest of the app says "LAR" — the same
+      // mismatch that once rendered an empty LAR page.
+      opponent: normTeam(r.opponent_team),
+      // Final score / W-L, or null when the schedule has no completed game
+      // for this id. A game not yet played is not a 0-0 game.
+      game_result: schedule ? resultFor(schedule, r.game_id, r.team) : null,
       snap_pct: snapOk ? round3(num(snapRow.offense_pct)) : null,
       offense_snaps: snapOk ? num(snapRow.offense_snaps) : null,
       targets: num(r.targets),
@@ -154,6 +165,7 @@ function gamesFor(name, pos, indexes, conflicts) {
       rushing_epa: round3(num(r.rushing_epa)),
       rushing_20: num(r.rushing_20),
       rushing_40: num(r.rushing_40),
+      passing_40: num(r.passing_40),
       passing_air_yards: num(r.passing_air_yards),
       passing_first_downs: num(r.passing_first_downs),
       passing_epa: round3(num(r.passing_epa)),
@@ -174,6 +186,14 @@ function gamesFor(name, pos, indexes, conflicts) {
       rz_tds: rzNum('rz_tds'),
       gl_targets: rzNum('gl_targets'),
       gl_carries: rzNum('gl_carries'),
+
+      // ---- touchdowns of 40+ yards (same play-by-play source and join) ----
+      // The weekly file has the 40+ yard PLAYS above; only the play-by-play
+      // knows which of them were touchdowns. Same rzNum discipline: a week the
+      // source has not covered stays null rather than claiming a zero.
+      passing_40_tds: rzNum('passing_40_tds'),
+      rushing_40_tds: rzNum('rushing_40_tds'),
+      receiving_40_tds: rzNum('receiving_40_tds'),
     };
   });
 }
@@ -225,7 +245,7 @@ export function buildDatabase() {
   const sleeper = JSON.parse(sleeperSnap.body);
   // Red zone is optional: if the play-by-play snapshot is missing the rest
   // of the build proceeds and the red-zone fields simply read as unavailable.
-  const rzSnap = loadSnapshot(`redzone_${sr.stats_season}.json`);
+  const rzSnap = loadSnapshot(pbpSnapshotName(sr.stats_season));
   const redzone = rzSnap ? JSON.parse(rzSnap.body) : null;
   // Play-by-play spells the Rams "LA" where the rest of the app says "LAR"
   // (and historically JAC/WSH); without this the Rams' red-zone panel would
@@ -242,15 +262,21 @@ export function buildDatabase() {
     }
     return acc;
   }, {}) : null;
-  const indexes = buildLogIndexes(parseCsv(weeklySnap.body), parseCsv(snapsSnap.body), redzone);
+  // Schedules are optional in the same way red zone is: without the snapshot
+  // every game row simply carries no result and the UI shows the week and
+  // opponent alone. One file covers every season, so both the active stats
+  // season and the baseline season read from it.
+  const schedSnap = loadSnapshot('games.csv');
+  const schedule = schedSnap ? indexSchedule(parseCsv(schedSnap.body)) : null;
+  const indexes = buildLogIndexes(parseCsv(weeklySnap.body), parseCsv(snapsSnap.body), redzone, schedule);
 
   // In season mode, last season's logs feed the early-season baseline.
   let baselineIndexes = null;
   if (sr.mode === 'season' && sr.baseline_season) {
     const bw = loadSnapshot(`stats_player_week_${sr.baseline_season}.csv`);
     const bs = loadSnapshot(`snap_counts_${sr.baseline_season}.csv`);
-    const brz = loadSnapshot(`redzone_${sr.baseline_season}.json`);
-    if (bw && bs) baselineIndexes = buildLogIndexes(parseCsv(bw.body), parseCsv(bs.body), brz ? JSON.parse(brz.body) : null);
+    const brz = loadSnapshot(pbpSnapshotName(sr.baseline_season));
+    if (bw && bs) baselineIndexes = buildLogIndexes(parseCsv(bw.body), parseCsv(bs.body), brz ? JSON.parse(brz.body) : null, schedule);
   }
 
   // ---- index market sources by nameKey ----
@@ -420,7 +446,8 @@ export function buildDatabase() {
       projections: projSnap?.meta ?? null,
       weekly_stats: weeklySnap.meta,
       snap_counts: snapsSnap.meta,
-      red_zone: rzSnap?.meta ?? null,
+      play_by_play: rzSnap?.meta ?? null,
+      schedules: schedSnap?.meta ?? null,
       player_meta: sleeperSnap.meta,
     },
     // Every red-zone play in the league, not just our top-250 universe — so

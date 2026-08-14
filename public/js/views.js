@@ -25,10 +25,15 @@ function ruleRow(s, positions, key) {
   </tr>`;
 }
 
+const isRate = (s, k) => (s.categories[k]?.kind ?? 'rate') === 'rate';
+
 function ruleTable(s, positions, title) {
-  // Union of the primary rows across the grouped positions, in engine order.
-  const primary = Object.keys(s.categories).filter(k => positions.some(p => s.primary[p].includes(k)));
-  const rare = Object.keys(s.categories).filter(k => !primary.includes(k));
+  // Rate rules only — milestones live in their own table, because their second
+  // column is a threshold and a column that means two things by row is exactly
+  // the confusion this editor exists to avoid.
+  const keys = Object.keys(s.categories).filter(k => isRate(s, k));
+  const primary = keys.filter(k => positions.some(p => s.primary[p].includes(k)));
+  const rare = keys.filter(k => !primary.includes(k));
   const key = positions.join('-');
   const open = !!scoringUi.showRare[key];
   return `
@@ -52,6 +57,31 @@ function ruleTable(s, positions, title) {
     </table>`;
 }
 
+// Milestones: a threshold crossed once in a game, not a rate. Same stored
+// shape as every other rule, but the second number is "at least this much"
+// rather than "per this many", so they get their own headers.
+function milestoneTable(s) {
+  const keys = Object.keys(s.categories).filter(k => !isRate(s, k));
+  if (!keys.length) return '';
+  const positions = s.positions;
+  return `
+    <table class="mt scoring-grid">
+      <thead>
+        <tr><th></th><th></th>${positions.map(p => `<th colspan="2" class="posgroup">${esc(p)}</th>`).join('')}</tr>
+        <tr><th>Game milestone</th><th>Short</th>${positions.map(() => '<th>FF Pts</th><th>At Least</th>').join('')}</tr>
+      </thead>
+      <tbody>${keys.map(k => ruleRow(s, positions, k)).join('')}</tbody>
+      <tfoot>
+        <tr><td colspan="${2 + positions.length * 2}" class="small aid">
+          Paid once per game when the line reaches the mark — a 195-yard game pays a
+          100-yard bonus once, not twice. Change "At Least" if your league uses a different
+          number. These are excluded from the prior-season column on roster pages, where only
+          per-game averages are stored and a threshold cannot be recovered from an average.
+        </td></tr>
+      </tfoot>
+    </table>`;
+}
+
 function scoringSection(s) {
   const active = s.preset;
   return `
@@ -68,6 +98,7 @@ function scoringSection(s) {
       </div>
       ${ruleTable(s, ['QB'], 'Quarterback')}
       ${ruleTable(s, ['RB', 'WR', 'TE'], 'Running back · Wide receiver · Tight end')}
+      ${milestoneTable(s)}
       <button class="rowbtn mine mt" id="scoring-apply" style="padding:8px 14px">Save scoring</button>
       <span class="small" id="scoring-status"></span>
       ${active !== 'ppr' ? `<div class="warn mt">

@@ -1,7 +1,11 @@
-// Red-zone usage: nflverse play-by-play (free).
+// Per-player facts that only the play-by-play knows: red-zone usage, and
+// touchdowns of 40+ yards.
 //
 // The weekly stats file we already ingest has no field-position splits, so
-// red-zone work has to come from the play-by-play file. That file is large
+// red-zone work has to come from the play-by-play file. It also publishes
+// plays of 40+ yards (`rushing_40` and friends) but not TOUCHDOWNS of 40+
+// yards, which many leagues pay a bonus for — that distinction is what makes
+// the second half of this reducer necessary. That file is large
 // (~19 MB gzipped, ~93 MB of CSV, 372 columns), so it is never kept on disk
 // and never fully materialized in memory: it is streamed, gunzipped, and
 // reduced play-by-play into a small per-player / per-team weekly aggregate.
@@ -20,6 +24,11 @@
 //    throwaways carry no receiver id and so are not targets.
 //  - A carry is a rush attempt with a rusher (includes QB scrambles).
 //  - A touchdown is credited to the rusher or receiver of the scoring play.
+//  - A LONG touchdown is one whose play gained 40+ yards. A TD pass counts for
+//    the passer AND the receiver, the way a league settings page treats them
+//    as two separate bonuses. Long TDs are counted before the red-zone filter:
+//    a 40-yard score starts outside the 20 by definition, so counting it
+//    inside that branch would always produce zero.
 import { createGunzip } from 'node:zlib';
 import { Readable } from 'node:stream';
 import { fetchConditional, snapshotValidators, saveSnapshot } from '../util.js';
@@ -33,16 +42,22 @@ export const pbpUrl = year => `${BASE}/pbp/play_by_play_${year}.csv.gz`;
 // the cached output would silently stay on the old rules forever. Bumping
 // this version forces a re-download and a re-reduction.
 // Bump whenever accumulatePlay or finalize changes what they produce.
-export const REDUCER_VERSION = 1;
+export const REDUCER_VERSION = 2;
 
 // Inside the 20 is the red zone; inside the 5 is the goal line, where the
 // scoring rate per touch is far higher and the pecking order is tightest.
 export const RED_ZONE = 20;
 export const GOAL_LINE = 5;
 
+// The distance that makes a touchdown a "long" one for bonus purposes. This
+// matches the threshold the weekly file's own `rushing_40` / `receiving_40` /
+// `passing_40` columns use, which is what lets those columns act as an
+// independent upper bound on what is counted here.
+export const LONG_TD = 40;
+
 const COLUMNS = ['season_type', 'week', 'posteam', 'yardline_100', 'two_point_attempt',
   'pass_attempt', 'rush_attempt', 'rush_touchdown', 'pass_touchdown',
-  'rusher_player_id', 'receiver_player_id'];
+  'yards_gained', 'passer_player_id', 'rusher_player_id', 'receiver_player_id'];
 
 // Column order has changed across nflverse releases, so resolve indices from
 // the header instead of hardcoding them.
@@ -82,19 +97,30 @@ export function pickFields(line, idx) {
   return out;
 }
 
-const blank = () => ({ rz_targets: 0, rz_carries: 0, rz_tds: 0, gl_targets: 0, gl_carries: 0 });
+// Players and teams carry different shapes on purpose: long-TD counts are a
+// scoring input, which is a per-player notion. Giving team rows three fields
+// that are never incremented would put permanent zeros on the record and
+// invite someone to read them as a real team total.
+const blankPlayer = () => ({
+  rz_targets: 0, rz_carries: 0, rz_tds: 0, gl_targets: 0, gl_carries: 0,
+  passing_40_tds: 0, rushing_40_tds: 0, receiving_40_tds: 0,
+});
+const blankTeam = () => ({ rz_targets: 0, rz_carries: 0, rz_tds: 0, gl_targets: 0, gl_carries: 0 });
+
 const bucket = (map, key) => {
   if (!map.has(key)) map.set(key, new Map());
   return map.get(key);
 };
-function slot(map, key, week) {
+function slot(map, key, week, blank) {
   const weeks = bucket(map, key);
   if (!weeks.has(week)) weeks.set(week, blank());
   return weeks.get(week);
 }
+const playerSlot = (acc, id, week) => slot(acc.players, id, week, blankPlayer);
+const teamSlot = (acc, team, week) => slot(acc.teams, team, week, blankTeam);
 
 export function createAccumulator() {
-  return { players: new Map(), teams: new Map(), weeks: new Set(), plays: 0, rzPlays: 0 };
+  return { players: new Map(), teams: new Map(), weeks: new Set(), plays: 0, rzPlays: 0, longTds: 0 };
 }
 
 // Fold one play into the accumulator. Pure and synchronous so the counting
@@ -112,27 +138,49 @@ export function accumulatePlay(acc, p) {
   if (!isTarget && !isCarry) return acc;
 
   acc.plays++;
+  // A week is "covered" if the source saw any scrimmage touch in it, which is
+  // what lets build.js tell a genuine zero from an uncovered week. That has to
+  // be recorded before the red-zone filter, or a long touchdown in a week with
+  // no red-zone play would land in a week the build thinks it never saw.
+  acc.weeks.add(week);
+
+  // ---- long touchdowns (not field-position bounded) ----
+  const gained = Number(p.yards_gained);
+  if (Number.isFinite(gained) && gained >= LONG_TD) {
+    if (isTarget && p.pass_touchdown === '1') {
+      // Two separate bonuses in a league settings screen, so two counters:
+      // the throw and the catch are credited independently.
+      playerSlot(acc, p.receiver_player_id, week).receiving_40_tds++;
+      if (p.passer_player_id) playerSlot(acc, p.passer_player_id, week).passing_40_tds++;
+      acc.longTds++;
+    }
+    if (isCarry && p.rush_touchdown === '1') {
+      playerSlot(acc, p.rusher_player_id, week).rushing_40_tds++;
+      acc.longTds++;
+    }
+  }
+
+  // ---- red zone ----
   if (!(yard > 0 && yard <= RED_ZONE)) return acc;
   acc.rzPlays++;
-  acc.weeks.add(week);
 
   const goalLine = yard <= GOAL_LINE;
   const team = p.posteam || null;
-  const teamSlot = team ? slot(acc.teams, team, week) : null;
+  const ts = team ? teamSlot(acc, team, week) : null;
 
   if (isTarget) {
-    const s = slot(acc.players, p.receiver_player_id, week);
+    const s = playerSlot(acc, p.receiver_player_id, week);
     s.rz_targets++;
     if (goalLine) s.gl_targets++;
     if (p.pass_touchdown === '1') s.rz_tds++;
-    if (teamSlot) { teamSlot.rz_targets++; if (goalLine) teamSlot.gl_targets++; }
+    if (ts) { ts.rz_targets++; if (goalLine) ts.gl_targets++; }
   }
   if (isCarry) {
-    const s = slot(acc.players, p.rusher_player_id, week);
+    const s = playerSlot(acc, p.rusher_player_id, week);
     s.rz_carries++;
     if (goalLine) s.gl_carries++;
     if (p.rush_touchdown === '1') s.rz_tds++;
-    if (teamSlot) { teamSlot.rz_carries++; if (goalLine) teamSlot.gl_carries++; }
+    if (ts) { ts.rz_carries++; if (goalLine) ts.gl_carries++; }
   }
   return acc;
 }
@@ -146,6 +194,7 @@ export function finalize(acc, season) {
     weeks: [...acc.weeks].sort((a, b) => a - b),
     red_zone_yardline: RED_ZONE,
     goal_line_yardline: GOAL_LINE,
+    long_td_yards: LONG_TD,
     // Team totals come from every play in the game, not from our top-250
     // universe — so unlike the reconstructed target pie, red-zone shares
     // have a complete and exact denominator.
@@ -171,9 +220,11 @@ async function* streamLines(res) {
   if (buf.trim() !== '') yield buf.replace(/\r$/, '');
 }
 
-export async function ingestRedZone(year, { force = false } = {}) {
+export const pbpSnapshotName = year => `pbp_${year}.json`;
+
+export async function ingestPbp(year, { force = false } = {}) {
   const url = pbpUrl(year);
-  const name = `redzone_${year}.json`;
+  const name = pbpSnapshotName(year);
 
   // Validators are stored against the derived snapshot but describe the
   // play-by-play file it was reduced from.
@@ -200,23 +251,28 @@ export async function ingestRedZone(year, { force = false } = {}) {
       rush_attempt: f[idx.rush_attempt],
       rush_touchdown: f[idx.rush_touchdown],
       pass_touchdown: f[idx.pass_touchdown],
+      yards_gained: f[idx.yards_gained],
+      passer_player_id: f[idx.passer_player_id],
       rusher_player_id: f[idx.rusher_player_id],
       receiver_player_id: f[idx.receiver_player_id],
     });
   }
   if (!idx) throw new Error(`nflverse pbp ${year}: empty file`);
-  if (!acc.weeks.size) throw new Error(`nflverse pbp ${year}: no regular-season red-zone plays parsed`);
+  if (!acc.weeks.size) throw new Error(`nflverse pbp ${year}: no regular-season scrimmage plays parsed`);
 
   const data = finalize(acc, year);
   saveSnapshot(name, data, {
-    source: `nflverse play-by-play (${year}), reduced to red-zone usage`,
+    source: `nflverse play-by-play (${year}), reduced to red-zone usage and long touchdowns`,
     url,
-    kind: 'redzone',
+    kind: 'pbp',
     season: year,
     reducer_version: REDUCER_VERSION,
     ...got.validators,
-    detail: `${acc.rzPlays} red-zone touches of ${acc.plays} scrimmage touches, ${data.weeks.length} weeks, ${Object.keys(data.players).length} players`,
+    detail: `${acc.rzPlays} red-zone touches and ${acc.longTds} touchdowns of ${LONG_TD}+ yards, of ${acc.plays} scrimmage touches; ${data.weeks.length} weeks, ${Object.keys(data.players).length} players`,
     derived: 'Aggregated at ingest; the source play-by-play file is not retained.',
   });
-  return { year, weeks: data.weeks.length, players: Object.keys(data.players).length, rz_touches: acc.rzPlays };
+  return {
+    year, weeks: data.weeks.length, players: Object.keys(data.players).length,
+    rz_touches: acc.rzPlays, long_tds: acc.longTds,
+  };
 }

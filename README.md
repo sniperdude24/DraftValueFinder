@@ -1,7 +1,10 @@
 # Fantasy Value Finder
 
-Season-long fantasy football player analysis for a 10-team league.
+In-season fantasy football roster management for a 10-team league.
 **Numbers first. Team context second. AI connects the dots.**
+
+The job is running a team, not building one: manage the players you hold, and
+catch the ones whose usage is rising before the market reprices them.
 
 The point is not to rank players — the market already does that. The point is to
 find value the market is late on: players whose snap share AND opportunities are
@@ -47,7 +50,8 @@ Then restart the server. Run tests with `npm test`.
 | Expert rankings | FantasyPros expert consensus (PPR cheat sheet page) |
 | Weekly stats 2025 | nflverse `stats_player_week_2025.csv` |
 | Snap counts 2025 | nflverse `snap_counts_2025.csv` |
-| Red-zone usage 2025 | nflverse `play_by_play_2025.csv.gz`, reduced at ingest |
+| Red-zone usage & 40+ yard TDs 2025 | nflverse `play_by_play_2025.csv.gz`, reduced at ingest |
+| Game results & scores | nflverse `games.csv` (all seasons, joined on `game_id`) |
 | Player metadata | Sleeper API (teams, depth charts, injury status) |
 | Trade-market values | [Stats Guy Fantasy](https://statsguyfantasy.com) (free API; values from >1M real Sleeper-league trades, non-SF redraft format) |
 
@@ -57,12 +61,32 @@ sources are recorded on the player record, not silently resolved.
 
 ## What it does
 
+- **This Week** — the roster-management page, and the app's landing page once
+  the season starts. Start/sit ranked by Sleeper's projected components *scored
+  with your rules*; a usage watch that calls a player fading only when snaps
+  **and** opportunities are both falling, and calls a points collapse with
+  steady usage what it is — noise; and swap candidates pairing the weakest hold
+  against the best available riser at the same position, both showing their
+  evidence. Out of season it renders as a labelled worked example against
+  completed games rather than pretending to advise on a week that does not exist.
+- **Who's available** — paste your league's free-agent list and the app stops
+  guessing. Everyone in the list is free, everyone else it tracks is rostered by
+  somebody, and **teams you have already recorded are left alone**. The list's
+  age is stored and shown, because acting on a ten-day-old pool is how you claim
+  a player who was gone on Tuesday.
 - **League rosters** — all ten teams, named and editable, with any player
   assignable to any team from the League page, the Players explorer or the draft
   board. Rosters can be pasted in bulk; names that do not match are reported
   rather than quietly skipped. Roster-size and bye problems are flagged, never
   blocked. Ownership is the stored fact — "drafted" and "mine" are derived from
   it, so they cannot drift apart.
+- **Roster stat grid** — the layout a league site uses for a roster, on My Team
+  and on every League team card: starters then bench, stat columns grouped by
+  phase, a week stepper and last-4 / season / prior-season ranges. Fan Pts is
+  computed with *your* scoring rules, so the grid is where a scoring change
+  becomes visible player by player. Each line carries its real result — `Final W
+  27-24 vs LAR` — from the nflverse schedule. A week a player has no row for
+  reads BYE or "no game"; it is never filled with zeros.
 - **Draft board** — top 250 (200 core + 50 sleeper watch) with ADP, expert rank,
   AI rank, trend arrows, sleeper badges, bye, availability, and personal ranks.
   Click-to-track picks (mine / gone / undo).
@@ -78,7 +102,10 @@ sources are recorded on the player record, not silently resolved.
   quarterbacks, and a completion bonus reaches passers only. Points are computed
   from each game's components rather than taken from a precomputed total, so a
   change re-scores every game log and flows through trends, the AI rank, team
-  pages and the chat — in memory, downloading nothing.
+  pages and the chat — in memory, downloading nothing. Long-play bonuses (40+
+  yard completions, rushes, receptions and the touchdowns among them) and game
+  milestones (100+ yard rushing/receiving, 300+ yard passing) are separate
+  categories, all worth zero until a league says otherwise.
 - **Red-zone usage** — a Players-explorer preset and a Teams panel covering
   touches inside the 20 and inside the 5, red-zone TDs, and each player's
   share of the team's scoring chances. Counts lead, rates follow: a 50% TD
@@ -109,6 +136,9 @@ src/analyze/    fantasyPoints (configurable scoring), playerStats (windowed
                 + ripple), trends, signals, score (AI rank), market
                 comparison, recommendations
 src/analyze/league.js   team rosters, warnings, bulk name resolution
+src/analyze/rosterTable.js  roster-grid columns + range aggregation (shared
+                with the browser via the /shared/ route, so there is one
+                definition rather than a server copy and a client copy)
 src/ai/         chat grounded in structured data (Claude + fallback)
 src/store/      league rosters (owners + pick order), personal ranks, history
 src/yahoo/      dormant Yahoo draft sync (credential-gated)
@@ -155,6 +185,39 @@ is more than 20 hours old.
 - **Fumbles**: only sack, rushing and receiving fumbles are charged. The raw
   `fumbles_lost_total` also counts special-teams muffs, which fantasy does not
   penalize — using it over-charged return men by 2 points a muff.
+- **Game results join on `game_id`.** The weekly stats file and the schedules
+  file share nflverse's own primary key (`2025_17_DAL_WAS`), so home/away, the
+  final score and the W/L on each roster line attach by exact lookup — no name,
+  date or abbreviation matching. A game the schedule has no final score for
+  resolves to nothing rather than to a 0-0 game. The schedules file writes the
+  Rams as `LA`, so team codes are normalized on the way in, the same defence the
+  play-by-play source needed.
+- **The roster grid sums; it does not average.** A multi-week range shows
+  totals, as a scoring page does. The prior-season range is the one exception —
+  only per-game averages are stored for the baseline season — and it says so on
+  every line rather than sitting silently under headers that mean totals.
+- **Long touchdowns are derived, not read.** nflverse publishes plays of 40+
+  yards but not *touchdowns* of 40+ yards, which is what a long-TD bonus
+  actually pays on — so those are counted from play-by-play, outside the
+  red-zone filter, since a 40-yard score starts outside the 20 by definition.
+  A long TD pass pays the passer and the receiver separately, as two bonuses.
+- **A projection is an expectation, not a game.** Sleeper publishes projected
+  *components*, so the app prices them under your own rules rather than showing
+  a PPR total your league does not use — but through the same path the
+  prior-season baseline uses, with **milestone bonuses excluded**: projecting
+  105 rushing yards says nothing about how often the 100-yard mark is actually
+  crossed. Sleeper's own figure stays beside ours, untouched, and the page says
+  which is which.
+- **Milestones are thresholds, and thresholds are not linear.** A 100-yard
+  rushing bonus pays once at the mark — a 195-yard game is one 100-yard game,
+  not two. Because only per-game *averages* are stored for the prior season,
+  milestone bonuses are excluded from the prior-season column and the grid says
+  so: a back averaging 95 yards may well have had six 100-yard games, and no
+  average can recover that. Live game rows score exactly, and multi-week ranges
+  sum per-game scores rather than scoring summed stats, so they come out right.
+- **One roster column is omitted, not blanked**: Pick Six, which is scored by
+  the returning defense and so never appears on the passer's row. A permanently
+  empty column is noise; the omission is named under the grid.
 - Undefined rates render as `—`, never as `0`. A red-zone blank means the
   play-by-play source has not covered those games; `0` means the player was
   genuinely shut out. The two are never conflated.
@@ -168,7 +231,8 @@ is more than 20 hours old.
 |---|---|---|---|---|
 | Sleeper `state/nfl` | `sleeper_state.json` | Decides the mode + current week | Every refresh | Last snapshot kept |
 | nflverse weekly stats + snaps | `stats_player_week_<yr>.csv`, `snap_counts_<yr>.csv` | Trends/game logs; prior year doubles as the in-season baseline | Weekly in-season; completed seasons cached | Last snapshot kept |
-| nflverse play-by-play | `redzone_<yr>.json` | Red-zone / goal-line usage and exact team red-zone totals | Weekly in-season; completed seasons cached | Red-zone columns read `—`, app unaffected |
+| nflverse play-by-play | `pbp_<yr>.json` | Red-zone / goal-line usage, exact team red-zone totals, and touchdowns of 40+ yards | Weekly in-season; completed seasons cached | Those columns read `—`, app unaffected |
+| nflverse schedules | `games.csv` | Final scores and W/L on each roster line | Weekly in-season (one file covers every season) | Rows show week and opponent only |
 | FFC ADP | `ffc_adp.json` | Draft market / stale artifact | Daily | Last snapshot kept |
 | FantasyPros cheat sheet | `fantasypros_ecr.json` | Expert ranks (draft mode) | Daily | Last snapshot kept |
 | FantasyPros rest-of-season | `fantasypros_ros.json` | Expert ranks (season mode) | Weekly in-season | Last snapshot kept |

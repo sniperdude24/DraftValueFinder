@@ -38,6 +38,9 @@ const DEFAULT = () => ({
   picks: [],
   personalRanks: {},
   scoring: { preset: 'ppr', rules: null },
+  // When the free-agent pool was last pasted in. Null means never, which is
+  // reported as "availability unknown" rather than treated as "all free".
+  freeAgents: null,
 });
 
 export function myTeamId(state) {
@@ -161,6 +164,66 @@ export function setTeams(state, teams) {
   }
   state.picks = (state.picks ?? []).filter(id => state.owners?.[id] != null);
   return derive(state);
+}
+
+// ---- the free-agent pool ----
+//
+// WHY THIS EXISTS: availability was derived purely from `owners`, and with a
+// handful of players assigned the app believed 246 of 250 were free. Every
+// waiver suggestion was built on that, and would happily propose someone
+// rostered since August. A wrong pool cannot be fixed by better analysis.
+//
+// The list is applied as the COMPLEMENT of what we already know, which is what
+// keeps a paste from destroying rosters that took effort to record:
+//
+//   in the list                      → freed
+//   not in the list, currently free  → UNKNOWN_OWNER (rostered by somebody)
+//   not in the list, on a named team → left exactly as it is
+//
+// The third rule is the load-bearing one. Without it, pasting a free-agent
+// list would silently reassign every recorded roster to "owner unknown".
+//
+// Freshness is part of the fact, not decoration: acting on a ten-day-old list
+// is how you claim a player who was gone on Tuesday, so `as_of` is stored and
+// surfaced wherever the pool is used.
+// `allIds` is the player universe the complement is taken over — without it
+// this can only speak about players it has already heard of, and the 240-odd
+// it has never seen stay "free" forever, which is the exact fiction this
+// function exists to end. Callers pass the whole database.
+export function applyFreeAgentList(state, freeIds, { allIds = null, week = null, now = new Date() } = {}) {
+  state.owners ??= {};
+  state.picks ??= [];
+  const free = new Set(freeIds);
+  const universe = new Set([...(allIds ?? []), ...free, ...Object.keys(state.owners)]);
+
+  let freed = 0, marked = 0, kept = 0;
+  for (const id of universe) {
+    const owner = state.owners[id];
+    if (free.has(id)) {
+      if (owner != null) { delete state.owners[id]; freed++; }   // a drop
+    } else if (owner == null) {
+      state.owners[id] = UNKNOWN_OWNER; marked++;
+    } else if (owner !== UNKNOWN_OWNER) {
+      kept++;                                                     // recorded roster, untouched
+    }
+  }
+  state.picks = state.picks.filter(id => state.owners[id] != null);
+  state.freeAgents = {
+    as_of: now.toISOString(),
+    week: week ?? null,
+    count: free.size,
+  };
+  return derive(state);
+}
+
+// Age of the free-agent pool in whole days, or null when none was ever pasted.
+// Callers decide what "too old" means; this only reports.
+export function freeAgentAge(state, now = Date.now()) {
+  const asOf = state.freeAgents?.as_of;
+  if (!asOf) return null;
+  const t = Date.parse(asOf);
+  if (Number.isNaN(t)) return null;
+  return Math.max(0, Math.floor((now - t) / 86400000));
 }
 
 export function clearRosters(state, { teamId = null } = {}) {

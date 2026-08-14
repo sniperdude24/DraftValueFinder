@@ -13,7 +13,8 @@ import { RAW_DIR } from './util.js';
 import { ingestFfcAdp } from './sources/ffcAdp.js';
 import { ingestFantasyPros, ingestFantasyProsROS } from './sources/fantasyPros.js';
 import { ingestWeeklyStats, ingestSnapCounts } from './sources/nflverse.js';
-import { ingestRedZone } from './sources/nflversePbp.js';
+import { ingestPbp, pbpSnapshotName } from './sources/nflversePbp.js';
+import { ingestSchedules } from './sources/nflverseSchedules.js';
 import { ingestSleeperPlayers, ingestSleeperState } from './sources/sleeper.js';
 import { ingestStatsGuy } from './sources/statsGuy.js';
 import { ingestSleeperProjections } from './sources/sleeperProjections.js';
@@ -39,20 +40,25 @@ export async function runIngest({ log = console, force = false } = {}) {
     ['Sleeper player metadata', () => ingestSleeperPlayers(opts)],
     ['Stats Guy trade-market values', () => ingestStatsGuy(opts)],
     ['Sleeper weekly projections', () => ingestSleeperProjections(state, opts)],
+    // Every season in one file, so it carries no year and gets no
+    // completed-season skip — the current season's scores land weekly.
+    ['nflverse schedules & final scores', () => ingestSchedules(opts)],
     [`nflverse weekly stats ${prevSeason}`, () => ingestWeeklyStats(prevSeason, opts),
       // Skip the big download when the previous season's snapshot already
       // exists — completed seasons don't change.
       existsSync(join(RAW_DIR, `stats_player_week_${prevSeason}.csv`))],
     [`nflverse snap counts ${prevSeason}`, () => ingestSnapCounts(prevSeason, opts),
       existsSync(join(RAW_DIR, `snap_counts_${prevSeason}.csv`))],
-    [`nflverse red-zone usage ${prevSeason}`, () => ingestRedZone(prevSeason, opts),
-      existsSync(join(RAW_DIR, `redzone_${prevSeason}.json`))],
+    [`nflverse play-by-play ${prevSeason}`, () => ingestPbp(prevSeason, opts),
+      // Must name the CURRENT snapshot: if this drifts from what ingestPbp
+      // writes, the skip never fires and every refresh re-downloads 19 MB.
+      existsSync(join(RAW_DIR, pbpSnapshotName(prevSeason)))],
   ];
   if (inSeason) {
     sources.push(
       [`nflverse weekly stats ${season}`, () => ingestWeeklyStats(season, opts)],
       [`nflverse snap counts ${season}`, () => ingestSnapCounts(season, opts)],
-      [`nflverse red-zone usage ${season}`, () => ingestRedZone(season, opts)],
+      [`nflverse play-by-play ${season}`, () => ingestPbp(season, opts)],
     );
   }
 

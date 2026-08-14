@@ -11,8 +11,8 @@ function play(over = {}) {
   return {
     season_type: 'REG', week: '1', posteam: 'ATL', yardline_100: '10',
     two_point_attempt: '0', pass_attempt: '0', rush_attempt: '0',
-    rush_touchdown: '0', pass_touchdown: '0',
-    rusher_player_id: '', receiver_player_id: '', ...over,
+    rush_touchdown: '0', pass_touchdown: '0', yards_gained: '3',
+    passer_player_id: '', rusher_player_id: '', receiver_player_id: '', ...over,
   };
 }
 const carry = over => play({ rush_attempt: '1', rusher_player_id: 'RB1', ...over });
@@ -104,13 +104,89 @@ test('weeks are recorded so downstream can tell "no data" from "no touches"', ()
   assert.deepEqual(finalize(acc, 2025).weeks, [4, 6]);
 });
 
+// ---- touchdowns of 40+ yards ----
+//
+// These are the counts nflverse does NOT publish: its weekly file has plays of
+// 40+ yards but not touchdowns of 40+ yards, which is what a long-TD bonus
+// actually pays on.
+
+const longTds = (acc, id) => [...(acc.players.get(id)?.values() ?? [])]
+  .reduce((a, w) => ({
+    passing_40_tds: a.passing_40_tds + w.passing_40_tds,
+    rushing_40_tds: a.rushing_40_tds + w.rushing_40_tds,
+    receiving_40_tds: a.receiving_40_tds + w.receiving_40_tds,
+  }), { passing_40_tds: 0, rushing_40_tds: 0, receiving_40_tds: 0 });
+
+test('a long touchdown counts even though it never enters the red zone', () => {
+  // THE regression this ordering guards. A 45-yard score starts at the 45, so
+  // counting it inside the red-zone branch would always produce zero — and the
+  // zero would look perfectly plausible.
+  const acc = fold([carry({ yardline_100: '45', yards_gained: '45', rush_touchdown: '1' })]);
+  assert.equal(longTds(acc, 'RB1').rushing_40_tds, 1);
+  assert.equal(acc.rzPlays, 0, 'and it is still not a red-zone touch');
+  assert.equal(totals(acc, 'RB1').rz_carries, 0);
+});
+
+test('a long TD pass pays the passer and the receiver separately', () => {
+  // A league settings screen has two distinct bonuses for one play.
+  const acc = fold([target({
+    yardline_100: '50', yards_gained: '50', pass_touchdown: '1', passer_player_id: 'QB1',
+  })]);
+  assert.equal(longTds(acc, 'WR1').receiving_40_tds, 1);
+  assert.equal(longTds(acc, 'QB1').passing_40_tds, 1);
+  assert.equal(longTds(acc, 'WR1').passing_40_tds, 0, 'the catch is not also a throw');
+  assert.equal(acc.longTds, 1, 'but it is one scoring play');
+});
+
+test('39 yards is not a 40-yard touchdown', () => {
+  const acc = fold([carry({ yardline_100: '39', yards_gained: '39', rush_touchdown: '1' })]);
+  assert.equal(longTds(acc, 'RB1').rushing_40_tds, 0);
+  const exact = fold([carry({ yardline_100: '40', yards_gained: '40', rush_touchdown: '1' })]);
+  assert.equal(longTds(exact, 'RB1').rushing_40_tds, 1, '40 itself counts');
+});
+
+test('a long gain that is not a touchdown pays nothing', () => {
+  // The weekly file already counts 40+ yard PLAYS; this counter is only about
+  // the ones that scored.
+  const acc = fold([carry({ yardline_100: '60', yards_gained: '55' })]);
+  assert.equal(longTds(acc, 'RB1').rushing_40_tds, 0);
+});
+
+test('a two-point conversion is never a long touchdown', () => {
+  const acc = fold([carry({ yardline_100: '2', yards_gained: '45', two_point_attempt: '1', rush_touchdown: '1' })]);
+  assert.equal(acc.players.size, 0);
+});
+
+test('a long TD with no passer id still credits the receiver', () => {
+  const acc = fold([target({ yardline_100: '50', yards_gained: '50', pass_touchdown: '1', passer_player_id: '' })]);
+  assert.equal(longTds(acc, 'WR1').receiving_40_tds, 1);
+});
+
+test('every week with a scrimmage touch is covered, red zone or not', () => {
+  // build.js reads `weeks` to tell a genuine zero from an uncovered week. If
+  // it were only recorded inside the red-zone branch, a long touchdown in a
+  // week with no red-zone play would land in a week the build thinks it never
+  // saw, and be silently discarded.
+  const acc = fold([carry({ week: '9', yardline_100: '60', yards_gained: '60', rush_touchdown: '1' })]);
+  assert.deepEqual(finalize(acc, 2025).weeks, [9]);
+  assert.equal(acc.rzPlays, 0);
+});
+
+test('team rows carry no long-TD fields, which are a per-player notion', () => {
+  const acc = fold([carry({ yardline_100: '10' })]);
+  assert.ok(!('rushing_40_tds' in acc.teams.get('ATL').get(1)),
+    'permanent zeros on a team row invite being read as a real team total');
+});
+
 // ---- CSV plumbing ----
 
 test('column indices are resolved from the header, not hardcoded', () => {
   const idx = resolveColumns('week,posteam,season_type,yardline_100,two_point_attempt,'
-    + 'pass_attempt,rush_attempt,rush_touchdown,pass_touchdown,rusher_player_id,receiver_player_id');
+    + 'pass_attempt,rush_attempt,rush_touchdown,pass_touchdown,yards_gained,'
+    + 'passer_player_id,rusher_player_id,receiver_player_id');
   assert.equal(idx.week, 0);
-  assert.equal(idx.receiver_player_id, 10);
+  assert.equal(idx.yards_gained, 9);
+  assert.equal(idx.receiver_player_id, 12);
 });
 
 test('a missing column fails loudly rather than silently counting zeros', () => {

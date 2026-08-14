@@ -10,7 +10,7 @@
 // player-weeks of 2025, exactly**. Custom rule sets are the same arithmetic
 // with different coefficients, so they inherit that footing.
 //
-// TWO THINGS REAL LEAGUES NEED THAT A SINGLE FLAT MULTIPLIER CANNOT EXPRESS
+// THREE THINGS REAL LEAGUES NEED THAT A SINGLE FLAT MULTIPLIER CANNOT EXPRESS
 //
 //  1. POINTS PER UNIT. Leagues write "1 point per 20 passing yards", not
 //     "0.05 points per yard". Storing the pair keeps the user's own numbers
@@ -22,6 +22,19 @@
 //     nothing to a quarterback, and a completion bonus applies only to
 //     passers. One global table cannot say that.
 //
+//  3. THRESHOLDS. "10 points for a 100-yard rushing game" is not a rate at
+//     all — it pays once when a line crosses a mark, and a 195-yard game pays
+//     it once, not twice. Rules therefore come in two KINDS, and the stored
+//     shape stays a plain pair either way:
+//
+//        rate      [a, b]  →  a points for every b of the stat
+//        milestone [a, b]  →  a points once, when the stat reaches b
+//
+//     The threshold lives in the rule rather than the category so a league
+//     with a 150-yard bonus can say so, for the same reason per-unit is
+//     editable. See `scoreGame`, and read the note on `scoreAverages` before
+//     assuming milestones behave like everything else.
+//
 // Reaching zero mismatches against nflverse required one correction worth
 // remembering: `fumbles_lost_total` counts special-teams muffs, which fantasy
 // does not charge to the player. Only sack, rushing and receiving fumbles
@@ -30,9 +43,14 @@
 
 export const POSITIONS = ['QB', 'RB', 'WR', 'TE'];
 
-// Rule keys ARE game-row field names, so there is no mapping layer to drift.
-// [label, shortForm, primaryFor] — `primaryFor` lists the positions a league
-// settings screen normally shows the category under.
+// [label, shortForm, primaryFor, meta?] — `primaryFor` lists the positions a
+// league settings screen normally shows the category under.
+//
+// A rule key is the game-row field it reads, EXCEPT for milestones: those name
+// the bonus ("100+ yard rushing game") and carry the field they measure in
+// `meta.field`, because two different rules can read the same stat. That is
+// why CATEGORY_KEYS and SCORING_FIELDS below are two different lists — the
+// first is what rules are keyed by, the second is what the game row supplies.
 //
 // EVERY position can score EVERY category. That is not pedantry: receivers
 // throw touchdowns on trick plays, quarterbacks catch passes, and a model
@@ -55,18 +73,50 @@ export const CATEGORIES = {
   two_point_conversions: ['2-point conversions', '2PT', POSITIONS],
   fumbles_lost:          ['Fumbles lost', 'FL', POSITIONS],
   special_teams_tds:     ['Special-teams TDs', 'STTD', POSITIONS],
+
+  // ---- long-play bonuses ----
+  // The weekly file counts plays of 40+ yards; the TDs of 40+ yards are
+  // derived from play-by-play (see ingest/sources/nflversePbp.js), because
+  // nflverse publishes the former and not the latter. Both are BONUSES —
+  // additive on top of the touchdown's ordinary points, as a league settings
+  // screen treats them.
+  passing_40:            ['Completions of 40+ yards', 'Pa40', ['QB']],
+  passing_40_tds:        ['Passing TDs of 40+ yards', 'Pa40TD', ['QB']],
+  rushing_40:            ['Rushes of 40+ yards', 'Ru40', POSITIONS],
+  rushing_40_tds:        ['Rushing TDs of 40+ yards', 'Ru40TD', POSITIONS],
+  receiving_40:          ['Receptions of 40+ yards', 'Re40', ['RB', 'WR', 'TE']],
+  receiving_40_tds:      ['Receiving TDs of 40+ yards', 'Re40TD', ['RB', 'WR', 'TE']],
+
+  // ---- game milestones (threshold rules, not rates) ----
+  passing_300_game:      ['300+ yard passing game', 'Pa300', ['QB'],
+                          { kind: 'milestone', field: 'passing_yards', threshold: 300 }],
+  rushing_100_game:      ['100+ yard rushing game', 'Ru100', POSITIONS,
+                          { kind: 'milestone', field: 'rushing_yards', threshold: 100 }],
+  receiving_100_game:    ['100+ yard receiving game', 'Re100', ['RB', 'WR', 'TE'],
+                          { kind: 'milestone', field: 'receiving_yards', threshold: 100 }],
 };
 
-// Every field any rule can read. normalize/build.js stores per-game averages
-// of these on the prior-season baseline so it can be re-scored later.
-export const SCORING_FIELDS = Object.keys(CATEGORIES);
+// What rules are keyed by.
+export const CATEGORY_KEYS = Object.keys(CATEGORIES);
+
+export const metaFor = key => CATEGORIES[key]?.[3] ?? null;
+export const isMilestone = key => metaFor(key)?.kind === 'milestone';
+// The game-row field a category reads. Same as the key for everything except
+// milestones, which name a bonus rather than a stat.
+export const fieldFor = key => metaFor(key)?.field ?? key;
+
+// Every DISTINCT game-row field any rule can read. normalize/build.js stores
+// per-game averages of these on the prior-season baseline, and the roster grid
+// builds its columns from them — neither wants the milestone keys, which are
+// not fields and would be undefined on every game row.
+export const SCORING_FIELDS = [...new Set(CATEGORY_KEYS.map(fieldFor))];
 
 // All categories apply everywhere; `primary` is only about editor layout.
-export const categoriesFor = () => SCORING_FIELDS;
+export const categoriesFor = () => CATEGORY_KEYS;
 export const primaryCategoriesFor = position =>
   Object.entries(CATEGORIES).filter(([, [, , on]]) => on.includes(position)).map(([k]) => k);
 export const rareCategoriesFor = position =>
-  SCORING_FIELDS.filter(k => !CATEGORIES[k][2].includes(position));
+  CATEGORY_KEYS.filter(k => !CATEGORIES[k][2].includes(position));
 
 // A rule is [points, perUnit]: `points` awarded for every `perUnit` of the
 // stat. [1, 20] is a point per 20 yards; [6, 1] is six points a touchdown.
@@ -89,6 +139,21 @@ const STANDARD_TABLE = receptionPts => ({
   two_point_conversions: R(2),
   fumbles_lost: R(-2),
   special_teams_tds: R(6),
+  // No stock format pays long-play or milestone bonuses, so they are worth
+  // nothing until a league says otherwise. This is also what keeps the PPR
+  // preset reproducing nflverse exactly after these categories were added.
+  passing_40: R(0),
+  passing_40_tds: R(0),
+  rushing_40: R(0),
+  rushing_40_tds: R(0),
+  receiving_40: R(0),
+  receiving_40_tds: R(0),
+  // For a milestone the second number is the threshold, not a divisor. It
+  // carries the conventional mark so the editor opens on something meaningful
+  // even though zero points means it pays nothing yet.
+  passing_300_game: R(0, 300),
+  rushing_100_game: R(0, 100),
+  receiving_100_game: R(0, 100),
 });
 
 // The stock formats apply the same table at every position — which is also
@@ -161,13 +226,22 @@ export function rulesFor(scoring) {
   return migrateFlatRules(scoring.rules) ?? DEFAULT_RULES;
 }
 
-const sameRule = (a, b) => normalizeRule(a)[0] / normalizeRule(a)[1] === normalizeRule(b)[0] / normalizeRule(b)[1];
+// Rate rules are compared by RATE, so [1,25] and [0.04,1] are the same rule
+// written two ways. A milestone has no rate — points over a threshold is not a
+// meaningful quantity — so it compares by points, with the threshold mattering
+// only when the bonus is actually worth something.
+function sameRule(key, a, b) {
+  const [ap, ab] = normalizeRule(a);
+  const [bp, bb] = normalizeRule(b);
+  if (isMilestone(key)) return ap === bp && (ap === 0 || ab === bb);
+  return ap / ab === bp / bb;
+}
 
 export function isPresetEqual(rules, presetName) {
   const preset = PRESETS[presetName];
   if (!preset) return false;
   return POSITIONS.every(pos =>
-    categoriesFor(pos).every(key => sameRule(rules?.[pos]?.[key] ?? [0, 1], preset[pos][key])));
+    categoriesFor(pos).every(key => sameRule(key, rules?.[pos]?.[key] ?? [0, 1], preset[pos][key])));
 }
 
 // Name the preset a rule set corresponds to, or 'custom' when it matches none.
@@ -189,15 +263,22 @@ export function copyPosition(rules, from, to) {
 // supply contributes nothing, but a row carrying no scoring components at
 // all yields null rather than a confident 0 — the same "undefined, not zero"
 // discipline the rest of src/analyze follows, so the UI can print "—".
-export function scoreGame(game, positionRules = DEFAULT_RULES.RB) {
+export function scoreGame(game, positionRules = DEFAULT_RULES.RB, { milestones = true } = {}) {
   if (!game || !positionRules) return null;
   let total = 0, seen = false;
-  for (const [field, rule] of Object.entries(positionRules)) {
-    const v = game[field];
+  for (const [key, rule] of Object.entries(positionRules)) {
+    const milestone = isMilestone(key);
+    if (milestone && !milestones) continue;
+    const v = game[fieldFor(key)];
     if (v == null) continue;
-    seen = true;
-    const [points, perUnit] = normalizeRule(rule);
-    total += (v / perUnit) * points;
+    // A milestone reads a field another rule also reads, so it must not be
+    // what makes a row count as having data — otherwise a row of nothing but
+    // milestone rules would score 0 instead of null.
+    if (!milestone) seen = true;
+    const [points, bound] = normalizeRule(rule);
+    // Pays once at the mark. A 195-yard game is one 100-yard game, not two.
+    if (milestone) total += v >= bound ? points : 0;
+    else total += (v / bound) * points;
   }
   if (!seen) return null;
   // Fantasy points are conventionally reported to two decimals; rounding
@@ -220,13 +301,36 @@ export function scorePlayers(players, rules) {
     // Positions with no rule set (K, DST) simply score nothing.
     const posRules = byPosition[p.position] ?? null;
     for (const g of p.games ?? []) g.fantasy_points = scoreGame(g, posRules);
-    if (p.baseline?.components) p.baseline.points = scoreGame(p.baseline.components, posRules);
+    // Averages, not a game — so this must go through scoreAverages, which
+    // leaves milestone bonuses out rather than testing a threshold against a
+    // mean. See the note there.
+    if (p.baseline?.components) p.baseline.points = scoreAverages(p.baseline.components, posRules);
+    // A projection is an EXPECTATION, not a game — so it goes through
+    // scoreAverages too. Paying a 100-yard-game bonus on a projected 105 yards
+    // is the same error as paying it on a season average: the projection says
+    // nothing about how often the mark is actually crossed.
+    //
+    // The result is this app's arithmetic on Sleeper's components, and every
+    // surface that shows it says so. `pts_ppr` beside it stays Sleeper's own.
+    if (p.projection?.components) p.projection.points = scoreAverages(p.projection.components, posRules);
   }
   return byPosition;
 }
 
-// Scoring is linear in its components, so the score of the per-game averages
-// equals the average of the per-game scores. That is what lets a player's
-// prior-season baseline be re-scored from stored averages alone, without
-// keeping every baseline game row on the record.
-export const scoreAverages = scoreGame;
+// RATE scoring is linear in its components, so the score of the per-game
+// averages equals the average of the per-game scores. That is what lets a
+// player's prior-season baseline be re-scored from stored averages alone,
+// without keeping every baseline game row on the record.
+//
+// MILESTONES ARE NOT LINEAR, and no average can recover them. A back averaging
+// 95 rushing yards may well have had six 100-yard games; scoring his average
+// pays the bonus zero times, and a back averaging 105 would be paid on every
+// game including the ones he was hurt in. Both answers are wrong, and neither
+// is visible in the output.
+//
+// So the baseline path skips milestone rules and the UI says the prior-season
+// line excludes them. Live game rows are unaffected — they score exactly — and
+// the roster grid's multi-week ranges sum PER-GAME scores rather than scoring
+// summed stats, so milestones come out right there with no special handling.
+export const scoreAverages = (averages, positionRules) =>
+  scoreGame(averages, positionRules, { milestones: false });
