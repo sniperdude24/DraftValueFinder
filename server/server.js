@@ -20,7 +20,11 @@ import { buildDatabase } from '../src/normalize/build.js';
 import { isStale } from '../src/ingest/freshness.js';
 import { computeWindows } from '../src/analyze/playerStats.js';
 import { buildTeamContext, teamSummaries } from '../src/analyze/teamContext.js';
-import { scoreGame, rulesFor, describeRules, PRESETS, SCORING_FIELDS, DEFAULT_RULES } from '../src/analyze/fantasyPoints.js';
+import {
+  scoreGame, scorePlayers, rulesFor, describeRules, normalizeRules, copyPosition,
+  PRESETS, DEFAULT_RULES, POSITIONS, CATEGORIES, categoriesFor,
+  primaryCategoriesFor, rareCategoriesFor,
+} from '../src/analyze/fantasyPoints.js';
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..');
 const PUBLIC = join(ROOT, 'public');
@@ -39,16 +43,9 @@ let db, assessments, byId, activeRules = DEFAULT_RULES;
 // a re-ingest or a rebuild: the components are already on disk, and the
 // arithmetic over ~3k rows is instant.
 function applyScoring(rules) {
-  activeRules = rules;
-  for (const p of db.players) {
-    for (const g of p.games ?? []) g.fantasy_points = scoreGame(g, rules);
-    // The baseline season's rows aren't retained, but its per-game component
-    // averages are — and scoring is linear, so scoring the averages gives
-    // exactly the average of the scores.
-    if (p.baseline?.components) {
-      p.baseline.points = scoreGame(p.baseline.components, rules);
-    }
-  }
+  // scorePlayers applies each position's own rules and re-scores the
+  // prior-season baseline from its stored component averages.
+  activeRules = scorePlayers(db.players, rules);
   assessments = assessAll(db.players);
 }
 
@@ -239,7 +236,14 @@ const server = createServer(async (req, res) => {
           preset: describeRules(activeRules),
           rules: activeRules,
           presets: PRESETS,
-          fields: SCORING_FIELDS,
+          positions: POSITIONS,
+          // Labels and which positions each category applies to, so the
+          // settings screen is built from the engine's own definitions
+          // rather than a second list that could drift out of step.
+          categories: Object.fromEntries(
+            Object.entries(CATEGORIES).map(([k, [label, short]]) => [k, { label, short }])),
+          primary: Object.fromEntries(POSITIONS.map(p => [p, primaryCategoriesFor(p)])),
+          rare: Object.fromEntries(POSITIONS.map(p => [p, rareCategoriesFor(p)])),
           // The market columns come from PPR-specific endpoints and cannot
           // follow custom scoring; the UI must say so rather than imply the
           // comparison is like-for-like.
@@ -252,20 +256,42 @@ const server = createServer(async (req, res) => {
         if (preset !== 'custom' && !PRESETS[preset]) {
           return send(res, 400, { error: `unknown preset "${preset}"` });
         }
-        // Reject non-numeric rule values rather than letting them become NaN
-        // and quietly poison every score downstream.
-        const rules = {};
+        let scoring;
         if (preset === 'custom') {
-          for (const [k, v] of Object.entries(body?.rules ?? {})) {
-            if (!SCORING_FIELDS.includes(k)) continue;
-            const n = Number(v);
-            if (!Number.isFinite(n)) return send(res, 400, { error: `rule "${k}" must be a number` });
-            rules[k] = n;
+          // Validate every value rather than letting a stray blank become NaN
+          // and quietly poison every score downstream. A zero per-unit would
+          // divide by zero, so it is rejected rather than silently coerced.
+          const rules = {};
+          for (const pos of POSITIONS) {
+            rules[pos] = {};
+            for (const key of categoriesFor(pos)) {
+              const raw = body?.rules?.[pos]?.[key];
+              if (raw == null) continue;
+              const [pts, per] = Array.isArray(raw) ? raw : [raw, 1];
+              const p = Number(pts), u = Number(per);
+              if (!Number.isFinite(p)) return send(res, 400, { error: `${pos} ${key}: points must be a number` });
+              if (!Number.isFinite(u) || u === 0) return send(res, 400, { error: `${pos} ${key}: per-unit must be a non-zero number` });
+              rules[pos][key] = [p, u];
+            }
           }
+          scoring = { preset: 'custom', rules };
+        } else {
+          scoring = { preset, rules: null };
         }
-        const scoring = preset === 'custom' ? { preset: 'custom', rules } : { preset, rules: null };
         saveState({ ...state, scoring });
         applyScoring(rulesFor(scoring));
+        return send(res, 200, { ok: true, preset: describeRules(activeRules), rules: activeRules });
+      }
+      if (req.method === 'POST' && path === '/api/scoring/copy') {
+        // The "same scoring as RB?" convenience — copy one position's rules
+        // onto another rather than retyping fourteen numbers.
+        const { from, to } = await readBody(req);
+        if (!POSITIONS.includes(from) || !POSITIONS.includes(to)) {
+          return send(res, 400, { error: 'from/to must both be QB, RB, WR or TE' });
+        }
+        const rules = copyPosition(activeRules, from, to);
+        saveState({ ...state, scoring: { preset: 'custom', rules } });
+        applyScoring(rules);
         return send(res, 200, { ok: true, preset: describeRules(activeRules), rules: activeRules });
       }
       if (req.method === 'GET' && path === '/api/teams') {

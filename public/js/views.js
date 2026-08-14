@@ -2,23 +2,55 @@
 import { api, esc, pct, trendArrow, signalBadge } from './api.js';
 import { openProfile } from './profile.js';
 
-// Human labels for the scoring rules. Yardage rules are stored per yard, so
-// they are shown as "1 point per N yards" — nobody thinks in 0.04.
-const RULE_LABELS = {
-  passing_yards: ['Passing yards', 'per yard (0.04 = 1 per 25)'],
-  passing_tds: ['Passing TD', ''],
-  interceptions: ['Interception', ''],
-  rushing_yards: ['Rushing yards', 'per yard (0.1 = 1 per 10)'],
-  rushing_tds: ['Rushing TD', ''],
-  receptions: ['Reception', 'the only difference between PPR, half and standard'],
-  receiving_yards: ['Receiving yards', 'per yard (0.1 = 1 per 10)'],
-  receiving_tds: ['Receiving TD', ''],
-  two_point_conversions: ['Two-point conversion', ''],
-  fumbles_lost: ['Fumble lost', 'offensive fumbles only — special-teams muffs are not charged'],
-  special_teams_tds: ['Special-teams TD', ''],
-};
-
 const PRESET_LABELS = { ppr: 'PPR', half_ppr: 'Half PPR', standard: 'Standard', custom: 'Custom' };
+
+// Show rare cross-position categories (a receiver's TD pass) only when the
+// user asks — they are real and scoreable, but they would triple the length
+// of every table if shown by default.
+const scoringUi = { showRare: {} };
+
+// One category row: FF Pts and Per Unit, laid out the way a league settings
+// page writes it. "1 point per 20 yards" stays 1 and 20 here rather than
+// being flattened to 0.05.
+function ruleRow(s, positions, key) {
+  const c = s.categories[key] ?? { label: key, short: key };
+  return `<tr>
+    <td>${esc(c.label)}</td>
+    <td class="aid">${esc(c.short)}</td>
+    ${positions.map(pos => {
+      const [pts, per] = s.rules[pos]?.[key] ?? [0, 1];
+      return `<td><input type="number" step="any" class="rule-pts" data-pos="${pos}" data-field="${key}" value="${pts}"></td>
+              <td><input type="number" step="any" class="rule-per" data-pos="${pos}" data-field="${key}" value="${per}"></td>`;
+    }).join('')}
+  </tr>`;
+}
+
+function ruleTable(s, positions, title) {
+  // Union of the primary rows across the grouped positions, in engine order.
+  const primary = Object.keys(s.categories).filter(k => positions.some(p => s.primary[p].includes(k)));
+  const rare = Object.keys(s.categories).filter(k => !primary.includes(k));
+  const key = positions.join('-');
+  const open = !!scoringUi.showRare[key];
+  return `
+    <table class="mt scoring-grid">
+      <thead>
+        <tr><th></th><th></th>${positions.map(p => `<th colspan="2" class="posgroup">${esc(p)}</th>`).join('')}</tr>
+        <tr><th>Scoring category</th><th>Short</th>${positions.map(() => '<th>FF Pts</th><th>Per Unit</th>').join('')}</tr>
+      </thead>
+      <tbody>
+        ${primary.map(k => ruleRow(s, positions, k)).join('')}
+        ${open ? rare.map(k => ruleRow(s, positions, k)).join('') : ''}
+      </tbody>
+      <tfoot>
+        <tr><td colspan="${2 + positions.length * 2}" class="small">
+          <button class="rowbtn" data-rare="${esc(key)}">${open ? 'Hide' : 'Show'} rare categories</button>
+          <span class="aid">${esc(title)} — rare rows cover cross-position plays (a receiver's TD pass, a quarterback's catch). They score too; they are just hidden by default.</span>
+          ${positions.length > 1 ? positions.slice(1).map((p, i) =>
+            `<button class="rowbtn" data-copy-from="${esc(positions[i])}" data-copy-to="${esc(p)}">Same scoring as ${esc(positions[i])}</button>`).join('') : ''}
+        </td></tr>
+      </tfoot>
+    </table>`;
+}
 
 function scoringSection(s) {
   const active = s.preset;
@@ -26,33 +58,28 @@ function scoringSection(s) {
     <div class="panel"><h2>Scoring</h2>
       <p class="small">Points are computed from each game's component stats, not taken from a
         precomputed total — so changing these values re-scores every game log and flows through
-        trends, the AI rank, team pages and the chat. Changing scoring re-scores in memory; it does
-        not re-download anything.</p>
+        trends, the AI rank, team pages and the chat. Each position has its own column, so a
+        per-carry bonus can pay running backs and nothing to quarterbacks. Changing scoring
+        re-scores in memory; it does not re-download anything.</p>
       <div class="toolbar mt">
         ${Object.keys(PRESET_LABELS).filter(p => p !== 'custom').map(p =>
           `<button class="posbtn ${active === p ? 'active' : ''}" data-preset="${p}">${PRESET_LABELS[p]}</button>`).join('')}
         <span class="small">Active: <b>${PRESET_LABELS[active] ?? esc(active)}</b></span>
       </div>
-      <table class="mt">
-        <thead><tr><th>Stat</th><th>Points</th><th>Note</th></tr></thead>
-        <tbody>${s.fields.map(f => `<tr>
-          <td>${esc(RULE_LABELS[f]?.[0] ?? f)}</td>
-          <td><input type="number" step="any" class="score-rule" data-field="${f}" value="${s.rules[f] ?? 0}" style="width:80px"></td>
-          <td class="small" style="white-space:normal">${esc(RULE_LABELS[f]?.[1] ?? '')}</td>
-        </tr>`).join('')}</tbody>
-      </table>
-      <button class="rowbtn mt" id="scoring-apply" style="padding:8px 14px">Apply custom scoring</button>
+      ${ruleTable(s, ['QB'], 'Quarterback')}
+      ${ruleTable(s, ['RB', 'WR', 'TE'], 'Running back · Wide receiver · Tight end')}
+      <button class="rowbtn mine mt" id="scoring-apply" style="padding:8px 14px">Save scoring</button>
       <span class="small" id="scoring-status"></span>
       ${active !== 'ppr' ? `<div class="warn mt">
         <b>ADP and expert ranks are still PPR.</b> Those columns come from PPR-specific sources
-        (Fantasy Football Calculator and FantasyPros) and cannot be converted to ${esc(PRESET_LABELS[active] ?? active)}
-        scoring. The app's own numbers — points, trends, AI rank — now use your scoring, so any
-        disagreement with the market partly reflects the format difference, not just opinion.
-        This is shown rather than silently corrected.
+        (Fantasy Football Calculator and FantasyPros) and cannot be converted to your scoring.
+        The app's own numbers — points, trends, AI rank — do use it, so any disagreement with the
+        market partly reflects the format difference, not just opinion. This is shown rather than
+        silently corrected.
       </div>` : ''}
-      <p class="small mt">The engine is checked against nflverse's own PPR figure: under PPR rules it
-        reproduces their number for every game log in the database, so the arithmetic here is
-        verified rather than assumed.</p>
+      <p class="small mt">Verified rather than assumed: set to PPR, this engine reproduces nflverse's
+        own points figure for every game log in the database, including the trick plays where a
+        receiver throws a touchdown.</p>
     </div>`;
 }
 
@@ -319,11 +346,11 @@ export async function renderAbout(el, refresh) {
   forceBtn.onclick = () => runRefresh(true);
 
   const scoringStatus = el.querySelector('#scoring-status');
-  const applyScoring = async (body, label) => {
+  const applyScoring = async (body) => {
     scoringStatus.textContent = ' Re-scoring…';
     try {
       const r = await api.setScoring(body);
-      scoringStatus.textContent = ` Now scoring as ${PRESET_LABELS[r.preset] ?? r.preset}${label ? '' : ''}.`;
+      scoringStatus.textContent = ` Saved — now scoring as ${PRESET_LABELS[r.preset] ?? r.preset}.`;
       setTimeout(() => refresh?.(), 900);
     } catch (err) {
       scoringStatus.textContent = ` Failed: ${err.message}`;
@@ -331,10 +358,40 @@ export async function renderAbout(el, refresh) {
   };
   el.querySelectorAll('[data-preset]').forEach(b =>
     b.onclick = () => applyScoring({ preset: b.dataset.preset }));
-  el.querySelector('#scoring-apply').onclick = () => {
+
+  // Collect the whole grid, not just the visible rows: hidden rare rows are
+  // still rendered when open and must not be dropped when they are not.
+  const collectRules = () => {
     const rules = {};
-    el.querySelectorAll('.score-rule').forEach(i => { rules[i.dataset.field] = Number(i.value); });
-    applyScoring({ preset: 'custom', rules });
+    for (const input of el.querySelectorAll('.rule-pts')) {
+      (rules[input.dataset.pos] ??= {})[input.dataset.field] = [Number(input.value), 1];
+    }
+    for (const input of el.querySelectorAll('.rule-per')) {
+      const cell = rules[input.dataset.pos]?.[input.dataset.field];
+      if (cell) cell[1] = Number(input.value);
+    }
+    // Rows not currently rendered keep whatever the server already holds.
+    for (const pos of s.positions) {
+      for (const [key, val] of Object.entries(s.rules[pos] ?? {})) {
+        (rules[pos] ??= {})[key] ??= val;
+      }
+    }
+    return rules;
   };
+  el.querySelector('#scoring-apply').onclick = () => applyScoring({ preset: 'custom', rules: collectRules() });
+
+  el.querySelectorAll('[data-rare]').forEach(b => b.onclick = () => {
+    scoringUi.showRare[b.dataset.rare] = !scoringUi.showRare[b.dataset.rare];
+    refresh?.();
+  });
+  el.querySelectorAll('[data-copy-from]').forEach(b => b.onclick = async () => {
+    scoringStatus.textContent = ' Copying…';
+    try {
+      await api.copyScoring(b.dataset.copyFrom, b.dataset.copyTo);
+      setTimeout(() => refresh?.(), 600);
+    } catch (err) {
+      scoringStatus.textContent = ` Failed: ${err.message}`;
+    }
+  });
   await wireYahoo(el, refresh ?? (() => renderAbout(el, refresh)));
 }

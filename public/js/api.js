@@ -23,6 +23,7 @@ export const api = {
   bulkRoster: (team_id, text, commit) => req('/api/league/bulk', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ team_id, text, commit }) }),
   resetRoster: team_id => req('/api/league/reset', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ team_id }) }),
   scoring: () => req('/api/scoring'),
+  copyScoring: (from, to) => req('/api/scoring/copy', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ from, to }) }),
   setScoring: body => req('/api/scoring', { method: 'PUT', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) }),
   draft: (id, mine) => req('/api/draft', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id, mine }) }),
   undraft: id => req('/api/undraft', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id }) }),

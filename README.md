@@ -70,11 +70,15 @@ sources are recorded on the player record, not silently resolved.
   (ADP + expert average) adjusted only for evidence in the data (usage trends,
   unsustainable spikes, injury designations). Every adjustment is emitted as a
   readable factor. Confidence % measures evidence strength, not win probability.
-- **Custom scoring** — PPR, half-PPR, standard, or a per-stat rule set, edited on
-  the Data page. Points are computed from each game's components rather than taken
-  from a precomputed total, so a change re-scores every game log and flows through
-  trends, the AI rank, team pages and the chat. Changing it re-scores in memory and
-  downloads nothing.
+- **Custom scoring** — PPR, half-PPR, standard, or a full per-position rule set,
+  edited on the Data page in the same shape a league settings screen uses: every
+  category has an *FF Pts* and a *Per Unit* value, so "1 point per 20 passing
+  yards" is stored as 1 and 20 rather than flattened to 0.05. Each position has
+  its own column, so a per-carry bonus can pay running backs and nothing to
+  quarterbacks, and a completion bonus reaches passers only. Points are computed
+  from each game's components rather than taken from a precomputed total, so a
+  change re-scores every game log and flows through trends, the AI rank, team
+  pages and the chat — in memory, downloading nothing.
 - **Red-zone usage** — a Players-explorer preset and a Teams panel covering
   touches inside the 20 and inside the 5, red-zone TDs, and each player's
   share of the team's scoring chances. Counts lead, rates follow: a 50% TD
@@ -143,6 +147,11 @@ is more than 20 hours old.
   custom rule sets trustworthy — they are the same arithmetic with different
   coefficients. nflverse's figure is kept on each game row untouched, as the
   reference the engine is checked against.
+- **Every position can score every category.** Receivers throw touchdowns on
+  trick plays and quarterbacks catch passes; a model that only scored a
+  position's "natural" categories silently lost points on nine real 2025 game
+  logs. The editor hides the rare rows behind a toggle rather than removing
+  them from the model.
 - **Fumbles**: only sack, rushing and receiving fumbles are charged. The raw
   `fumbles_lost_total` also counts special-teams muffs, which fantasy does not
   penalize — using it over-charged return men by 2 points a muff.
