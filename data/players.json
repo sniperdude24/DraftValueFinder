@@ -1,5 +1,5 @@
 {
- "built_at": "2026-08-13T23:54:18.859Z",
+ "built_at": "2026-08-14T00:16:15.442Z",
  "mode": "draft",
  "season": 2026,
  "stats_season": 2025,
@@ -7,7 +7,7 @@
  "week": null,
  "sources": {
   "adp": {
-   "fetched_at": "2026-08-13T23:54:17.532Z",
+   "fetched_at": "2026-08-13T23:58:22.414Z",
    "bytes": 42902,
    "source": "Fantasy Football Calculator",
    "url": "https://fantasyfootballcalculator.com/api/v1/adp/ppr?teams=10&year=2026",
@@ -15,7 +15,7 @@
    "detail": "PPR, 10-team, 6160 drafts 2026-08-06..2026-08-13"
   },
   "expert": {
-   "fetched_at": "2026-08-13T23:54:17.563Z",
+   "fetched_at": "2026-08-13T23:58:22.450Z",
    "bytes": 245086,
    "source": "FantasyPros expert consensus (PPR)",
    "url": "https://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php",
@@ -23,12 +23,20 @@
    "detail": "505 players, 86 experts, accessed 8/13"
   },
   "trade_market": {
-   "fetched_at": "2026-08-13T23:54:18.376Z",
+   "fetched_at": "2026-08-13T23:58:22.764Z",
    "bytes": 30940,
    "source": "Stats Guy Fantasy trade-market values (non-SF redraft)",
    "url": "https://api.statsguyfantasy.com/api/v1/rankings?format=non_sf_redraft&limit=500",
    "kind": "trade_market_values",
    "detail": "224 players, values as of 2026-08-13T13:01:29.840Z, derived from real Sleeper-league trades"
+  },
+  "projections": {
+   "fetched_at": "2026-08-14T00:16:14.893Z",
+   "bytes": 340541,
+   "source": "Sleeper weekly projections (external), 2026 week 1",
+   "url": "https://api.sleeper.app/v1/projections/nfl/regular/2026/1",
+   "kind": "projections",
+   "detail": "994 players with PPR projections"
   },
   "weekly_stats": {
    "fetched_at": "2026-08-13T09:19:56.602Z",
@@ -45,7 +53,7 @@
    "kind": "snap_counts"
   },
   "player_meta": {
-   "fetched_at": "2026-08-13T23:54:17.721Z",
+   "fetched_at": "2026-08-13T23:58:22.613Z",
    "bytes": 819251,
    "source": "Sleeper API",
    "url": "https://api.sleeper.app/v1/players/nfl",
@@ -59,7 +67,8 @@
   "with_adp": 227,
   "with_expert": 247,
   "with_stats": 212,
-  "with_trade_market": 205
+  "with_trade_market": 205,
+  "with_projection": 231
  },
  "unmatched": {
   "ffc_only": [
@@ -227,6 +236,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "7564",
     "age": 26,
     "years_exp": 5,
     "injury_status": null,
@@ -579,6 +589,20 @@
     "value": 8505,
     "pos_rank": 1,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 19.7,
+    "detail": {
+     "rush_att": 0.3,
+     "rush_yd": 1.1,
+     "rush_td": 0,
+     "rec_tgt": 9.4,
+     "rec": 6.6,
+     "rec_yd": 85.8,
+     "rec_td": 0.7
+    }
    }
   },
   {
@@ -613,6 +637,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9221",
     "age": 24,
     "years_exp": 3,
     "injury_status": "Questionable",
@@ -986,6 +1011,20 @@
     "value": 10000,
     "pos_rank": 1,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 22.3,
+    "detail": {
+     "rush_att": 17,
+     "rush_yd": 89.4,
+     "rush_td": 0.9,
+     "rec_tgt": 4.7,
+     "rec": 4,
+     "rec_yd": 26.7,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -1020,6 +1059,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9493",
     "age": 25,
     "years_exp": 3,
     "injury_status": "Questionable",
@@ -1372,6 +1412,20 @@
     "value": 7763,
     "pos_rank": 2,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 19.8,
+    "detail": {
+     "rush_att": 0.5,
+     "rush_yd": 2.9,
+     "rush_td": 0,
+     "rec_tgt": 9.3,
+     "rec": 7,
+     "rec_yd": 92.9,
+     "rec_td": 0.5
+    }
    }
   },
   {
@@ -1406,6 +1460,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9509",
     "age": 24,
     "years_exp": 3,
     "injury_status": null,
@@ -1779,6 +1834,20 @@
     "value": 9828,
     "pos_rank": 2,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 21.7,
+    "detail": {
+     "rush_att": 19.4,
+     "rush_yd": 93.1,
+     "rush_td": 0.6,
+     "rec_tgt": 5.2,
+     "rec": 4.3,
+     "rec_yd": 32.8,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -1813,6 +1882,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9488",
     "age": 24,
     "years_exp": 3,
     "injury_status": null,
@@ -2186,6 +2256,20 @@
     "value": 7314,
     "pos_rank": 3,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 19.7,
+    "detail": {
+     "rush_att": 0.4,
+     "rush_yd": 1.9,
+     "rush_td": 0,
+     "rec_tgt": 9.3,
+     "rec": 6.8,
+     "rec_yd": 94.2,
+     "rec_td": 0.5
+    }
    }
   },
   {
@@ -2220,6 +2304,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "7547",
     "age": 26,
     "years_exp": 5,
     "injury_status": null,
@@ -2593,6 +2678,20 @@
     "value": 6566,
     "pos_rank": 4,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 19.8,
+    "detail": {
+     "rush_att": 0.3,
+     "rush_yd": 1.4,
+     "rush_td": 0,
+     "rec_tgt": 9.8,
+     "rec": 7.1,
+     "rec_yd": 86.2,
+     "rec_td": 0.7
+    }
    }
   },
   {
@@ -2627,6 +2726,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "6786",
     "age": 27,
     "years_exp": 6,
     "injury_status": null,
@@ -2916,6 +3016,20 @@
     "value": 6202,
     "pos_rank": 5,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 17.1,
+    "detail": {
+     "rush_att": 0.2,
+     "rush_yd": 1,
+     "rush_td": 0,
+     "rec_tgt": 9.1,
+     "rec": 6.1,
+     "rec_yd": 81.8,
+     "rec_td": 0.5
+    }
    }
   },
   {
@@ -2950,6 +3064,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "4034",
     "age": 30,
     "years_exp": 9,
     "injury_status": "Questionable",
@@ -3323,6 +3438,20 @@
     "value": 6569,
     "pos_rank": 3,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 19.6,
+    "detail": {
+     "rush_att": 15.3,
+     "rush_yd": 64.6,
+     "rush_td": 0.5,
+     "rec_tgt": 5.5,
+     "rec": 4.9,
+     "rec_yd": 35.2,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -3357,6 +3486,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "6794",
     "age": 27,
     "years_exp": 6,
     "injury_status": null,
@@ -3730,6 +3860,19 @@
     "value": 5901,
     "pos_rank": 6,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 16.8,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.5,
+     "rec_tgt": 9.2,
+     "rec": 5.9,
+     "rec_yd": 84.4,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -3764,6 +3907,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "6813",
     "age": 27,
     "years_exp": 6,
     "injury_status": null,
@@ -4137,6 +4281,20 @@
     "value": 6470,
     "pos_rank": 4,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 18.9,
+    "detail": {
+     "rush_att": 17.4,
+     "rush_yd": 83.2,
+     "rush_td": 0.7,
+     "rec_tgt": 4,
+     "rec": 3.3,
+     "rec_yd": 23.2,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -4171,6 +4329,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8112",
     "age": 25,
     "years_exp": 4,
     "injury_status": null,
@@ -4439,6 +4598,19 @@
     "value": 4830,
     "pos_rank": 7,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 15.4,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.3,
+     "rec_tgt": 8.3,
+     "rec": 5.1,
+     "rec_yd": 73.2,
+     "rec_td": 0.5
+    }
    }
   },
   {
@@ -4473,6 +4645,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "5859",
     "age": 29,
     "years_exp": 7,
     "injury_status": null,
@@ -4804,6 +4977,19 @@
     "value": 4607,
     "pos_rank": 8,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 16.8,
+    "detail": {
+     "rush_att": 0,
+     "rush_yd": 0.2,
+     "rec_tgt": 8,
+     "rec": 5.4,
+     "rec_yd": 79.8,
+     "rec_td": 0.6
+    }
    }
   },
   {
@@ -4838,6 +5024,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "7569",
     "age": 27,
     "years_exp": 5,
     "injury_status": null,
@@ -5169,6 +5356,20 @@
     "value": 4390,
     "pos_rank": 9,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 16.6,
+    "detail": {
+     "rush_att": 0.2,
+     "rush_yd": 1.1,
+     "rush_td": 0,
+     "rec_tgt": 8.3,
+     "rec": 5.4,
+     "rec_yd": 83.2,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -5203,6 +5404,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12527",
     "age": 22,
     "years_exp": 1,
     "injury_status": null,
@@ -5576,6 +5778,20 @@
     "value": 5821,
     "pos_rank": 6,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 14.8,
+    "detail": {
+     "rush_att": 16.5,
+     "rush_yd": 63,
+     "rush_td": 0.5,
+     "rec_tgt": 3.9,
+     "rec": 3.1,
+     "rec_yd": 17,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -5610,6 +5826,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9224",
     "age": 26,
     "years_exp": 3,
     "injury_status": null,
@@ -5983,6 +6200,20 @@
     "value": 4863,
     "pos_rank": 10,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 16.7,
+    "detail": {
+     "rush_att": 14.6,
+     "rush_yd": 62.2,
+     "rush_td": 0.4,
+     "rec_tgt": 4.8,
+     "rec": 4.2,
+     "rec_yd": 25.1,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -6017,6 +6248,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8138",
     "age": 26,
     "years_exp": 4,
     "injury_status": null,
@@ -6390,6 +6622,20 @@
     "value": 6102,
     "pos_rank": 5,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 17,
+    "detail": {
+     "rush_att": 15.4,
+     "rush_yd": 77.8,
+     "rush_td": 0.7,
+     "rec_tgt": 3,
+     "rec": 2.6,
+     "rec_yd": 18.4,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -6424,6 +6670,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8130",
     "age": 26,
     "years_exp": 4,
     "injury_status": null,
@@ -6797,6 +7044,17 @@
     "value": 4772,
     "pos_rank": 1,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 15.6,
+    "detail": {
+     "rec_tgt": 8.6,
+     "rec": 6.8,
+     "rec_yd": 66.7,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -6831,6 +7089,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8137",
     "age": 25,
     "years_exp": 4,
     "injury_status": null,
@@ -7204,6 +7463,19 @@
     "value": 4279,
     "pos_rank": 10,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 16.2,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.3,
+     "rec_tgt": 8.2,
+     "rec": 5.2,
+     "rec_yd": 83.9,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -7238,6 +7510,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11604",
     "age": 23,
     "years_exp": 2,
     "injury_status": null,
@@ -7506,6 +7779,20 @@
     "value": 4693,
     "pos_rank": 2,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 16,
+    "detail": {
+     "rush_att": 0.2,
+     "rush_yd": 0.9,
+     "rush_td": 0,
+     "rec_tgt": 8.1,
+     "rec": 6.6,
+     "rec_yd": 67.1,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -7540,6 +7827,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8144",
     "age": 26,
     "years_exp": 4,
     "injury_status": null,
@@ -7892,6 +8180,19 @@
     "value": 3894,
     "pos_rank": 13,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 14.7,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.2,
+     "rec_tgt": 8.4,
+     "rec": 5.3,
+     "rec_yd": 68.7,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -7926,6 +8227,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9226",
     "age": 24,
     "years_exp": 3,
     "injury_status": null,
@@ -8278,6 +8580,20 @@
     "value": 5505,
     "pos_rank": 7,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 17.5,
+    "detail": {
+     "rush_att": 14.2,
+     "rush_yd": 79.2,
+     "rush_td": 0.5,
+     "rec_tgt": 3.6,
+     "rec": 3.3,
+     "rec_yd": 22.1,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -8312,6 +8628,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "10229",
     "age": 26,
     "years_exp": 3,
     "injury_status": null,
@@ -8496,6 +8813,20 @@
     "value": 4001,
     "pos_rank": 12,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 13.3,
+    "detail": {
+     "rush_att": 0.5,
+     "rush_yd": 1.9,
+     "rush_td": 0,
+     "rec_tgt": 7.3,
+     "rec": 5.1,
+     "rec_yd": 56.5,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -8530,6 +8861,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "7525",
     "age": 27,
     "years_exp": 5,
     "injury_status": "Questionable",
@@ -8903,6 +9235,19 @@
     "value": 3331,
     "pos_rank": 17,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 14.9,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.2,
+     "rec_tgt": 7.4,
+     "rec": 5.3,
+     "rec_yd": 69.6,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -8937,6 +9282,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12507",
     "age": 23,
     "years_exp": 1,
     "injury_status": null,
@@ -9142,6 +9488,20 @@
     "value": 5010,
     "pos_rank": 9,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 15.7,
+    "detail": {
+     "rush_att": 14,
+     "rush_yd": 63.7,
+     "rush_td": 0.5,
+     "rec_tgt": 4.3,
+     "rec": 3.9,
+     "rec_yd": 21.7,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -9176,6 +9536,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "4984",
     "age": 30,
     "years_exp": 8,
     "injury_status": null,
@@ -9528,6 +9889,21 @@
     "value": 4410,
     "pos_rank": 1,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 22.9,
+    "detail": {
+     "pass_att": 30.8,
+     "pass_cmp": 20,
+     "pass_yd": 230.2,
+     "pass_td": 1.6,
+     "pass_int": 0.7,
+     "rush_att": 5.8,
+     "rush_yd": 26.3,
+     "rush_td": 0.6
+    }
    }
   },
   {
@@ -9562,6 +9938,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "4866",
     "age": 29,
     "years_exp": 8,
     "injury_status": null,
@@ -9914,6 +10291,20 @@
     "value": 5069,
     "pos_rank": 8,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 13.8,
+    "detail": {
+     "rush_att": 16.1,
+     "rush_yd": 71.5,
+     "rush_td": 0.5,
+     "rec_tgt": 2.5,
+     "rec": 2,
+     "rec_yd": 13.6,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -9948,6 +10339,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11632",
     "age": 23,
     "years_exp": 2,
     "injury_status": "Questionable",
@@ -10048,6 +10440,19 @@
     "value": 4178,
     "pos_rank": 11,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 12.7,
+    "detail": {
+     "rush_att": 0.2,
+     "rush_yd": 0.6,
+     "rec_tgt": 7.7,
+     "rec": 4.6,
+     "rec_yd": 55.8,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -10082,6 +10487,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9997",
     "age": 25,
     "years_exp": 3,
     "injury_status": null,
@@ -10455,6 +10861,20 @@
     "value": 3125,
     "pos_rank": 20,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 16.2,
+    "detail": {
+     "rush_att": 0.4,
+     "rush_yd": 1.9,
+     "rush_td": 0,
+     "rec_tgt": 7.9,
+     "rec": 5.7,
+     "rec_yd": 78.6,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -10489,6 +10909,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8151",
     "age": 25,
     "years_exp": 4,
     "injury_status": null,
@@ -10862,6 +11283,20 @@
     "value": 4828,
     "pos_rank": 11,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 15.5,
+    "detail": {
+     "rush_att": 15.9,
+     "rush_yd": 69.1,
+     "rush_td": 0.6,
+     "rec_tgt": 3.4,
+     "rec": 3,
+     "rec_yd": 19.7,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -10896,6 +11331,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8146",
     "age": 26,
     "years_exp": 4,
     "injury_status": null,
@@ -11059,6 +11495,20 @@
     "value": 3249,
     "pos_rank": 19,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 13.5,
+    "detail": {
+     "rush_att": 0.2,
+     "rush_yd": 0.6,
+     "rush_td": 0,
+     "rec_tgt": 8.1,
+     "rec": 4.8,
+     "rec_yd": 60.9,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -11093,6 +11543,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "4881",
     "age": 29,
     "years_exp": 8,
     "injury_status": null,
@@ -11382,6 +11833,21 @@
     "value": 3659,
     "pos_rank": 2,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 21.4,
+    "detail": {
+     "pass_att": 27.2,
+     "pass_cmp": 17.9,
+     "pass_yd": 218.6,
+     "pass_td": 1.6,
+     "pass_int": 0.6,
+     "rush_att": 7.5,
+     "rush_yd": 38.6,
+     "rush_td": 0.2
+    }
    }
   },
   {
@@ -11416,6 +11882,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12526",
     "age": 23,
     "years_exp": 1,
     "injury_status": null,
@@ -11789,6 +12256,19 @@
     "value": 3454,
     "pos_rank": 15,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 14,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.4,
+     "rec_tgt": 8,
+     "rec": 4.5,
+     "rec_yd": 70,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -11823,6 +12303,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "6801",
     "age": 27,
     "years_exp": 6,
     "injury_status": null,
@@ -12154,6 +12635,19 @@
     "value": 3698,
     "pos_rank": 14,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 16.3,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.3,
+     "rec_tgt": 7.7,
+     "rec": 4.9,
+     "rec_yd": 71.1,
+     "rec_td": 0.7
+    }
    }
   },
   {
@@ -12188,6 +12682,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11635",
     "age": 24,
     "years_exp": 2,
     "injury_status": null,
@@ -12540,6 +13035,19 @@
     "value": 3310,
     "pos_rank": 18,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 13.1,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.5,
+     "rec_tgt": 7,
+     "rec": 4.6,
+     "rec_yd": 62.3,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -12574,6 +13082,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12514",
     "age": 23,
     "years_exp": 1,
     "injury_status": "Questionable",
@@ -12947,6 +13456,20 @@
     "value": 3434,
     "pos_rank": 16,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11.7,
+    "detail": {
+     "rush_att": 0.2,
+     "rush_yd": 1.1,
+     "rush_td": 0,
+     "rec_tgt": 7,
+     "rec": 3.5,
+     "rec_yd": 55.5,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -12981,6 +13504,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "3198",
     "age": 32,
     "years_exp": 10,
     "injury_status": null,
@@ -13354,6 +13878,20 @@
     "value": 4460,
     "pos_rank": 12,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 15.6,
+    "detail": {
+     "rush_att": 17.4,
+     "rush_yd": 86.4,
+     "rush_td": 0.8,
+     "rec_tgt": 1.4,
+     "rec": 1.1,
+     "rec_yd": 8.9,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -13388,6 +13926,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "13287",
     "age": 21,
     "years_exp": 0,
     "injury_status": null,
@@ -13403,6 +13942,20 @@
     "value": 4425,
     "pos_rank": 13,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 15.8,
+    "detail": {
+     "rush_att": 12.7,
+     "rush_yd": 55.9,
+     "rush_td": 0.4,
+     "rec_tgt": 5.1,
+     "rec": 4,
+     "rec_yd": 25.7,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -13437,6 +13990,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12517",
     "age": 22,
     "years_exp": 1,
     "injury_status": null,
@@ -13789,6 +14343,19 @@
     "value": 3221,
     "pos_rank": 3,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 15.2,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.2,
+     "rec_tgt": 7.7,
+     "rec": 5.5,
+     "rec_yd": 67.1,
+     "rec_td": 0.5
+    }
    }
   },
   {
@@ -13823,6 +14390,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "7526",
     "age": 27,
     "years_exp": 5,
     "injury_status": "Questionable",
@@ -14175,6 +14743,20 @@
     "value": 3032,
     "pos_rank": 21,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 14.8,
+    "detail": {
+     "rush_att": 0.2,
+     "rush_yd": 1.1,
+     "rush_td": 0,
+     "rec_tgt": 7.7,
+     "rec": 5.1,
+     "rec_yd": 70.6,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -14209,6 +14791,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11564",
     "age": 23,
     "years_exp": 2,
     "injury_status": null,
@@ -14582,6 +15165,21 @@
     "value": 2876,
     "pos_rank": 3,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 20.1,
+    "detail": {
+     "pass_att": 31.2,
+     "pass_cmp": 20.7,
+     "pass_yd": 245.3,
+     "pass_td": 1.6,
+     "pass_int": 0.8,
+     "rush_att": 3.6,
+     "rush_yd": 17.2,
+     "rush_td": 0.1
+    }
    }
   },
   {
@@ -14616,6 +15214,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8155",
     "age": 25,
     "years_exp": 4,
     "injury_status": null,
@@ -14968,6 +15567,20 @@
     "value": 3672,
     "pos_rank": 16,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 13.8,
+    "detail": {
+     "rush_att": 15.2,
+     "rush_yd": 67.5,
+     "rush_td": 0.4,
+     "rec_tgt": 2.9,
+     "rec": 2.4,
+     "rec_yd": 17.7,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -15002,6 +15615,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8150",
     "age": 25,
     "years_exp": 4,
     "injury_status": null,
@@ -15375,6 +15989,20 @@
     "value": 3761,
     "pos_rank": 15,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 13.8,
+    "detail": {
+     "rush_att": 14.1,
+     "rush_yd": 64.9,
+     "rush_td": 0.6,
+     "rec_tgt": 2.5,
+     "rec": 2,
+     "rec_yd": 12.6,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -15409,6 +16037,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "5850",
     "age": 28,
     "years_exp": 7,
     "injury_status": "Questionable",
@@ -15740,6 +16369,20 @@
     "value": 3884,
     "pos_rank": 14,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 13.9,
+    "detail": {
+     "rush_att": 14.8,
+     "rush_yd": 60.4,
+     "rush_td": 0.6,
+     "rec_tgt": 2.7,
+     "rec": 2.3,
+     "rec_yd": 15.4,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -15774,6 +16417,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "5927",
     "age": 30,
     "years_exp": 7,
     "injury_status": null,
@@ -16000,6 +16644,19 @@
     "value": 2630,
     "pos_rank": 24,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 13.6,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.2,
+     "rec_tgt": 7.3,
+     "rec": 4.7,
+     "rec_yd": 64.6,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -16034,6 +16691,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "6770",
     "age": 29,
     "years_exp": 6,
     "injury_status": null,
@@ -16218,6 +16876,21 @@
     "value": 2779,
     "pos_rank": 4,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 21.2,
+    "detail": {
+     "pass_att": 34.7,
+     "pass_cmp": 23.5,
+     "pass_yd": 251.5,
+     "pass_td": 2.1,
+     "pass_int": 0.7,
+     "rush_att": 2.5,
+     "rush_yd": 7.7,
+     "rush_td": 0.1
+    }
    }
   },
   {
@@ -16252,6 +16925,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "7588",
     "age": 26,
     "years_exp": 5,
     "injury_status": null,
@@ -16604,6 +17278,20 @@
     "value": 3460,
     "pos_rank": 17,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 14.7,
+    "detail": {
+     "rush_att": 16.5,
+     "rush_yd": 73.4,
+     "rush_td": 0.6,
+     "rec_tgt": 3,
+     "rec": 2.4,
+     "rec_yd": 13.2,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -16638,6 +17326,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12519",
     "age": 22,
     "years_exp": 1,
     "injury_status": "Questionable",
@@ -16969,6 +17658,20 @@
     "value": 2981,
     "pos_rank": 22,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 12.7,
+    "detail": {
+     "rush_att": 0.5,
+     "rush_yd": 2.8,
+     "rush_td": 0,
+     "rec_tgt": 6.2,
+     "rec": 4.4,
+     "rec_yd": 60.8,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -17003,6 +17706,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11566",
     "age": 25,
     "years_exp": 2,
     "injury_status": null,
@@ -17166,6 +17870,21 @@
     "value": 2408,
     "pos_rank": 5,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 20.5,
+    "detail": {
+     "pass_att": 32.3,
+     "pass_cmp": 20.4,
+     "pass_yd": 218.7,
+     "pass_td": 1.4,
+     "pass_int": 0.6,
+     "rush_att": 7.1,
+     "rush_yd": 34.6,
+     "rush_td": 0.3
+    }
    }
   },
   {
@@ -17200,6 +17919,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "2133",
     "age": 33,
     "years_exp": 12,
     "injury_status": null,
@@ -17510,6 +18230,17 @@
     "value": 2844,
     "pos_rank": 23,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 12.3,
+    "detail": {
+     "rec_tgt": 6.8,
+     "rec": 3.9,
+     "rec_yd": 53.5,
+     "rec_td": 0.5
+    }
    }
   },
   {
@@ -17544,6 +18275,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "7543",
     "age": 27,
     "years_exp": 5,
     "injury_status": null,
@@ -17917,6 +18649,20 @@
     "value": 3325,
     "pos_rank": 18,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11.7,
+    "detail": {
+     "rush_att": 13.4,
+     "rush_yd": 58.9,
+     "rush_td": 0.4,
+     "rec_tgt": 2.3,
+     "rec": 1.8,
+     "rec_yd": 12.4,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -17951,6 +18697,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "4983",
     "age": 29,
     "years_exp": 8,
     "injury_status": null,
@@ -18324,6 +19071,20 @@
     "value": 2417,
     "pos_rank": 27,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 12.1,
+    "detail": {
+     "rush_att": 0.4,
+     "rush_yd": 2.3,
+     "rush_td": 0,
+     "rec_tgt": 6.5,
+     "rec": 4.1,
+     "rec_yd": 54.1,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -18358,6 +19119,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12518",
     "age": 24,
     "years_exp": 1,
     "injury_status": null,
@@ -18731,6 +19493,20 @@
     "value": 2949,
     "pos_rank": 4,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 13.2,
+    "detail": {
+     "rush_att": 0.3,
+     "rush_yd": 1,
+     "rush_td": 0,
+     "rec_tgt": 7.4,
+     "rec": 5,
+     "rec_yd": 54.2,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -18765,6 +19541,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "2216",
     "age": 32,
     "years_exp": 12,
     "injury_status": "Questionable",
@@ -18949,6 +19726,17 @@
     "value": 2459,
     "pos_rank": 26,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 12.8,
+    "detail": {
+     "rec_tgt": 6.8,
+     "rec": 3.9,
+     "rec_yd": 57.6,
+     "rec_td": 0.5
+    }
    }
   },
   {
@@ -18983,6 +19771,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12481",
     "age": 24,
     "years_exp": 1,
     "injury_status": null,
@@ -19167,6 +19956,20 @@
     "value": 3081,
     "pos_rank": 20,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 14.1,
+    "detail": {
+     "rush_att": 11.9,
+     "rush_yd": 52.4,
+     "rush_td": 0.5,
+     "rec_tgt": 3.5,
+     "rec": 2.8,
+     "rec_yd": 21.2,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -19201,6 +20004,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8148",
     "age": 25,
     "years_exp": 4,
     "injury_status": null,
@@ -19574,6 +20378,20 @@
     "value": 2511,
     "pos_rank": 25,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 13.9,
+    "detail": {
+     "rush_att": 0.6,
+     "rush_yd": 2.9,
+     "rush_td": 0,
+     "rec_tgt": 6.9,
+     "rec": 4.1,
+     "rec_yd": 67.3,
+     "rec_td": 0.5
+    }
    }
   },
   {
@@ -19608,6 +20426,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8167",
     "age": 27,
     "years_exp": 4,
     "injury_status": null,
@@ -19834,6 +20653,20 @@
     "value": 2214,
     "pos_rank": 31,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 13.7,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.7,
+     "rush_td": 0,
+     "rec_tgt": 6.8,
+     "rec": 3.9,
+     "rec_yd": 66.1,
+     "rec_td": 0.5
+    }
    }
   },
   {
@@ -19868,6 +20701,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "6904",
     "age": 28,
     "years_exp": 6,
     "injury_status": null,
@@ -20220,6 +21054,21 @@
     "value": 2284,
     "pos_rank": 6,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 21,
+    "detail": {
+     "pass_att": 27.5,
+     "pass_cmp": 17.8,
+     "pass_yd": 206.7,
+     "pass_td": 1.4,
+     "pass_int": 0.6,
+     "rush_att": 6.9,
+     "rush_yd": 27.5,
+     "rush_td": 0.5
+    }
    }
   },
   {
@@ -20254,6 +21103,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11584",
     "age": 23,
     "years_exp": 2,
     "injury_status": null,
@@ -20480,6 +21330,20 @@
     "value": 3324,
     "pos_rank": 19,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 12.1,
+    "detail": {
+     "rush_att": 13.1,
+     "rush_yd": 54.6,
+     "rush_td": 0.3,
+     "rec_tgt": 2.6,
+     "rec": 2.4,
+     "rec_yd": 17.8,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -20514,6 +21378,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11620",
     "age": 24,
     "years_exp": 2,
     "injury_status": null,
@@ -20782,6 +21647,19 @@
     "value": 2409,
     "pos_rank": 28,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11.5,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.2,
+     "rec_tgt": 6.7,
+     "rec": 3.7,
+     "rec_yd": 53.1,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -20816,6 +21694,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "6790",
     "age": 27,
     "years_exp": 6,
     "injury_status": null,
@@ -21168,6 +22047,20 @@
     "value": 2514,
     "pos_rank": 24,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 12.7,
+    "detail": {
+     "rush_att": 12.5,
+     "rush_yd": 59.7,
+     "rush_td": 0.5,
+     "rec_tgt": 2.8,
+     "rec": 2.2,
+     "rec_yd": 14.5,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -21202,6 +22095,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12512",
     "age": 22,
     "years_exp": 1,
     "injury_status": null,
@@ -21512,6 +22406,20 @@
     "value": 2842,
     "pos_rank": 21,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11.6,
+    "detail": {
+     "rush_att": 13.6,
+     "rush_yd": 56,
+     "rush_td": 0.5,
+     "rec_tgt": 2.5,
+     "rec": 2,
+     "rec_yd": 11.7,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -21546,6 +22454,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "5892",
     "age": 29,
     "years_exp": 7,
     "injury_status": null,
@@ -21919,6 +22828,20 @@
     "value": 2741,
     "pos_rank": 23,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 13.5,
+    "detail": {
+     "rush_att": 13.5,
+     "rush_yd": 57,
+     "rush_td": 0.6,
+     "rec_tgt": 2.6,
+     "rec": 2.3,
+     "rec_yd": 15.7,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -21953,6 +22876,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12529",
     "age": 23,
     "years_exp": 1,
     "injury_status": null,
@@ -22326,6 +23250,20 @@
     "value": 2826,
     "pos_rank": 22,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11.8,
+    "detail": {
+     "rush_att": 10.4,
+     "rush_yd": 49.8,
+     "rush_td": 0.5,
+     "rec_tgt": 2.6,
+     "rec": 2.2,
+     "rec_yd": 12.6,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -22360,6 +23298,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "13279",
     "age": 21,
     "years_exp": 0,
     "injury_status": null,
@@ -22375,6 +23314,19 @@
     "value": 2336,
     "pos_rank": 29,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 12,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.4,
+     "rec_tgt": 7.7,
+     "rec": 4.1,
+     "rec_yd": 58.1,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -22409,6 +23361,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11560",
     "age": 24,
     "years_exp": 2,
     "injury_status": null,
@@ -22782,6 +23735,21 @@
     "value": 1907,
     "pos_rank": 7,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 21.3,
+    "detail": {
+     "pass_att": 34.7,
+     "pass_cmp": 21.3,
+     "pass_yd": 249.8,
+     "pass_td": 1.8,
+     "pass_int": 0.6,
+     "rush_att": 4.5,
+     "rush_yd": 22.5,
+     "rush_td": 0.2
+    }
    }
   },
   {
@@ -22816,6 +23784,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9487",
     "age": 24,
     "years_exp": 3,
     "injury_status": null,
@@ -23168,6 +24137,20 @@
     "value": 1698,
     "pos_rank": 37,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11.4,
+    "detail": {
+     "rush_att": 0.5,
+     "rush_yd": 1.6,
+     "rush_td": 0,
+     "rec_tgt": 6.1,
+     "rec": 3.7,
+     "rec_yd": 53.6,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -23202,6 +24185,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12490",
     "age": 23,
     "years_exp": 1,
     "injury_status": null,
@@ -23533,6 +24517,20 @@
     "value": 2366,
     "pos_rank": 26,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11.2,
+    "detail": {
+     "rush_att": 11.5,
+     "rush_yd": 45.5,
+     "rush_td": 0.5,
+     "rec_tgt": 2.4,
+     "rec": 1.8,
+     "rec_yd": 12.3,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -23567,6 +24565,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11628",
     "age": 24,
     "years_exp": 2,
     "injury_status": null,
@@ -23835,6 +24834,17 @@
     "value": 1842,
     "pos_rank": 33,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 10.7,
+    "detail": {
+     "rec_tgt": 6.6,
+     "rec": 3.3,
+     "rec_yd": 53.5,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -23869,6 +24879,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "6797",
     "age": 28,
     "years_exp": 6,
     "injury_status": null,
@@ -24221,6 +25232,21 @@
     "value": 1772,
     "pos_rank": 9,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 19.2,
+    "detail": {
+     "pass_att": 30.7,
+     "pass_cmp": 20,
+     "pass_yd": 227.2,
+     "pass_td": 1.5,
+     "pass_int": 0.6,
+     "rush_att": 4.5,
+     "rush_yd": 18.8,
+     "rush_td": 0.2
+    }
    }
   },
   {
@@ -24255,6 +25281,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9484",
     "age": 25,
     "years_exp": 3,
     "injury_status": "Questionable",
@@ -24439,6 +25466,17 @@
     "value": 2336,
     "pos_rank": 6,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11.6,
+    "detail": {
+     "rec_tgt": 5.2,
+     "rec": 4,
+     "rec_yd": 49,
+     "rec_td": 0.5
+    }
    }
   },
   {
@@ -24473,6 +25511,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "13286",
     "age": 22,
     "years_exp": 0,
     "injury_status": "Questionable",
@@ -24488,6 +25527,20 @@
     "value": 2265,
     "pos_rank": 27,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 9.1,
+    "detail": {
+     "rush_att": 11.6,
+     "rush_yd": 50,
+     "rush_td": 0.3,
+     "rec_tgt": 1.3,
+     "rec": 1.1,
+     "rec_yd": 7.4,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -24522,6 +25575,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8228",
     "age": 27,
     "years_exp": 4,
     "injury_status": null,
@@ -24874,6 +25928,20 @@
     "value": 1971,
     "pos_rank": 28,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 13.4,
+    "detail": {
+     "rush_att": 12.1,
+     "rush_yd": 57.6,
+     "rush_td": 0.3,
+     "rec_tgt": 3.6,
+     "rec": 3.3,
+     "rec_yd": 22.6,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -24908,6 +25976,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12506",
     "age": 22,
     "years_exp": 1,
     "injury_status": null,
@@ -25260,6 +26329,20 @@
     "value": 2382,
     "pos_rank": 5,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 12.2,
+    "detail": {
+     "rush_att": 0.2,
+     "rush_yd": 0.7,
+     "rush_td": 0,
+     "rec_tgt": 6.9,
+     "rec": 4.8,
+     "rec_yd": 49.9,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -25294,6 +26377,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "5846",
     "age": 28,
     "years_exp": 7,
     "injury_status": "Questionable",
@@ -25625,6 +26709,20 @@
     "value": 1789,
     "pos_rank": 35,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11.9,
+    "detail": {
+     "rush_att": 0.2,
+     "rush_yd": 0.7,
+     "rush_td": 0,
+     "rec_tgt": 6.4,
+     "rec": 3.6,
+     "rec_yd": 56.8,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -25659,6 +26757,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11631",
     "age": 23,
     "years_exp": 2,
     "injury_status": null,
@@ -25969,6 +27068,20 @@
     "value": 2216,
     "pos_rank": 30,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 10.8,
+    "detail": {
+     "rush_att": 0.2,
+     "rush_yd": 1.2,
+     "rush_td": 0,
+     "rec_tgt": 6,
+     "rec": 3.5,
+     "rec_yd": 52.8,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -26003,6 +27116,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "7523",
     "age": 26,
     "years_exp": 5,
     "injury_status": null,
@@ -26376,6 +27490,21 @@
     "value": 1349,
     "pos_rank": 11,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 19.6,
+    "detail": {
+     "pass_att": 31.5,
+     "pass_cmp": 19.7,
+     "pass_yd": 221.4,
+     "pass_td": 1.4,
+     "pass_int": 0.7,
+     "rush_att": 4.4,
+     "rush_yd": 17.7,
+     "rush_td": 0.3
+    }
    }
   },
   {
@@ -26410,6 +27539,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "3294",
     "age": 33,
     "years_exp": 10,
     "injury_status": null,
@@ -26783,6 +27913,21 @@
     "value": 1761,
     "pos_rank": 10,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 20.2,
+    "detail": {
+     "pass_att": 34.5,
+     "pass_cmp": 22.4,
+     "pass_yd": 256.9,
+     "pass_td": 1.8,
+     "pass_int": 0.7,
+     "rush_att": 2.4,
+     "rush_yd": 8.6,
+     "rush_td": 0.1
+    }
    }
   },
   {
@@ -26817,6 +27962,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "5967",
     "age": 29,
     "years_exp": 7,
     "injury_status": null,
@@ -27190,6 +28336,20 @@
     "value": 1569,
     "pos_rank": 32,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 10,
+    "detail": {
+     "rush_att": 10.4,
+     "rush_yd": 48.2,
+     "rush_td": 0.3,
+     "rec_tgt": 2.2,
+     "rec": 1.8,
+     "rec_yd": 11,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -27224,6 +28384,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "4037",
     "age": 30,
     "years_exp": 9,
     "injury_status": null,
@@ -27429,6 +28590,19 @@
     "value": 1423,
     "pos_rank": 40,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.3,
+     "rec_tgt": 6.2,
+     "rec": 4.2,
+     "rec_yd": 50.5,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -27463,6 +28637,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "7611",
     "age": 28,
     "years_exp": 5,
     "injury_status": null,
@@ -27773,6 +28948,20 @@
     "value": 1634,
     "pos_rank": 31,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 10.5,
+    "detail": {
+     "rush_att": 10.6,
+     "rush_yd": 46.1,
+     "rush_td": 0.4,
+     "rec_tgt": 2.1,
+     "rec": 1.9,
+     "rec_yd": 13,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -27807,6 +28996,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "10859",
     "age": 25,
     "years_exp": 3,
     "injury_status": null,
@@ -28012,6 +29202,19 @@
     "value": 2253,
     "pos_rank": 7,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 12.1,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.2,
+     "rec_tgt": 6,
+     "rec": 4.6,
+     "rec_yd": 49.5,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -28046,6 +29249,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "7553",
     "age": 25,
     "years_exp": 5,
     "injury_status": null,
@@ -28419,6 +29623,17 @@
     "value": 2132,
     "pos_rank": 8,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11.1,
+    "detail": {
+     "rec_tgt": 6.2,
+     "rec": 4.3,
+     "rec_yd": 50.6,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -28453,6 +29668,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "6819",
     "age": 28,
     "years_exp": 6,
     "injury_status": "Questionable",
@@ -28826,6 +30042,19 @@
     "value": 1201,
     "pos_rank": 42,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 10.8,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.3,
+     "rec_tgt": 6.1,
+     "rec": 4.2,
+     "rec_yd": 48.9,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -28860,6 +30089,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "13281",
     "age": 22,
     "years_exp": 0,
     "injury_status": "Questionable",
@@ -28875,6 +30105,19 @@
     "value": 1903,
     "pos_rank": 32,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 10.8,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.4,
+     "rec_tgt": 6.4,
+     "rec": 3.6,
+     "rec_yd": 52.4,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -28909,6 +30152,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "5045",
     "age": 30,
     "years_exp": 8,
     "injury_status": null,
@@ -29282,6 +30526,17 @@
     "value": 1700,
     "pos_rank": 36,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 10.6,
+    "detail": {
+     "rec_tgt": 6,
+     "rec": 3.6,
+     "rec_yd": 50.9,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -29316,6 +30571,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9500",
     "age": 25,
     "years_exp": 3,
     "injury_status": "Questionable",
@@ -29668,6 +30924,20 @@
     "value": 1027,
     "pos_rank": 48,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 13.4,
+    "detail": {
+     "rush_att": 0.2,
+     "rush_yd": 0.6,
+     "rush_td": 0,
+     "rec_tgt": 7.6,
+     "rec": 5.1,
+     "rec_yd": 58,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -29702,6 +30972,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "7594",
     "age": 27,
     "years_exp": 5,
     "injury_status": "Questionable",
@@ -30033,6 +31304,20 @@
     "value": 1841,
     "pos_rank": 30,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11.7,
+    "detail": {
+     "rush_att": 13.2,
+     "rush_yd": 54.4,
+     "rush_td": 0.4,
+     "rec_tgt": 2.4,
+     "rec": 2.1,
+     "rec_yd": 12.3,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -30067,6 +31352,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8126",
     "age": 25,
     "years_exp": 4,
     "injury_status": null,
@@ -30419,6 +31705,20 @@
     "value": 1061,
     "pos_rank": 47,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 10,
+    "detail": {
+     "rush_att": 0.2,
+     "rush_yd": 1,
+     "rush_td": 0,
+     "rec_tgt": 6.4,
+     "rec": 4,
+     "rec_yd": 44.7,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -30453,6 +31753,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "7021",
     "age": 28,
     "years_exp": 6,
     "injury_status": null,
@@ -30826,6 +32127,20 @@
     "value": 1458,
     "pos_rank": 34,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11.8,
+    "detail": {
+     "rush_att": 10.7,
+     "rush_yd": 48.8,
+     "rush_td": 0.3,
+     "rec_tgt": 3.3,
+     "rec": 2.7,
+     "rec_yd": 19.4,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -30860,6 +32175,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "10232",
     "age": 26,
     "years_exp": 3,
     "injury_status": null,
@@ -31233,6 +32549,19 @@
     "value": 1799,
     "pos_rank": 34,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11.3,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.2,
+     "rec_tgt": 6.3,
+     "rec": 4,
+     "rec_yd": 54.3,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -31267,6 +32596,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8142",
     "age": 26,
     "years_exp": 4,
     "injury_status": "PUP",
@@ -31598,6 +32928,19 @@
     "value": 1591,
     "pos_rank": 39,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 8.8,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.2,
+     "rec_tgt": 4.4,
+     "rec": 2.4,
+     "rec_yd": 47,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -31632,6 +32975,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12489",
     "age": 25,
     "years_exp": 1,
     "injury_status": null,
@@ -32005,6 +33349,20 @@
     "value": 1937,
     "pos_rank": 29,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 10.3,
+    "detail": {
+     "rush_att": 8.1,
+     "rush_yd": 30.7,
+     "rush_td": 0.3,
+     "rec_tgt": 3.1,
+     "rec": 2.6,
+     "rec_yd": 18.4,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -32039,6 +33397,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12508",
     "age": 23,
     "years_exp": 1,
     "injury_status": null,
@@ -32349,6 +33708,21 @@
     "value": 1834,
     "pos_rank": 8,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 20.6,
+    "detail": {
+     "pass_att": 30.4,
+     "pass_cmp": 19,
+     "pass_yd": 209.4,
+     "pass_td": 1.3,
+     "pass_int": 0.7,
+     "rush_att": 5.7,
+     "rush_yd": 28.6,
+     "rush_td": 0.5
+    }
    }
   },
   {
@@ -32383,6 +33757,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8183",
     "age": 26,
     "years_exp": 4,
     "injury_status": null,
@@ -32588,6 +33963,21 @@
     "value": 1130,
     "pos_rank": 14,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 19.8,
+    "detail": {
+     "pass_att": 30,
+     "pass_cmp": 19.8,
+     "pass_yd": 243.1,
+     "pass_td": 1.7,
+     "pass_int": 0.8,
+     "rush_att": 3.1,
+     "rush_yd": 10.9,
+     "rush_td": 0.2
+    }
    }
   },
   {
@@ -32622,6 +34012,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "1466",
     "age": 36,
     "years_exp": 13,
     "injury_status": null,
@@ -32995,6 +34386,17 @@
     "value": 1156,
     "pos_rank": 11,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11.7,
+    "detail": {
+     "rec_tgt": 6.3,
+     "rec": 4.8,
+     "rec_yd": 49.7,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -33029,6 +34431,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11563",
     "age": 26,
     "years_exp": 2,
     "injury_status": null,
@@ -33402,6 +34805,21 @@
     "value": 1022,
     "pos_rank": 15,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 19.8,
+    "detail": {
+     "pass_att": 34.4,
+     "pass_cmp": 21.9,
+     "pass_yd": 224.8,
+     "pass_td": 1.6,
+     "pass_int": 0.8,
+     "rush_att": 4.4,
+     "rush_yd": 17.7,
+     "rush_td": 0.2
+    }
    }
   },
   {
@@ -33436,6 +34854,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "4046",
     "age": 30,
     "years_exp": 9,
     "injury_status": "Questionable",
@@ -33746,6 +35165,21 @@
     "value": 1308,
     "pos_rank": 12,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 17.6,
+    "detail": {
+     "pass_att": 31.8,
+     "pass_cmp": 20.5,
+     "pass_yd": 229.2,
+     "pass_td": 1.6,
+     "pass_int": 0.7,
+     "rush_att": 1.5,
+     "rush_yd": 7,
+     "rush_td": 0.1
+    }
    }
   },
   {
@@ -33780,6 +35214,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "13294",
     "age": 22,
     "years_exp": 0,
     "injury_status": "Questionable",
@@ -33795,6 +35230,19 @@
     "value": 1631,
     "pos_rank": 38,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 9.7,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.5,
+     "rec_tgt": 5.5,
+     "rec": 3.5,
+     "rec_yd": 44.4,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -33829,6 +35277,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "7567",
     "age": 27,
     "years_exp": 5,
     "injury_status": null,
@@ -34202,6 +35651,20 @@
     "value": 1030,
     "pos_rank": 37,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 9.5,
+    "detail": {
+     "rush_att": 6.7,
+     "rush_yd": 29.8,
+     "rush_td": 0.2,
+     "rec_tgt": 3.1,
+     "rec": 2.7,
+     "rec_yd": 17.5,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -34236,6 +35699,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "5947",
     "age": 29,
     "years_exp": 7,
     "injury_status": null,
@@ -34588,6 +36052,20 @@
     "value": 1315,
     "pos_rank": 41,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 9.4,
+    "detail": {
+     "rush_att": 0.3,
+     "rush_yd": 1.4,
+     "rush_td": 0,
+     "rec_tgt": 5.3,
+     "rec": 3.5,
+     "rec_yd": 43.5,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -34622,6 +36100,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "6806",
     "age": 27,
     "years_exp": 6,
     "injury_status": "Questionable",
@@ -34848,6 +36327,20 @@
     "value": 1441,
     "pos_rank": 35,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 8,
+    "detail": {
+     "rush_att": 8.7,
+     "rush_yd": 42.1,
+     "rush_td": 0.3,
+     "rec_tgt": 1.3,
+     "rec": 1.1,
+     "rec_yd": 5.5,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -34882,6 +36375,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9754",
     "age": 24,
     "years_exp": 3,
     "injury_status": null,
@@ -35171,6 +36665,20 @@
     "value": 1128,
     "pos_rank": 44,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11.1,
+    "detail": {
+     "rush_att": 0.2,
+     "rush_yd": 0.8,
+     "rush_td": 0,
+     "rec_tgt": 5.9,
+     "rec": 3.4,
+     "rec_yd": 50.1,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -35205,6 +36713,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "421",
     "age": 38,
     "years_exp": 17,
     "injury_status": null,
@@ -35578,6 +37087,21 @@
     "value": 1272,
     "pos_rank": 13,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 18.4,
+    "detail": {
+     "pass_att": 31,
+     "pass_cmp": 19.7,
+     "pass_yd": 231.2,
+     "pass_td": 1.8,
+     "pass_int": 0.8,
+     "rush_att": 1.2,
+     "rush_yd": 1.7,
+     "rush_td": 0
+    }
    }
   },
   {
@@ -35612,6 +37136,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "4217",
     "age": 32,
     "years_exp": 9,
     "injury_status": "PUP",
@@ -35859,6 +37384,17 @@
     "value": 1508,
     "pos_rank": 9,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 10.1,
+    "detail": {
+     "rec_tgt": 4.5,
+     "rec": 3.7,
+     "rec_yd": 42,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -35893,6 +37429,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12534",
     "age": 24,
     "years_exp": 1,
     "injury_status": null,
@@ -36266,6 +37803,20 @@
     "value": 1459,
     "pos_rank": 33,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 8.4,
+    "detail": {
+     "rush_att": 8.3,
+     "rush_yd": 40.5,
+     "rush_td": 0.3,
+     "rec_tgt": 1.7,
+     "rec": 1.3,
+     "rec_yd": 10,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -36300,6 +37851,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11583",
     "age": 23,
     "years_exp": 2,
     "injury_status": null,
@@ -36315,6 +37867,20 @@
     "value": 897,
     "pos_rank": 40,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 7.2,
+    "detail": {
+     "rush_att": 6.8,
+     "rush_yd": 28.4,
+     "rush_td": 0.2,
+     "rec_tgt": 1.9,
+     "rec": 1.6,
+     "rec_yd": 9.9,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -36349,6 +37915,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "3163",
     "age": 31,
     "years_exp": 10,
     "injury_status": null,
@@ -36722,6 +38289,21 @@
     "value": 697,
     "pos_rank": 20,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 19.1,
+    "detail": {
+     "pass_att": 33.2,
+     "pass_cmp": 21.8,
+     "pass_yd": 252.6,
+     "pass_td": 1.8,
+     "pass_int": 0.7,
+     "rush_att": 1.4,
+     "rush_yd": 2.7,
+     "rush_td": 0.1
+    }
    }
   },
   {
@@ -36756,6 +38338,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9756",
     "age": 24,
     "years_exp": 3,
     "injury_status": "Questionable",
@@ -37066,6 +38649,20 @@
     "value": 1168,
     "pos_rank": 43,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11.2,
+    "detail": {
+     "rush_att": 0.3,
+     "rush_yd": 2.1,
+     "rush_td": 0,
+     "rec_tgt": 6,
+     "rec": 3.5,
+     "rec_yd": 50.3,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -37100,6 +38697,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8136",
     "age": 27,
     "years_exp": 4,
     "injury_status": null,
@@ -37473,6 +39071,20 @@
     "value": 837,
     "pos_rank": 42,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 10,
+    "detail": {
+     "rush_att": 7.5,
+     "rush_yd": 31.6,
+     "rush_td": 0.2,
+     "rec_tgt": 3.3,
+     "rec": 3.2,
+     "rec_yd": 18.1,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -37507,6 +39119,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "10222",
     "age": 26,
     "years_exp": 3,
     "injury_status": null,
@@ -37628,6 +39241,20 @@
     "value": 1075,
     "pos_rank": 46,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 13.6,
+    "detail": {
+     "rush_att": 1,
+     "rush_yd": 6.6,
+     "rush_td": 0.1,
+     "rec_tgt": 6.4,
+     "rec": 4.6,
+     "rec_yd": 55.5,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -37662,6 +39289,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11586",
     "age": 25,
     "years_exp": 2,
     "injury_status": null,
@@ -38035,6 +39663,20 @@
     "value": 1401,
     "pos_rank": 36,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 9.1,
+    "detail": {
+     "rush_att": 11.5,
+     "rush_yd": 53.9,
+     "rush_td": 0.4,
+     "rec_tgt": 1.2,
+     "rec": 0.8,
+     "rec_yd": 4.5,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -38069,6 +39711,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "5849",
     "age": 29,
     "years_exp": 7,
     "injury_status": null,
@@ -38190,6 +39833,21 @@
     "value": 745,
     "pos_rank": 18,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 17.7,
+    "detail": {
+     "pass_att": 31.3,
+     "pass_cmp": 20.7,
+     "pass_yd": 210.4,
+     "pass_td": 1.3,
+     "pass_int": 0.7,
+     "rush_att": 4.1,
+     "rush_yd": 20.6,
+     "rush_td": 0.1
+    }
    }
   },
   {
@@ -38224,6 +39882,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "4199",
     "age": 31,
     "years_exp": 9,
     "injury_status": null,
@@ -38492,6 +40151,20 @@
     "value": 1020,
     "pos_rank": 38,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 8.3,
+    "detail": {
+     "rush_att": 8.2,
+     "rush_yd": 37.5,
+     "rush_td": 0.3,
+     "rec_tgt": 2,
+     "rec": 1.6,
+     "rec_yd": 10.3,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -38526,6 +40199,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8110",
     "age": 27,
     "years_exp": 4,
     "injury_status": null,
@@ -38899,6 +40573,17 @@
     "value": 1087,
     "pos_rank": 12,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 9.7,
+    "detail": {
+     "rec_tgt": 5.4,
+     "rec": 4.3,
+     "rec_yd": 36.2,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -38933,6 +40618,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "10236",
     "age": 26,
     "years_exp": 3,
     "injury_status": null,
@@ -39201,6 +40887,17 @@
     "value": 1166,
     "pos_rank": 10,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 9.4,
+    "detail": {
+     "rec_tgt": 4.7,
+     "rec": 3.7,
+     "rec_yd": 40.4,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -39235,6 +40932,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8131",
     "age": 26,
     "years_exp": 4,
     "injury_status": null,
@@ -39503,6 +41201,17 @@
     "value": 891,
     "pos_rank": 14,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 9.6,
+    "detail": {
+     "rec_tgt": 5.1,
+     "rec": 4,
+     "rec_yd": 40.7,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -39537,6 +41246,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "2449",
     "age": 32,
     "years_exp": 11,
     "injury_status": null,
@@ -39910,6 +41620,19 @@
     "value": 831,
     "pos_rank": 50,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11.4,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.2,
+     "rec_tgt": 6.2,
+     "rec": 4.5,
+     "rec_yd": 50.6,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -39944,6 +41667,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "4892",
     "age": 31,
     "years_exp": 8,
     "injury_status": null,
@@ -40317,6 +42041,21 @@
     "value": 819,
     "pos_rank": 17,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 19.8,
+    "detail": {
+     "pass_att": 32.1,
+     "pass_cmp": 20.7,
+     "pass_yd": 234.2,
+     "pass_td": 1.7,
+     "pass_int": 0.9,
+     "rush_att": 3.3,
+     "rush_yd": 14.4,
+     "rush_td": 0.1
+    }
    }
   },
   {
@@ -40351,6 +42090,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12533",
     "age": 25,
     "years_exp": 1,
     "injury_status": null,
@@ -40724,6 +42464,20 @@
     "value": 1016,
     "pos_rank": 39,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 8.7,
+    "detail": {
+     "rush_att": 8.2,
+     "rush_yd": 36.1,
+     "rush_td": 0.4,
+     "rec_tgt": 1.8,
+     "rec": 1.3,
+     "rec_yd": 11.3,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -40749,6 +42503,7 @@
    },
    "expert": null,
    "meta": {
+    "sleeper_id": "11638",
     "age": 25,
     "years_exp": 2,
     "injury_status": "IR",
@@ -40954,7 +42709,8 @@
     "value": 1107,
     "pos_rank": 45,
     "as_of": "2026-08-13T13:01:29.840Z"
-   }
+   },
+   "projection": null
   },
   {
    "id": "QB-jordan_love",
@@ -40988,6 +42744,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "6804",
     "age": 27,
     "years_exp": 6,
     "injury_status": null,
@@ -41319,6 +43076,21 @@
     "value": 845,
     "pos_rank": 16,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 19,
+    "detail": {
+     "pass_att": 32.2,
+     "pass_cmp": 20.7,
+     "pass_yd": 235.2,
+     "pass_td": 1.6,
+     "pass_int": 0.8,
+     "rush_att": 3.1,
+     "rush_yd": 11.1,
+     "rush_td": 0.1
+    }
    }
   },
   {
@@ -41353,6 +43125,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8134",
     "age": 26,
     "years_exp": 4,
     "injury_status": null,
@@ -41705,6 +43478,19 @@
     "value": 753,
     "pos_rank": 54,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11.4,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.5,
+     "rec_tgt": 6,
+     "rec": 4.6,
+     "rec_yd": 51.8,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -41739,6 +43525,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8408",
     "age": 27,
     "years_exp": 4,
     "injury_status": null,
@@ -42091,6 +43878,20 @@
     "value": 882,
     "pos_rank": 41,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 9.1,
+    "detail": {
+     "rush_att": 9.9,
+     "rush_yd": 50.1,
+     "rush_td": 0.4,
+     "rec_tgt": 1.2,
+     "rec": 1,
+     "rec_yd": 6.1,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -42125,6 +43926,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "5022",
     "age": 31,
     "years_exp": 8,
     "injury_status": null,
@@ -42456,6 +44258,17 @@
     "value": 867,
     "pos_rank": 15,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 8.5,
+    "detail": {
+     "rec_tgt": 4.1,
+     "rec": 3.3,
+     "rec_yd": 32.9,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -42490,6 +44303,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12545",
     "age": 26,
     "years_exp": 1,
     "injury_status": null,
@@ -42737,6 +44551,21 @@
     "value": 704,
     "pos_rank": 19,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 18.6,
+    "detail": {
+     "pass_att": 32.4,
+     "pass_cmp": 21,
+     "pass_yd": 225.6,
+     "pass_td": 1.4,
+     "pass_int": 0.7,
+     "rush_att": 4.6,
+     "rush_yd": 17.2,
+     "rush_td": 0.2
+    }
    }
   },
   {
@@ -42771,6 +44600,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12484",
     "age": 23,
     "years_exp": 1,
     "injury_status": null,
@@ -43144,6 +44974,19 @@
     "value": 786,
     "pos_rank": 51,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 10.1,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.3,
+     "rec_tgt": 5.6,
+     "rec": 3.2,
+     "rec_yd": 45.8,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -43178,6 +45021,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11646",
     "age": 24,
     "years_exp": 2,
     "injury_status": null,
@@ -43425,6 +45269,19 @@
     "value": 726,
     "pos_rank": 56,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 12.7,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.4,
+     "rec_tgt": 6.4,
+     "rec": 4.5,
+     "rec_yd": 59.6,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -43459,6 +45316,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11624",
     "age": 23,
     "years_exp": 2,
     "injury_status": "Questionable",
@@ -43769,6 +45627,20 @@
     "value": 767,
     "pos_rank": 53,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 9.8,
+    "detail": {
+     "rush_att": 1.1,
+     "rush_yd": 6,
+     "rush_td": 0.1,
+     "rec_tgt": 5.8,
+     "rec": 3.1,
+     "rec_yd": 42.4,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -43803,6 +45675,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "5012",
     "age": 30,
     "years_exp": 8,
     "injury_status": null,
@@ -44176,6 +46049,20 @@
     "value": 839,
     "pos_rank": 17,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 11,
+    "detail": {
+     "rush_att": 0.4,
+     "rush_yd": 1.7,
+     "rush_td": 0,
+     "rec_tgt": 5.2,
+     "rec": 4,
+     "rec_yd": 42.8,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -44210,6 +46097,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8121",
     "age": 26,
     "years_exp": 4,
     "injury_status": null,
@@ -44562,6 +46450,17 @@
     "value": 843,
     "pos_rank": 49,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 10.6,
+    "detail": {
+     "rec_tgt": 5.8,
+     "rec": 3.7,
+     "rec_yd": 49.3,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -44596,6 +46495,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8161",
     "age": 27,
     "years_exp": 4,
     "injury_status": null,
@@ -44696,6 +46596,21 @@
     "value": 579,
     "pos_rank": 21,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 17.4,
+    "detail": {
+     "pass_att": 25.3,
+     "pass_cmp": 17.2,
+     "pass_yd": 180.6,
+     "pass_td": 1,
+     "pass_int": 0.6,
+     "rush_att": 7,
+     "rush_yd": 33,
+     "rush_td": 0.3
+    }
    }
   },
   {
@@ -44730,6 +46645,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12501",
     "age": 23,
     "years_exp": 1,
     "injury_status": null,
@@ -45040,6 +46956,20 @@
     "value": 729,
     "pos_rank": 55,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 9.9,
+    "detail": {
+     "rush_att": 0.8,
+     "rush_yd": 3.5,
+     "rush_td": 0,
+     "rec_tgt": 5.5,
+     "rec": 3.4,
+     "rec_yd": 44.9,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -45074,6 +47004,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "13298",
     "age": 21,
     "years_exp": 0,
     "injury_status": null,
@@ -45089,6 +47020,20 @@
     "value": 779,
     "pos_rank": 52,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 9.3,
+    "detail": {
+     "rush_att": 0.6,
+     "rush_yd": 2.8,
+     "rush_td": 0,
+     "rec_tgt": 5.1,
+     "rec": 3.1,
+     "rec_yd": 42,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -45123,6 +47068,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11655",
     "age": 26,
     "years_exp": 2,
     "injury_status": null,
@@ -45454,6 +47400,20 @@
     "value": 649,
     "pos_rank": 46,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 6.5,
+    "detail": {
+     "rush_att": 8.5,
+     "rush_yd": 36.6,
+     "rush_td": 0.2,
+     "rec_tgt": 1,
+     "rec": 0.8,
+     "rec_yd": 5.2,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -45488,6 +47448,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8132",
     "age": 26,
     "years_exp": 4,
     "injury_status": null,
@@ -45861,6 +47822,20 @@
     "value": 660,
     "pos_rank": 44,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 4.7,
+    "detail": {
+     "rush_att": 5.9,
+     "rush_yd": 24.9,
+     "rush_td": 0.2,
+     "rec_tgt": 0.7,
+     "rec": 0.6,
+     "rec_yd": 4.2,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -45895,6 +47870,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9758",
     "age": 24,
     "years_exp": 3,
     "injury_status": null,
@@ -46205,6 +48181,21 @@
     "value": 573,
     "pos_rank": 22,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 17.4,
+    "detail": {
+     "pass_att": 30.7,
+     "pass_cmp": 19.5,
+     "pass_yd": 222.1,
+     "pass_td": 1.4,
+     "pass_int": 0.7,
+     "rush_att": 2.6,
+     "rush_yd": 10.5,
+     "rush_td": 0.1
+    }
    }
   },
   {
@@ -46239,6 +48230,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12474",
     "age": 25,
     "years_exp": 1,
     "injury_status": null,
@@ -46591,6 +48583,20 @@
     "value": 639,
     "pos_rank": 47,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 6.2,
+    "detail": {
+     "rush_att": 7.5,
+     "rush_yd": 29.5,
+     "rush_td": 0.2,
+     "rec_tgt": 1.3,
+     "rec": 1,
+     "rec_yd": 7.7,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -46625,6 +48631,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "4943",
     "age": 29,
     "years_exp": 8,
     "injury_status": null,
@@ -46998,6 +49005,21 @@
     "value": 524,
     "pos_rank": 23,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 18.9,
+    "detail": {
+     "pass_att": 30.9,
+     "pass_cmp": 19.7,
+     "pass_yd": 231.4,
+     "pass_td": 1.6,
+     "pass_int": 0.9,
+     "rush_att": 2.9,
+     "rush_yd": 9.8,
+     "rush_td": 0.1
+    }
    }
   },
   {
@@ -47032,6 +49054,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "10219",
     "age": 26,
     "years_exp": 3,
     "injury_status": null,
@@ -47300,6 +49323,20 @@
     "value": 630,
     "pos_rank": 48,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 8.1,
+    "detail": {
+     "rush_att": 9.6,
+     "rush_yd": 45.6,
+     "rush_td": 0.4,
+     "rec_tgt": 0.7,
+     "rec": 0.5,
+     "rec_yd": 3.8,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -47334,6 +49371,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9753",
     "age": 25,
     "years_exp": 3,
     "injury_status": "PUP",
@@ -47686,6 +49724,20 @@
     "value": 743,
     "pos_rank": 43,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 3.3,
+    "detail": {
+     "rush_att": 3.4,
+     "rush_yd": 14.1,
+     "rush_td": 0.2,
+     "rec_tgt": 0.6,
+     "rec": 0.6,
+     "rec_yd": 3.6,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -47720,6 +49772,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "7002",
     "age": 29,
     "years_exp": 6,
     "injury_status": null,
@@ -48093,6 +50146,17 @@
     "value": 643,
     "pos_rank": 21,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 9.9,
+    "detail": {
+     "rec_tgt": 5.4,
+     "rec": 4.1,
+     "rec_yd": 42.5,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -48127,6 +50191,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9508",
     "age": 25,
     "years_exp": 3,
     "injury_status": "Questionable",
@@ -48416,6 +50481,20 @@
     "value": 450,
     "pos_rank": 53,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 7.4,
+    "detail": {
+     "rush_att": 5.1,
+     "rush_yd": 20.7,
+     "rush_td": 0.2,
+     "rec_tgt": 2.8,
+     "rec": 2.4,
+     "rec_yd": 14.7,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -48450,6 +50529,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8676",
     "age": 27,
     "years_exp": 4,
     "injury_status": null,
@@ -48844,6 +50924,20 @@
     "value": 609,
     "pos_rank": 59,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 9.1,
+    "detail": {
+     "rush_att": 0.6,
+     "rush_yd": 3.6,
+     "rush_td": 0,
+     "rec_tgt": 4.7,
+     "rec": 2.9,
+     "rec_yd": 41.9,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -48878,6 +50972,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "5872",
     "age": 30,
     "years_exp": 7,
     "injury_status": null,
@@ -49230,6 +51325,20 @@
     "value": 701,
     "pos_rank": 57,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 8.3,
+    "detail": {
+     "rush_att": 0.8,
+     "rush_yd": 4,
+     "rush_td": 0.1,
+     "rec_tgt": 4.1,
+     "rec": 2.7,
+     "rec_yd": 36.2,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -49264,6 +51373,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "4035",
     "age": 31,
     "years_exp": 9,
     "injury_status": null,
@@ -49511,6 +51621,20 @@
     "value": 547,
     "pos_rank": 50,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 4.8,
+    "detail": {
+     "rush_att": 4.8,
+     "rush_yd": 19.4,
+     "rush_td": 0.2,
+     "rec_tgt": 1.3,
+     "rec": 1.1,
+     "rec_yd": 6.5,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -49545,6 +51669,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12469",
     "age": 21,
     "years_exp": 1,
     "injury_status": null,
@@ -49876,6 +52001,20 @@
     "value": 462,
     "pos_rank": 52,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 7.2,
+    "detail": {
+     "rush_att": 6.6,
+     "rush_yd": 24,
+     "rush_td": 0.1,
+     "rec_tgt": 2.4,
+     "rec": 2.1,
+     "rec_yd": 15.3,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -49910,6 +52049,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8205",
     "age": 27,
     "years_exp": 4,
     "injury_status": "Questionable",
@@ -50199,6 +52339,20 @@
     "value": 430,
     "pos_rank": 55,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 3.9,
+    "detail": {
+     "rush_att": 4.9,
+     "rush_yd": 20.3,
+     "rush_td": 0.1,
+     "rec_tgt": 0.7,
+     "rec": 0.6,
+     "rec_yd": 3.3,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -50233,6 +52387,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12522",
     "age": 24,
     "years_exp": 1,
     "injury_status": null,
@@ -50606,6 +52761,21 @@
     "value": 465,
     "pos_rank": 25,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 16.5,
+    "detail": {
+     "pass_att": 33.5,
+     "pass_cmp": 20.2,
+     "pass_yd": 215.5,
+     "pass_td": 1.3,
+     "pass_int": 0.7,
+     "rush_att": 2.6,
+     "rush_yd": 9.4,
+     "rush_td": 0.1
+    }
    }
   },
   {
@@ -50640,6 +52810,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8210",
     "age": 26,
     "years_exp": 4,
     "injury_status": null,
@@ -51013,6 +53184,17 @@
     "value": 645,
     "pos_rank": 20,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 9.1,
+    "detail": {
+     "rec_tgt": 5.4,
+     "rec": 4,
+     "rec_yd": 38.7,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -51047,6 +53229,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9480",
     "age": 25,
     "years_exp": 3,
     "injury_status": null,
@@ -51315,6 +53498,17 @@
     "value": 686,
     "pos_rank": 19,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 8.2,
+    "detail": {
+     "rec_tgt": 4.4,
+     "rec": 3.4,
+     "rec_yd": 36.2,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -51349,6 +53543,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9511",
     "age": 24,
     "years_exp": 3,
     "injury_status": null,
@@ -51638,6 +53833,20 @@
     "value": 469,
     "pos_rank": 51,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 6,
+    "detail": {
+     "rush_att": 4.6,
+     "rush_yd": 26.2,
+     "rush_td": 0.1,
+     "rec_tgt": 1.5,
+     "rec": 1.3,
+     "rec_yd": 9,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -51672,6 +53881,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "5870",
     "age": 29,
     "years_exp": 7,
     "injury_status": null,
@@ -51961,6 +54171,21 @@
     "value": 298,
     "pos_rank": 26,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 17.5,
+    "detail": {
+     "pass_att": 32.3,
+     "pass_cmp": 20.4,
+     "pass_yd": 224.5,
+     "pass_td": 1.3,
+     "pass_int": 0.7,
+     "rush_att": 3.3,
+     "rush_yd": 13.8,
+     "rush_td": 0.1
+    }
    }
   },
   {
@@ -51995,6 +54220,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "13346",
     "age": 22,
     "years_exp": 0,
     "injury_status": null,
@@ -52010,6 +54236,19 @@
     "value": 643,
     "pos_rank": 58,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 6.8,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.6,
+     "rec_tgt": 4,
+     "rec": 2.3,
+     "rec_yd": 32.8,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -52044,6 +54283,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "6783",
     "age": 27,
     "years_exp": 6,
     "injury_status": null,
@@ -52417,6 +54657,19 @@
     "value": 369,
     "pos_rank": 66,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 6.5,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.3,
+     "rec_tgt": 4.5,
+     "rec": 2.3,
+     "rec_yd": 34.1,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -52451,6 +54704,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "7049",
     "age": 29,
     "years_exp": 6,
     "injury_status": null,
@@ -52782,6 +55036,17 @@
     "value": 454,
     "pos_rank": 63,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 9.5,
+    "detail": {
+     "rec_tgt": 5,
+     "rec": 3.1,
+     "rec_yd": 41.9,
+     "rec_td": 0.4
+    }
    }
   },
   {
@@ -52816,6 +55081,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9228",
     "age": 25,
     "years_exp": 3,
     "injury_status": null,
@@ -53168,6 +55434,21 @@
     "value": 215,
     "pos_rank": 27,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 17.8,
+    "detail": {
+     "pass_att": 30.6,
+     "pass_cmp": 19.1,
+     "pass_yd": 200.5,
+     "pass_td": 1.3,
+     "pass_int": 0.7,
+     "rush_att": 4.7,
+     "rush_yd": 21.6,
+     "rush_td": 0.2
+    }
    }
   },
   {
@@ -53202,6 +55483,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "3214",
     "age": 31,
     "years_exp": 10,
     "injury_status": null,
@@ -53575,6 +55857,17 @@
     "value": 859,
     "pos_rank": 16,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 9.4,
+    "detail": {
+     "rec_tgt": 4.8,
+     "rec": 3.6,
+     "rec_yd": 39.9,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -53609,6 +55902,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9225",
     "age": 23,
     "years_exp": 3,
     "injury_status": null,
@@ -53940,6 +56234,20 @@
     "value": 386,
     "pos_rank": 56,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 3.6,
+    "detail": {
+     "rush_att": 4.2,
+     "rush_yd": 19.8,
+     "rush_td": 0.1,
+     "rec_tgt": 0.5,
+     "rec": 0.4,
+     "rec_yd": 2.9,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -53977,7 +56285,8 @@
    "games": [],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": null
   },
   {
    "id": "RB-brian_robinson",
@@ -54011,6 +56320,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8154",
     "age": 27,
     "years_exp": 4,
     "injury_status": null,
@@ -54384,6 +56694,20 @@
     "value": 653,
     "pos_rank": 45,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 4.8,
+    "detail": {
+     "rush_att": 5.5,
+     "rush_yd": 22.6,
+     "rush_td": 0.2,
+     "rec_tgt": 0.9,
+     "rec": 0.8,
+     "rec_yd": 5.4,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -54418,6 +56742,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11625",
     "age": 23,
     "years_exp": 2,
     "injury_status": null,
@@ -54770,6 +57095,19 @@
     "value": 140,
     "pos_rank": 75,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 4,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.2,
+     "rec_tgt": 2.8,
+     "rec": 1.2,
+     "rec_yd": 20.4,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -54804,6 +57142,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11618",
     "age": 24,
     "years_exp": 2,
     "injury_status": "Questionable",
@@ -54904,6 +57243,19 @@
     "value": 407,
     "pos_rank": 64,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 7.3,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.6,
+     "rec_tgt": 3.7,
+     "rec": 2.3,
+     "rec_yd": 32.5,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -54938,6 +57290,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "13276",
     "age": 22,
     "years_exp": 0,
     "injury_status": null,
@@ -54953,6 +57306,20 @@
     "value": 537,
     "pos_rank": 61,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 7.9,
+    "detail": {
+     "rush_att": 0.2,
+     "rush_yd": 0.7,
+     "rush_td": 0,
+     "rec_tgt": 4.7,
+     "rec": 2.5,
+     "rec_yd": 38.5,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -54987,6 +57354,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "13345",
     "age": 22,
     "years_exp": 0,
     "injury_status": null,
@@ -55002,6 +57370,20 @@
     "value": 600,
     "pos_rank": 49,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 3.5,
+    "detail": {
+     "rush_att": 3.3,
+     "rush_yd": 14.2,
+     "rush_td": 0.1,
+     "rec_tgt": 1,
+     "rec": 0.8,
+     "rec_yd": 4.9,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -55036,6 +57418,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "13417",
     "age": 23,
     "years_exp": 0,
     "injury_status": null,
@@ -55051,6 +57434,20 @@
     "value": 387,
     "pos_rank": 65,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 6.9,
+    "detail": {
+     "rush_att": 0.2,
+     "rush_yd": 0.9,
+     "rush_td": 0,
+     "rec_tgt": 3.8,
+     "rec": 2.3,
+     "rec_yd": 31.3,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -55085,6 +57482,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12493",
     "age": 23,
     "years_exp": 1,
     "injury_status": null,
@@ -55416,6 +57814,17 @@
     "value": 1072,
     "pos_rank": 13,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 7.4,
+    "detail": {
+     "rec_tgt": 3.7,
+     "rec": 2.6,
+     "rec_yd": 35.7,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -55450,6 +57859,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "10213",
     "age": 25,
     "years_exp": 3,
     "injury_status": null,
@@ -55823,6 +58233,20 @@
     "value": 147,
     "pos_rank": 74,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 8,
+    "detail": {
+     "rush_att": 0.5,
+     "rush_yd": 2.3,
+     "rush_td": 0,
+     "rec_tgt": 4.5,
+     "rec": 2.6,
+     "rec_yd": 36.5,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -55860,7 +58284,8 @@
    "games": [],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": null
   },
   {
    "id": "TE-dalton_schultz",
@@ -55894,6 +58319,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "5001",
     "age": 30,
     "years_exp": 8,
     "injury_status": null,
@@ -56267,6 +58693,17 @@
     "value": 518,
     "pos_rank": 22,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 8.7,
+    "detail": {
+     "rec_tgt": 5,
+     "rec": 3.6,
+     "rec_yd": 36.9,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -56301,6 +58738,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12509",
     "age": 24,
     "years_exp": 1,
     "injury_status": null,
@@ -56653,6 +59091,19 @@
     "value": 73,
     "pos_rank": 80,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 5.9,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.6,
+     "rec_tgt": 3.5,
+     "rec": 2.3,
+     "rec_yd": 27.9,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -56687,6 +59138,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12530",
     "age": 23,
     "years_exp": 1,
     "injury_status": null,
@@ -56855,6 +59307,20 @@
     "value": 487,
     "pos_rank": 62,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 4.4,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.6,
+     "rush_td": 0,
+     "rec_tgt": 2.7,
+     "rec": 1.6,
+     "rec_yd": 19.1,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -56892,7 +59358,8 @@
    "games": [],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": null
   },
   {
    "id": "DST-los_angeles_rams",
@@ -56929,7 +59396,8 @@
    "games": [],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": null
   },
   {
    "id": "RB-braelon_allen",
@@ -56963,6 +59431,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11576",
     "age": 22,
     "years_exp": 2,
     "injury_status": null,
@@ -57063,6 +59532,20 @@
     "value": 191,
     "pos_rank": 62,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 3.4,
+    "detail": {
+     "rush_att": 3.8,
+     "rush_yd": 15,
+     "rush_td": 0.1,
+     "rec_tgt": 0.7,
+     "rec": 0.5,
+     "rec_yd": 4.1,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -57100,7 +59583,8 @@
    "games": [],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": null
   },
   {
    "id": "TE-tj_hockenson",
@@ -57134,6 +59618,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "5844",
     "age": 29,
     "years_exp": 7,
     "injury_status": null,
@@ -57465,6 +59950,17 @@
     "value": 450,
     "pos_rank": 23,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 8.4,
+    "detail": {
+     "rec_tgt": 4.8,
+     "rec": 3.7,
+     "rec_yd": 35.1,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -57499,6 +59995,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11575",
     "age": 26,
     "years_exp": 2,
     "injury_status": null,
@@ -57872,6 +60369,20 @@
     "value": 32,
     "pos_rank": 70,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 3.9,
+    "detail": {
+     "rush_att": 4.2,
+     "rush_yd": 18.2,
+     "rush_td": 0.1,
+     "rec_tgt": 0.8,
+     "rec": 0.7,
+     "rec_yd": 5.5,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -57900,7 +60411,8 @@
    "games": [],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": null
   },
   {
    "id": "WR-ryan_flournoy",
@@ -57934,6 +60446,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11783",
     "age": 26,
     "years_exp": 2,
     "injury_status": null,
@@ -58265,6 +60778,20 @@
     "value": 30,
     "pos_rank": 83,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 6.6,
+    "detail": {
+     "rush_att": 0.2,
+     "rush_yd": 1,
+     "rush_td": 0,
+     "rec_tgt": 3.6,
+     "rec": 2.3,
+     "rec_yd": 30.1,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -58299,6 +60826,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8180",
     "age": 27,
     "years_exp": 4,
     "injury_status": null,
@@ -58672,6 +61200,20 @@
     "value": 541,
     "pos_rank": 60,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 8.7,
+    "detail": {
+     "rush_att": 0.2,
+     "rush_yd": 1,
+     "rush_td": 0,
+     "rec_tgt": 4.9,
+     "rec": 2.8,
+     "rec_yd": 42.4,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -58706,6 +61248,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "3257",
     "age": 33,
     "years_exp": 10,
     "injury_status": null,
@@ -59016,6 +61559,21 @@
     "value": 103,
     "pos_rank": 29,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 16.1,
+    "detail": {
+     "pass_att": 33.3,
+     "pass_cmp": 20.4,
+     "pass_yd": 220.4,
+     "pass_td": 1.3,
+     "pass_int": 0.7,
+     "rush_att": 1.7,
+     "rush_yd": 6.1,
+     "rush_td": 0.1
+    }
    }
   },
   {
@@ -59053,7 +61611,8 @@
    "games": [],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": null
   },
   {
    "id": "RB-kimani_vidal",
@@ -59087,6 +61646,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11647",
     "age": 24,
     "years_exp": 2,
     "injury_status": null,
@@ -59376,6 +61936,20 @@
     "value": 40,
     "pos_rank": 68,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 2.2,
+    "detail": {
+     "rush_att": 3.1,
+     "rush_yd": 13.1,
+     "rush_td": 0.1,
+     "rec_tgt": 0.4,
+     "rec": 0.3,
+     "rec_yd": 2.2,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -59413,7 +61987,8 @@
    "games": [],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": null
   },
   {
    "id": "DST-jacksonville_jaguars",
@@ -59441,7 +62016,8 @@
    "games": [],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": null
   },
   {
    "id": "DST-minnesota_vikings",
@@ -59478,7 +62054,8 @@
    "games": [],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": null
   },
   {
    "id": "K-brandon_aubrey",
@@ -59512,6 +62089,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11533",
     "age": 31,
     "years_exp": 3,
     "injury_status": null,
@@ -59880,7 +62458,17 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 7.9,
+    "detail": {
+     "fga": 2.4,
+     "fgm": 2.1,
+     "xpm": 2.7
+    }
+   }
   },
   {
    "id": "DST-los_angeles_chargers",
@@ -59917,7 +62505,8 @@
    "games": [],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": null
   },
   {
    "id": "WR-dontayvion_wicks",
@@ -59951,6 +62540,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9486",
     "age": 25,
     "years_exp": 3,
     "injury_status": null,
@@ -60235,7 +62825,20 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 4.3,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.2,
+     "rec_tgt": 2.4,
+     "rec": 1.4,
+     "rec_yd": 19.1,
+     "rec_td": 0.2
+    }
+   }
   },
   {
    "id": "RB-emmett_johnson",
@@ -60260,6 +62863,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "13337",
     "age": 22,
     "years_exp": 0,
     "injury_status": null,
@@ -60275,6 +62879,20 @@
     "value": 431,
     "pos_rank": 54,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 3.3,
+    "detail": {
+     "rush_att": 2.8,
+     "rush_yd": 11.5,
+     "rush_td": 0.1,
+     "rec_tgt": 1,
+     "rec": 0.8,
+     "rec_yd": 5.4,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -60309,6 +62927,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9504",
     "age": 24,
     "years_exp": 3,
     "injury_status": null,
@@ -60619,6 +63238,17 @@
     "value": 129,
     "pos_rank": 76,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 3.8,
+    "detail": {
+     "rec_tgt": 1.9,
+     "rec": 1.2,
+     "rec_yd": 18.2,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -60653,6 +63283,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8259",
     "age": 26,
     "years_exp": 4,
     "injury_status": null,
@@ -61021,7 +63652,17 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 8.3,
+    "detail": {
+     "fga": 2.4,
+     "fgm": 2.1,
+     "xpm": 2.7
+    }
+   }
   },
   {
    "id": "WR-malik_washington",
@@ -61055,6 +63696,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11610",
     "age": 25,
     "years_exp": 2,
     "injury_status": null,
@@ -61428,6 +64070,20 @@
     "value": 311,
     "pos_rank": 70,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 6.7,
+    "detail": {
+     "rush_att": 1.1,
+     "rush_yd": 6,
+     "rush_td": 0.1,
+     "rec_tgt": 3.5,
+     "rec": 2.6,
+     "rec_yd": 23.9,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -61453,6 +64109,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12492",
     "age": 23,
     "years_exp": 1,
     "injury_status": null,
@@ -61737,7 +64394,20 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 5.1,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.4,
+     "rec_tgt": 3.1,
+     "rec": 1.9,
+     "rec_yd": 24.1,
+     "rec_td": 0.1
+    }
+   }
   },
   {
    "id": "RB-sean_tucker",
@@ -61762,6 +64432,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9506",
     "age": 24,
     "years_exp": 3,
     "injury_status": null,
@@ -62135,6 +64806,20 @@
     "value": 16,
     "pos_rank": 74,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 3.7,
+    "detail": {
+     "rush_att": 4.2,
+     "rush_yd": 19.1,
+     "rush_td": 0.2,
+     "rec_tgt": 0.3,
+     "rec": 0.2,
+     "rec_yd": 1.6,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -62169,6 +64854,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11603",
     "age": 24,
     "years_exp": 2,
     "injury_status": null,
@@ -62542,6 +65228,20 @@
     "value": 422,
     "pos_rank": 24,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 9.9,
+    "detail": {
+     "rush_att": 0.6,
+     "rush_yd": 2.1,
+     "rush_td": 0,
+     "rec_tgt": 5,
+     "rec": 4,
+     "rec_yd": 36.5,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -62576,6 +65276,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "3451",
     "age": 32,
     "years_exp": 10,
     "injury_status": null,
@@ -62902,7 +65603,17 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 7.7,
+    "detail": {
+     "fga": 2.3,
+     "fgm": 2,
+     "xpm": 2.4
+    }
+   }
   },
   {
    "id": "K-cam_little",
@@ -62936,6 +65647,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11786",
     "age": 22,
     "years_exp": 2,
     "injury_status": null,
@@ -63304,7 +66016,17 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 7.5,
+    "detail": {
+     "fga": 2.3,
+     "fgm": 2,
+     "xpm": 2.7
+    }
+   }
   },
   {
    "id": "WR-calvin_ridley",
@@ -63338,6 +66060,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "4981",
     "age": 31,
     "years_exp": 8,
     "injury_status": null,
@@ -63496,7 +66219,20 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 6.7,
+    "detail": {
+     "rush_att": 0,
+     "rush_yd": 0.2,
+     "rec_tgt": 4,
+     "rec": 2,
+     "rec_yd": 33,
+     "rec_td": 0.2
+    }
+   }
   },
   {
    "id": "DST-baltimore_ravens",
@@ -63533,7 +66269,8 @@
    "games": [],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": null
   },
   {
    "id": "RB-james_conner",
@@ -63567,6 +66304,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "4137",
     "age": 31,
     "years_exp": 9,
     "injury_status": "Questionable",
@@ -63646,6 +66384,20 @@
     "value": 358,
     "pos_rank": 58,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 3.3,
+    "detail": {
+     "rush_att": 2.5,
+     "rush_yd": 10.5,
+     "rush_td": 0.1,
+     "rec_tgt": 1,
+     "rec": 0.9,
+     "rec_yd": 5.5,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -63671,6 +66423,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11627",
     "age": 23,
     "years_exp": 2,
     "injury_status": null,
@@ -64044,6 +66797,20 @@
     "value": 26,
     "pos_rank": 85,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 5.1,
+    "detail": {
+     "rush_att": 0.2,
+     "rush_yd": 1,
+     "rush_td": 0,
+     "rec_tgt": 3.1,
+     "rec": 1.7,
+     "rec_yd": 20.9,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -64069,6 +66836,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12536",
     "age": 23,
     "years_exp": 1,
     "injury_status": null,
@@ -64437,7 +67205,21 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 4.1,
+    "detail": {
+     "rush_att": 0.3,
+     "rush_yd": 1.3,
+     "rush_td": 0,
+     "rec_tgt": 2,
+     "rec": 1.4,
+     "rec_yd": 17.2,
+     "rec_td": 0.1
+    }
+   }
   },
   {
    "id": "K-jason_myers",
@@ -64471,6 +67253,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "2747",
     "age": 35,
     "years_exp": 11,
     "injury_status": null,
@@ -64839,7 +67622,17 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 7.9,
+    "detail": {
+     "fga": 2.3,
+     "fgm": 2,
+     "xpm": 2.7
+    }
+   }
   },
   {
    "id": "RB-mike_washington",
@@ -64873,6 +67666,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "13305",
     "age": 23,
     "years_exp": 0,
     "injury_status": null,
@@ -64888,6 +67682,20 @@
     "value": 188,
     "pos_rank": 63,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 3.4,
+    "detail": {
+     "rush_att": 2.8,
+     "rush_yd": 11.8,
+     "rush_td": 0.1,
+     "rec_tgt": 1.1,
+     "rec": 0.9,
+     "rec_yd": 5.8,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -64913,6 +67721,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11435",
     "age": 27,
     "years_exp": 3,
     "injury_status": null,
@@ -65286,6 +68095,20 @@
     "value": 37,
     "pos_rank": 69,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 2.4,
+    "detail": {
+     "rush_att": 3,
+     "rush_yd": 13.2,
+     "rush_td": 0.1,
+     "rec_tgt": 0.3,
+     "rec": 0.3,
+     "rec_yd": 2,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -65323,7 +68146,8 @@
    "games": [],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": null
   },
   {
    "id": "K-eddy_pineiro",
@@ -65357,6 +68181,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "5189",
     "age": 30,
     "years_exp": 8,
     "injury_status": null,
@@ -65662,7 +68487,17 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 7.3,
+    "detail": {
+     "fga": 2.1,
+     "fgm": 1.8,
+     "xpm": 2.6
+    }
+   }
   },
   {
    "id": "WR-darnell_mooney",
@@ -65696,6 +68531,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "7090",
     "age": 28,
     "years_exp": 6,
     "injury_status": null,
@@ -66027,6 +68863,19 @@
     "value": 20,
     "pos_rank": 89,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 5.7,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.3,
+     "rec_tgt": 3.7,
+     "rec": 1.9,
+     "rec_yd": 29.2,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -66061,6 +68910,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12711",
     "age": 25,
     "years_exp": 1,
     "injury_status": null,
@@ -66429,7 +69279,17 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 8,
+    "detail": {
+     "fga": 2.2,
+     "fgm": 1.9,
+     "xpm": 2.8
+    }
+   }
   },
   {
    "id": "RB-nicholas_singleton",
@@ -66454,6 +69314,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "13288",
     "age": 22,
     "years_exp": 0,
     "injury_status": null,
@@ -66469,6 +69330,20 @@
     "value": 385,
     "pos_rank": 57,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 2.3,
+    "detail": {
+     "rush_att": 2.2,
+     "rush_yd": 9.2,
+     "rush_td": 0.1,
+     "rec_tgt": 0.6,
+     "rec": 0.5,
+     "rec_yd": 3.2,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -66503,6 +69378,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "13330",
     "age": 21,
     "years_exp": 0,
     "injury_status": "Questionable",
@@ -66518,6 +69394,20 @@
     "value": 780,
     "pos_rank": 18,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 6.6,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.5,
+     "rush_td": 0,
+     "rec_tgt": 3.8,
+     "rec": 2.8,
+     "rec_yd": 27,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -66546,7 +69436,8 @@
    "games": [],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": null
   },
   {
    "id": "TE-gunnar_helm",
@@ -66571,6 +69462,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12502",
     "age": 23,
     "years_exp": 1,
     "injury_status": null,
@@ -66923,6 +69815,17 @@
     "value": 95,
     "pos_rank": 28,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 8,
+    "detail": {
+     "rec_tgt": 4.3,
+     "rec": 3.3,
+     "rec_yd": 30.9,
+     "rec_td": 0.3
+    }
    }
   },
   {
@@ -66957,6 +69860,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11581",
     "age": 25,
     "years_exp": 2,
     "injury_status": null,
@@ -66972,6 +69876,20 @@
     "value": 215,
     "pos_rank": 61,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 3.8,
+    "detail": {
+     "rush_att": 3.3,
+     "rush_yd": 13,
+     "rush_td": 0.1,
+     "rec_tgt": 1.2,
+     "rec": 1,
+     "rec_yd": 6.1,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -67006,6 +69924,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12535",
     "age": 24,
     "years_exp": 1,
     "injury_status": null,
@@ -67316,6 +70235,19 @@
     "value": 76,
     "pos_rank": 79,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 5.7,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.5,
+     "rec_tgt": 3.3,
+     "rec": 1.9,
+     "rec_yd": 25.6,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -67350,6 +70282,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "9502",
     "age": 26,
     "years_exp": 3,
     "injury_status": "Questionable",
@@ -67365,6 +70298,20 @@
     "value": 322,
     "pos_rank": 69,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 4.4,
+    "detail": {
+     "rush_att": 0.2,
+     "rush_yd": 0.9,
+     "rush_td": 0,
+     "rec_tgt": 2.5,
+     "rec": 1.5,
+     "rec_yd": 19.4,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -67399,6 +70346,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "7571",
     "age": 26,
     "years_exp": 5,
     "injury_status": null,
@@ -67683,7 +70631,18 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 6.6,
+    "detail": {
+     "rec_tgt": 3.8,
+     "rec": 2.1,
+     "rec_yd": 31.5,
+     "rec_td": 0.2
+    }
+   }
   },
   {
    "id": "QB-geno_smith",
@@ -67708,6 +70667,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "1373",
     "age": 35,
     "years_exp": 13,
     "injury_status": null,
@@ -68034,7 +70994,22 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 15.8,
+    "detail": {
+     "pass_att": 28.3,
+     "pass_cmp": 18.9,
+     "pass_yd": 203.1,
+     "pass_td": 1.2,
+     "pass_int": 0.7,
+     "rush_att": 3,
+     "rush_yd": 11.2,
+     "rush_td": 0.1
+    }
+   }
   },
   {
    "id": "RB-aj_dillon",
@@ -68059,6 +71034,7 @@
    },
    "expert": null,
    "meta": {
+    "sleeper_id": "6828",
     "age": 28,
     "years_exp": 6,
     "injury_status": null,
@@ -68196,7 +71172,8 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": null
   },
   {
    "id": "QB-aaron_rodgers",
@@ -68230,6 +71207,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "96",
     "age": 42,
     "years_exp": 21,
     "injury_status": null,
@@ -68582,6 +71560,21 @@
     "value": 119,
     "pos_rank": 28,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 16.7,
+    "detail": {
+     "pass_att": 29.5,
+     "pass_cmp": 19.1,
+     "pass_yd": 207.4,
+     "pass_td": 1.6,
+     "pass_int": 0.8,
+     "rush_att": 1,
+     "rush_yd": 3.1,
+     "rush_td": 0
+    }
    }
   },
   {
@@ -68616,6 +71609,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12457",
     "age": 22,
     "years_exp": 1,
     "injury_status": null,
@@ -68737,6 +71731,20 @@
     "value": 135,
     "pos_rank": 64,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 2.3,
+    "detail": {
+     "rush_att": 2.6,
+     "rush_yd": 9.3,
+     "rush_td": 0.1,
+     "rec_tgt": 0.5,
+     "rec": 0.4,
+     "rec_yd": 2.4,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -68771,6 +71779,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "2020",
     "age": 34,
     "years_exp": 12,
     "injury_status": null,
@@ -69097,7 +72106,17 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 7.2,
+    "detail": {
+     "fga": 2.1,
+     "fgm": 1.8,
+     "xpm": 2.5
+    }
+   }
   },
   {
    "id": "WR-cooper_kupp",
@@ -69131,6 +72150,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "4039",
     "age": 33,
     "years_exp": 9,
     "injury_status": null,
@@ -69483,6 +72503,17 @@
     "value": 29,
     "pos_rank": 84,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 6.1,
+    "detail": {
+     "rec_tgt": 3.3,
+     "rec": 2.2,
+     "rec_yd": 27.8,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -69517,6 +72548,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11539",
     "age": 27,
     "years_exp": 3,
     "injury_status": null,
@@ -69885,7 +72917,17 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 8,
+    "detail": {
+     "fga": 2.3,
+     "fgm": 1.9,
+     "xpm": 3
+    }
+   }
   },
   {
    "id": "DST-detroit_lions",
@@ -69922,7 +72964,8 @@
    "games": [],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": null
   },
   {
    "id": "K-evan_mcpherson",
@@ -69956,6 +72999,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "7839",
     "age": 27,
     "years_exp": 5,
     "injury_status": null,
@@ -70324,7 +73368,17 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 7.8,
+    "detail": {
+     "fga": 2.3,
+     "fgm": 1.9,
+     "xpm": 2.7
+    }
+   }
   },
   {
    "id": "WR-zachariah_branch",
@@ -70358,6 +73412,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "13320",
     "age": 22,
     "years_exp": 0,
     "injury_status": null,
@@ -70373,6 +73428,17 @@
     "value": 360,
     "pos_rank": 68,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 5.2,
+    "detail": {
+     "rec_tgt": 3.1,
+     "rec": 2,
+     "rec_yd": 23.2,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -70407,6 +73473,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "6650",
     "age": 30,
     "years_exp": 7,
     "injury_status": null,
@@ -70775,7 +73842,17 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 7.2,
+    "detail": {
+     "fga": 2.2,
+     "fgm": 1.9,
+     "xpm": 2.5
+    }
+   }
   },
   {
    "id": "RB-kaytron_allen",
@@ -70800,6 +73877,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "13405",
     "age": 23,
     "years_exp": 0,
     "injury_status": null,
@@ -70815,6 +73893,20 @@
     "value": 109,
     "pos_rank": 66,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 1.5,
+    "detail": {
+     "rush_att": 1.6,
+     "rush_yd": 6.7,
+     "rush_td": 0.1,
+     "rec_tgt": 0.4,
+     "rec": 0.3,
+     "rec_yd": 1.9,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -70840,6 +73932,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12713",
     "age": 23,
     "years_exp": 1,
     "injury_status": null,
@@ -71208,7 +74301,17 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 6.6,
+    "detail": {
+     "fga": 1.9,
+     "fgm": 1.7,
+     "xpm": 2.3
+    }
+   }
   },
   {
    "id": "WR-antonio_williams",
@@ -71242,6 +74345,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "13301",
     "age": 22,
     "years_exp": 0,
     "injury_status": null,
@@ -71257,6 +74361,19 @@
     "value": 361,
     "pos_rank": 67,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 3.1,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.5,
+     "rec_tgt": 1.8,
+     "rec": 1.1,
+     "rec_yd": 13.6,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -71282,6 +74399,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "7600",
     "age": 27,
     "years_exp": 5,
     "injury_status": null,
@@ -71608,7 +74726,18 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 7.3,
+    "detail": {
+     "rec_tgt": 3.8,
+     "rec": 3,
+     "rec_yd": 29.5,
+     "rec_td": 0.2
+    }
+   }
   },
   {
    "id": "TE-cade_otton",
@@ -71642,6 +74771,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8111",
     "age": 27,
     "years_exp": 4,
     "injury_status": null,
@@ -71973,6 +75103,17 @@
     "value": 216,
     "pos_rank": 26,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 7.4,
+    "detail": {
+     "rec_tgt": 4.4,
+     "rec": 3.2,
+     "rec_yd": 31.6,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -72007,6 +75148,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12015",
     "age": 24,
     "years_exp": 2,
     "injury_status": null,
@@ -72207,7 +75349,17 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 7.8,
+    "detail": {
+     "fga": 2.2,
+     "fgm": 1.9,
+     "xpm": 2.9
+    }
+   }
   },
   {
    "id": "TE-terrance_ferguson",
@@ -72232,6 +75384,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12487",
     "age": 23,
     "years_exp": 1,
     "injury_status": null,
@@ -72479,6 +75632,17 @@
     "value": 240,
     "pos_rank": 25,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 3.7,
+    "detail": {
+     "rec_tgt": 2.6,
+     "rec": 1.3,
+     "rec_yd": 15,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -72516,7 +75680,8 @@
    "games": [],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": null
   },
   {
    "id": "RB-jaylen_wright",
@@ -72541,6 +75706,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11643",
     "age": 23,
     "years_exp": 2,
     "injury_status": null,
@@ -72746,6 +75912,20 @@
     "value": 16,
     "pos_rank": 73,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 3.1,
+    "detail": {
+     "rush_att": 3.2,
+     "rush_yd": 12.8,
+     "rush_td": 0.1,
+     "rec_tgt": 0.8,
+     "rec": 0.6,
+     "rec_yd": 4.9,
+     "rec_td": 0
+    }
    }
   },
   {
@@ -72783,7 +75963,8 @@
    "games": [],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": null
   },
   {
    "id": "WR-chimere_dike",
@@ -72808,6 +75989,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12540",
     "age": 24,
     "years_exp": 1,
     "injury_status": null,
@@ -73176,7 +76358,21 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 3.3,
+    "detail": {
+     "rush_att": 0.4,
+     "rush_yd": 1.4,
+     "rush_td": 0,
+     "rec_tgt": 2,
+     "rec": 1.2,
+     "rec_yd": 13.1,
+     "rec_td": 0.1
+    }
+   }
   },
   {
    "id": "RB-justice_hill",
@@ -73210,6 +76406,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "5995",
     "age": 28,
     "years_exp": 7,
     "injury_status": null,
@@ -73431,7 +76628,21 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 4,
+    "detail": {
+     "rush_att": 1.6,
+     "rush_yd": 7.4,
+     "rush_td": 0.1,
+     "rec_tgt": 1.7,
+     "rec": 1.4,
+     "rec_yd": 9.9,
+     "rec_td": 0.1
+    }
+   }
   },
   {
    "id": "WR-germie_bernard",
@@ -73465,6 +76676,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "13274",
     "age": 22,
     "years_exp": 0,
     "injury_status": null,
@@ -73480,6 +76692,19 @@
     "value": 37,
     "pos_rank": 82,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 5.4,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.5,
+     "rec_tgt": 3.1,
+     "rec": 1.9,
+     "rec_yd": 24.3,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -73505,6 +76730,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "4066",
     "age": 31,
     "years_exp": 9,
     "injury_status": null,
@@ -73852,7 +77078,18 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 4,
+    "detail": {
+     "rec_tgt": 2.5,
+     "rec": 1.9,
+     "rec_yd": 16.4,
+     "rec_td": 0.1
+    }
+   }
   },
   {
    "id": "RB-ollie_gordon",
@@ -73877,6 +77114,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12495",
     "age": 22,
     "years_exp": 1,
     "injury_status": null,
@@ -74245,7 +77483,21 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 2.7,
+    "detail": {
+     "rush_att": 2.5,
+     "rush_yd": 7.9,
+     "rush_td": 0.1,
+     "rec_tgt": 0.8,
+     "rec": 0.6,
+     "rec_yd": 4.1,
+     "rec_td": 0
+    }
+   }
   },
   {
    "id": "TE-greg_dulcich",
@@ -74279,6 +77531,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "8172",
     "age": 26,
     "years_exp": 4,
     "injury_status": null,
@@ -74484,6 +77737,17 @@
     "value": 64,
     "pos_rank": 29,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 6.4,
+    "detail": {
+     "rec_tgt": 3.5,
+     "rec": 2.6,
+     "rec_yd": 29.6,
+     "rec_td": 0.2
+    }
    }
   },
   {
@@ -74518,6 +77782,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "4227",
     "age": 31,
     "years_exp": 9,
     "injury_status": null,
@@ -74886,7 +78151,17 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 7.2,
+    "detail": {
+     "fga": 2.1,
+     "fgm": 1.8,
+     "xpm": 2.5
+    }
+   }
   },
   {
    "id": "WR-elic_ayomanor",
@@ -74911,6 +78186,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12499",
     "age": 23,
     "years_exp": 1,
     "injury_status": null,
@@ -75258,7 +78534,18 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 3,
+    "detail": {
+     "rec_tgt": 2,
+     "rec": 0.9,
+     "rec_yd": 14,
+     "rec_td": 0.1
+    }
+   }
   },
   {
    "id": "TE-david_njoku",
@@ -75283,6 +78570,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "4033",
     "age": 30,
     "years_exp": 9,
     "injury_status": null,
@@ -75530,6 +78818,17 @@
     "value": 143,
     "pos_rank": 27,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 3.4,
+    "detail": {
+     "rec_tgt": 2,
+     "rec": 1.4,
+     "rec_yd": 13.7,
+     "rec_td": 0.1
+    }
    }
   },
   {
@@ -75555,6 +78854,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "12483",
     "age": 23,
     "years_exp": 1,
     "injury_status": null,
@@ -75860,7 +79160,20 @@
    ],
    "baseline": null,
    "conflicts": [],
-   "trade_market": null
+   "trade_market": null,
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 4.7,
+    "detail": {
+     "rush_att": 0.1,
+     "rush_yd": 0.2,
+     "rec_tgt": 2.6,
+     "rec": 1.7,
+     "rec_yd": 21.4,
+     "rec_td": 0.1
+    }
+   }
   },
   {
    "id": "WR-keon_coleman",
@@ -75885,6 +79198,7 @@
     "scope": "draft"
    },
    "meta": {
+    "sleeper_id": "11637",
     "age": 23,
     "years_exp": 2,
     "injury_status": null,
@@ -76153,6 +79467,19 @@
     "value": 20,
     "pos_rank": 88,
     "as_of": "2026-08-13T13:01:29.840Z"
+   },
+   "projection": {
+    "season": 2026,
+    "week": 1,
+    "pts_ppr": 2.6,
+    "detail": {
+     "rush_att": 0,
+     "rush_yd": 0.2,
+     "rec_tgt": 1.4,
+     "rec": 0.8,
+     "rec_yd": 12,
+     "rec_td": 0.1
+    }
    }
   }
  ]

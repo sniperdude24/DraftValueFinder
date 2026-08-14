@@ -1,4 +1,5 @@
 import { renderBoard } from './board.js';
+import { renderTeam } from './team.js';
 import { renderRecs, renderSleepers, renderMarket, renderHistory, renderAbout } from './views.js';
 import { renderRoster } from './roster.js';
 import { initChat } from './chat.js';
@@ -6,6 +7,7 @@ import { api } from './api.js';
 
 const VIEWS = {
   board: renderBoard,
+  team: renderTeam,
   recs: renderRecs,
   sleepers: renderSleepers,
   market: renderMarket,

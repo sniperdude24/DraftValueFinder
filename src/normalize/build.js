@@ -21,6 +21,7 @@ import { loadSnapshot, parseCsv, ROOT, RAW_DIR } from '../ingest/util.js';
 import { nameKey, normPosition, normTeam, samePositionGroup, playerId } from './names.js';
 import { resolveSeason } from './season.js';
 import { matchTradeMarket } from './tradeMarket.js';
+import { attachProjections } from './projections.js';
 import { loadState } from '../store/state.js';
 
 const FANTASY_POSITIONS = new Set(['QB', 'RB', 'WR', 'TE', 'K', 'DST']);
@@ -229,7 +230,8 @@ export function buildDatabase() {
   const players = list.map((e, i) => {
     const pos = e.position;
     const key = `${pos}|${nameKey(e.name)}`;
-    const sl = pos === 'DST' ? null : sleeperByKey.get(key)?.p ?? null;
+    const slEntry = pos === 'DST' ? null : sleeperByKey.get(key) ?? null;
+    const sl = slEntry?.p ?? null;
     const conflicts = [];
 
     const fpBye = num(e.fp?.player_bye_week);
@@ -278,6 +280,7 @@ export function buildDatabase() {
         scope: sr.mode === 'season' ? 'rest-of-season' : 'draft',
       } : null,
       meta: sl ? {
+        sleeper_id: slEntry.sid,
         age: sl.age, years_exp: sl.years_exp,
         injury_status: sl.injury_status ?? null,
         status: sl.status ?? null,
@@ -296,6 +299,12 @@ export function buildDatabase() {
     ? matchTradeMarket(players, JSON.parse(statsguySnap.body))
     : (players.forEach(p => { p.trade_market = null; }), { matched: 0, unmatched: [] });
 
+  // External weekly projections (optional source, exact sleeper_id join).
+  const projSnap = loadSnapshot('sleeper_projections.json');
+  const projResult = projSnap
+    ? attachProjections(players, JSON.parse(projSnap.body))
+    : (players.forEach(p => { p.projection = null; }), { attached: 0 });
+
   const suspiciousNoStats = players
     .filter(p => !['K', 'DST'].includes(p.position))
     .filter(p => p.games.length === 0 && (p.meta?.years_exp ?? 0) > 0)
@@ -312,6 +321,7 @@ export function buildDatabase() {
       adp: ffcSnap.meta,
       expert: fpSnap.meta,
       trade_market: statsguySnap?.meta ?? null,
+      projections: projSnap?.meta ?? null,
       weekly_stats: weeklySnap.meta,
       snap_counts: snapsSnap.meta,
       player_meta: sleeperSnap.meta,
@@ -323,6 +333,7 @@ export function buildDatabase() {
       with_expert: players.filter(p => p.expert).length,
       with_stats: players.filter(p => p.games.length).length,
       with_trade_market: players.filter(p => p.trade_market).length,
+      with_projection: projResult.attached,
     },
     unmatched: { ffc_only: unmatchedFfc, veterans_without_stats: suspiciousNoStats, trade_market: tradeMatch.unmatched },
     players,

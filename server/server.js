@@ -13,7 +13,7 @@ import { chat } from '../src/ai/chat.js';
 import { isConfigured, isConnected, authorizeUrl, awaitCallback } from '../src/yahoo/oauth.js';
 import { yahooApi } from '../src/yahoo/client.js';
 import { syncOnce, draftComplete } from '../src/yahoo/sync.js';
-import { LEAGUE } from '../src/analyze/roster.js';
+import { LEAGUE, rosterSummary } from '../src/analyze/roster.js';
 import { runIngest } from '../src/ingest/fetchAll.js';
 import { buildDatabase } from '../src/normalize/build.js';
 import { isStale } from '../src/ingest/freshness.js';
@@ -151,6 +151,28 @@ const server = createServer(async (req, res) => {
           personal_rank: state.personalRanks[id] ?? null,
           drafted: state.drafted.includes(id),
           mine: state.mine.includes(id),
+        });
+      }
+      if (req.method === 'GET' && path === '/api/team') {
+        const minePlayers = db.players
+          .filter(p => state.mine.includes(p.id))
+          .sort((a, b) => state.drafted.indexOf(a.id) - state.drafted.indexOf(b.id))
+          .map(p => {
+            const a = assessments.get(p.id);
+            return {
+              ...p,
+              pick_number: state.drafted.indexOf(p.id) + 1 || null,
+              ai_rank: a.ai_rank, confidence: a.confidence, verdict: a.verdict,
+              usage_trend: a.trend.available ? a.trend.usage : null,
+              sleeper_state: a.signal.state,
+              personal_rank: state.personalRanks[p.id] ?? null,
+            };
+          });
+        return send(res, 200, {
+          mode: db.mode, week: db.week, stats_season: db.stats_season,
+          projection_meta: db.sources.projections,
+          roster: rosterSummary(minePlayers),
+          players: minePlayers,
         });
       }
       if (req.method === 'GET' && path === '/api/market') {

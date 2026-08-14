@@ -2,26 +2,14 @@
 // Slot layout mirrors the league settings (10-team PPR Yahoo default).
 import { api, esc } from './api.js';
 import { openProfile } from './profile.js';
-
-const SLOTS = [
-  ['QB', 'QB'], ['RB', 'RB1'], ['RB', 'RB2'], ['WR', 'WR1'], ['WR', 'WR2'], ['WR', 'WR3'],
-  ['TE', 'TE'], ['FLEX', 'FLX'], ['K', 'K'], ['DST', 'DEF'],
-];
-const FLEX_ELIGIBLE = ['RB', 'WR', 'TE'];
+import { SLOTS, assignSlots } from './lineup.js';
 
 export async function renderRoster(refresh) {
   const el = document.getElementById('roster');
   const { players } = await api.board();
   const mine = players.filter(p => p.mine).sort((a, b) => (a.pick_number ?? 999) - (b.pick_number ?? 999));
 
-  // Assign players to slots: dedicated position slots first (in draft
-  // order), then flex, everything else to the bench.
-  const pool = [...mine];
-  const filled = SLOTS.map(([pos, label]) => {
-    const idx = pool.findIndex(p => pos === 'FLEX' ? FLEX_ELIGIBLE.includes(p.position) : p.position === pos);
-    return { pos, label, player: idx === -1 ? null : pool.splice(idx, 1)[0] };
-  });
-  const bench = pool;
+  const { filled, bench } = assignSlots(mine);
 
   // Byes shared by 3+ of my players get flagged.
   const byeCounts = {};

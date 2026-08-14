@@ -25,6 +25,7 @@ export async function openProfile(id, onChange) {
             <span>ADP <b>${p.adp ? '#' + p.adp.rank : '—'}</b>${p.adp ? ` <span class="aid">(${esc(p.adp.formatted)}, ${p.adp.times_drafted} drafts)</span>` : ''}</span>
             <span>Expert <b>${p.expert ? '#' + p.expert.rank : '—'}</b>${p.expert ? ` <span class="aid">(${esc(p.expert.pos_rank)}, tier ${p.expert.tier})</span>` : ''}</span>
             ${p.trade_market ? `<span>Trade mkt <b>#${p.trade_market.rank}</b> <span class="aid">(value ${p.trade_market.value}, Stats Guy)</span></span>` : ''}
+            ${p.projection ? `<span>Proj <b>${p.projection.pts_ppr} pts</b> <span class="aid">(wk ${p.projection.week}, Sleeper — external)</span></span>` : ''}
             <span>AI <b>${a.ai_rank ? '#' + a.ai_rank : '—'}</b> <span class="aid">(${a.confidence ?? '—'}% conf, AI-generated)</span></span>
             <span>My rank <input id="my-rank" type="number" min="1" max="500" value="${data.personal_rank ?? ''}" placeholder="—"> <button class="rowbtn" id="save-rank">Save</button></span>
           </div>
