@@ -57,6 +57,12 @@ sources are recorded on the player record, not silently resolved.
 
 ## What it does
 
+- **League rosters** — all ten teams, named and editable, with any player
+  assignable to any team from the League page, the Players explorer or the draft
+  board. Rosters can be pasted in bulk; names that do not match are reported
+  rather than quietly skipped. Roster-size and bye problems are flagged, never
+  blocked. Ownership is the stored fact — "drafted" and "mine" are derived from
+  it, so they cannot drift apart.
 - **Draft board** — top 250 (200 core + 50 sleeper watch) with ADP, expert rank,
   AI rank, trend arrows, sleeper badges, bye, availability, and personal ranks.
   Click-to-track picks (mine / gone / undo).
@@ -98,8 +104,9 @@ src/analyze/    fantasyPoints (configurable scoring), playerStats (windowed
                 metrics), teamContext (opportunity distribution + red-zone pie
                 + ripple), trends, signals, score (AI rank), market
                 comparison, recommendations
+src/analyze/league.js   team rosters, warnings, bulk name resolution
 src/ai/         chat grounded in structured data (Claude + fallback)
-src/store/      roster/draft state, personal ranks, history log
+src/store/      league rosters (owners + pick order), personal ranks, history
 src/yahoo/      dormant Yahoo draft sync (credential-gated)
 server/         zero-framework node:http API + static frontend
 public/         vanilla-JS UI (no build step); table.js is the shared

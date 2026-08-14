@@ -2,6 +2,7 @@ import { renderBoard } from './board.js';
 import { renderPlayers } from './players.js';
 import { renderTeams } from './teams.js';
 import { renderTeam } from './team.js';
+import { renderLeague } from './league.js';
 import { renderRecs, renderSleepers, renderMarket, renderHistory, renderAbout } from './views.js';
 import { renderRoster } from './roster.js';
 import { initChat } from './chat.js';
@@ -12,6 +13,7 @@ const VIEWS = {
   teams: renderTeams,
   board: renderBoard,
   team: renderTeam,
+  league: renderLeague,
   recs: renderRecs,
   sleepers: renderSleepers,
   market: renderMarket,

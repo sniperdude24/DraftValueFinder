@@ -7,6 +7,7 @@
 import { api, esc, trendArrow, signalBadge } from './api.js';
 import { openProfile } from './profile.js';
 import { sortRows, headerCells, wireSort, wireSearch } from './table.js';
+import { ownerSelect, wireOwnerSelects } from './owners.js';
 
 // key -> [label, format, tooltip]
 const METRICS = {
@@ -77,7 +78,7 @@ function fmt(v, kind) {
 }
 
 export async function renderPlayers(el, refresh) {
-  const { players, mode, week, stats_season } = await api.players();
+  const { players, mode, week, stats_season, teams } = await api.players();
   if (state.window == null) state.window = mode === 'season' ? 'last3' : 'season';
 
   const withData = players.filter(p => p.windows.season).length;
@@ -85,7 +86,7 @@ export async function renderPlayers(el, refresh) {
     `${stats_season} stats${mode === 'season' ? ` · week ${week ?? '?'}` : ''} · ${withData} players with game data`;
 
   const metricKeys = PRESETS[state.preset];
-  const cols = [['name', 'Player'], ...metricKeys.map(k => [k, METRICS[k][0]]), ['ai_rank', 'AI'], ['usage_trend', 'Trend']];
+  const cols = [['name', 'Player'], ...metricKeys.map(k => [k, METRICS[k][0]]), ['ai_rank', 'AI'], ['usage_trend', 'Trend'], ['owner_id', 'Owner']];
 
   // Value accessor: metric keys read from the selected window, everything
   // else from the row itself.
@@ -125,6 +126,7 @@ export async function renderPlayers(el, refresh) {
             ${metricKeys.map(k => `<td>${fmt(w?.[k] ?? null, METRICS[k][1])}</td>`).join('')}
             <td>${p.ai_rank ?? '<span class="aid">—</span>'}</td>
             <td>${trendArrow(p.usage_trend)}</td>
+            <td>${ownerSelect(p.id, p.owner_id, teams)}</td>
           </tr>`;
         }).join('')}
       </tbody>
@@ -154,5 +156,6 @@ export async function renderPlayers(el, refresh) {
   el.querySelector('#pl-mingames').onchange = e => { state.minGames = Math.max(1, Number(e.target.value) || 1); refresh(); };
   wireSearch(el.querySelector('#pl-search'), state, el);
   wireSort(el, state, refresh);
+  wireOwnerSelects(el, refresh);
   el.querySelectorAll('td.name').forEach(td => td.onclick = () => openProfile(td.dataset.id, refresh));
 }

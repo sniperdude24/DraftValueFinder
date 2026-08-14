@@ -1,13 +1,14 @@
 import { api, esc, trendArrow, signalBadge } from './api.js';
 import { openProfile } from './profile.js';
 import { sortRows, headerCells, wireSort, wireSearch } from './table.js';
+import { ownerSelect, wireOwnerSelects } from './owners.js';
 
 const state = { pos: 'ALL', search: '', hideDrafted: false, sort: 'consensus', dir: 1 };
 
 const COLS = [
   ['name', 'Player'], ['adp_rank', 'ADP'], ['expert_rank', 'Expert'], ['ai_rank', 'AI'],
   ['personal_rank', 'My Rank'], ['confidence', 'Conf'], ['trend', 'Trend'], ['signal', 'Signal'],
-  ['bye', 'Bye'], ['actions', ''],
+  ['bye', 'Bye'], ['owner', 'Owner'], ['actions', ''],
 ];
 
 // Missing values are returned as null so the shared sorter can push them
@@ -21,7 +22,7 @@ function sortVal(p, key) {
 }
 
 export async function renderBoard(el, refresh) {
-  const { players, mode, week, stats_season } = await api.board();
+  const { players, mode, week, stats_season, teams } = await api.board();
   const season = mode === 'season';
   const drafted = players.filter(p => p.drafted).length;
   const mine = players.filter(p => p.mine).length;
@@ -49,7 +50,7 @@ export async function renderBoard(el, refresh) {
       <button class="danger" id="reset-draft">Reset draft</button>
     </div>
     <table>
-      <thead><tr>${headerCells(COLS, state, ['actions'])}</tr></thead>
+      <thead><tr>${headerCells(COLS, state, ['actions', 'owner'])}</tr></thead>
       <tbody>
         ${rows.map(p => `
           <tr class="${p.drafted ? 'drafted' : ''} ${p.mine ? 'mine' : ''}">
@@ -64,6 +65,7 @@ export async function renderBoard(el, refresh) {
             <td>${trendArrow(p.usage_trend)}</td>
             <td>${signalBadge(p.sleeper_state)}</td>
             <td>${p.bye ?? '—'}</td>
+            <td>${ownerSelect(p.id, p.owner_id, teams)}</td>
             <td>${p.drafted
               ? `<button class="rowbtn" data-undraft="${esc(p.id)}">Undo</button>`
               : `<button class="rowbtn mine" data-mine="${esc(p.id)}" title="On my roster">${mineLabel}</button>
@@ -81,6 +83,7 @@ export async function renderBoard(el, refresh) {
   };
   // Board columns are ranks and byes — low-first is the useful default.
   wireSort(el, state, refresh, { firstClickDir: () => 1 });
+  wireOwnerSelects(el, refresh);
   el.querySelectorAll('td.name').forEach(td => td.onclick = () => openProfile(td.dataset.id, refresh));
   el.querySelectorAll('[data-mine]').forEach(b => b.onclick = async () => { await api.draft(b.dataset.mine, true); refresh(); });
   el.querySelectorAll('[data-gone]').forEach(b => b.onclick = async () => { await api.draft(b.dataset.gone, false); refresh(); });

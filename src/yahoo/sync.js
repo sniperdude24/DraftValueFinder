@@ -4,7 +4,7 @@
 // mapPicksToState is pure and fully unit-tested; syncOnce orchestrates.
 import { yahooApi } from './client.js';
 import { nameKey, normPosition } from '../normalize/names.js';
-import { loadState, saveState } from '../store/state.js';
+import { loadState, saveState, setOwner, clearRosters, myTeamId, UNKNOWN_OWNER } from '../store/state.js';
 import { logEvent } from '../store/history.js';
 import { LEAGUE } from '../analyze/roster.js';
 
@@ -63,8 +63,15 @@ export async function syncOnce(db) {
   const mapped = mapPicksToState(picks, yahooPlayers, team_key, index);
 
   // Yahoo is the source of truth for pick state; personal ranks untouched.
-  state.drafted = mapped.drafted;
-  state.mine = mapped.mine;
+  // Route through the owner model rather than assigning the derived arrays.
+  // Picks belonging to other managers land as owner-unknown until the League
+  // page names them — mapping Yahoo's own team keys onto our league teams is
+  // a separate job, and guessing would be worse than asking.
+  clearRosters(state);
+  const mineSet = new Set(mapped.mine);
+  for (const id of mapped.drafted) {
+    setOwner(state, id, mineSet.has(id) ? myTeamId(state) : UNKNOWN_OWNER);
+  }
   state.yahoo = { ...state.yahoo, last_sync: new Date().toISOString(), unmatched: mapped.unmatched, pick_count: picks.length };
   saveState(state);
   logEvent({ trigger: 'draft_sync', picks: picks.length, matched: mapped.drafted.length, unmatched: mapped.unmatched.length });

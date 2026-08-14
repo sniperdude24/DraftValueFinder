@@ -7,7 +7,8 @@ import { fileURLToPath } from 'node:url';
 import { assessAll } from '../src/analyze/score.js';
 import { marketComparison } from '../src/analyze/market.js';
 import { recommendations } from '../src/analyze/recommend.js';
-import { loadState, saveState, markDrafted, undoDraft, setPersonalRank } from '../src/store/state.js';
+import { loadState, saveState, markDrafted, undoDraft, setPersonalRank, setOwner, setTeams, clearRosters, myTeamId, UNKNOWN_OWNER } from '../src/store/state.js';
+import { leagueView, resolveNames } from '../src/analyze/league.js';
 import { logRecommendations, logEvent, readHistory } from '../src/store/history.js';
 import { chat } from '../src/ai/chat.js';
 import { isConfigured, isConnected, authorizeUrl, awaitCallback } from '../src/yahoo/oauth.js';
@@ -97,6 +98,7 @@ function boardRow(p, state) {
     personal_rank: state.personalRanks[p.id] ?? null,
     drafted: state.drafted.includes(p.id),
     mine: state.mine.includes(p.id),
+    owner_id: state.owners?.[p.id] ?? null,
     pick_number: state.drafted.includes(p.id) ? state.drafted.indexOf(p.id) + 1 : null,
     changed_team: p.changed_team,
   };
@@ -162,7 +164,7 @@ const server = createServer(async (req, res) => {
         return send(res, 200, { built_at: db.built_at, mode: db.mode, season: db.season, stats_season: db.stats_season, baseline_season: db.baseline_season, week: db.week, sources: db.sources, counts: db.counts, unmatched: db.unmatched, auto_refresh: autoRefresh, scoring: describeRules(activeRules) });
       }
       if (req.method === 'GET' && path === '/api/board') {
-        return send(res, 200, { mode: db.mode, week: db.week, stats_season: db.stats_season, players: db.players.map(p => boardRow(p, state)) });
+        return send(res, 200, { mode: db.mode, week: db.week, stats_season: db.stats_season, teams: state.league.teams, players: db.players.map(p => boardRow(p, state)) });
       }
       if (req.method === 'POST' && path === '/api/admin/refresh') {
         if (refreshing.busy) return send(res, 409, { error: 'A refresh is already running' });
@@ -191,6 +193,46 @@ const server = createServer(async (req, res) => {
           drafted: state.drafted.includes(id),
           mine: state.mine.includes(id),
         });
+      }
+      if (req.method === 'GET' && path === '/api/league') {
+        return send(res, 200, { mode: db.mode, week: db.week, ...leagueView(db.players, state) });
+      }
+      if (req.method === 'PUT' && path === '/api/league/teams') {
+        const { teams } = await readBody(req);
+        if (!Array.isArray(teams) || !teams.length) return send(res, 400, { error: 'teams array required' });
+        saveState(setTeams(state, teams));
+        return send(res, 200, { ok: true, ...leagueView(db.players, loadState()) });
+      }
+      if (req.method === 'POST' && path === '/api/league/owner') {
+        const { id, team_id = null } = await readBody(req);
+        if (!byId.has(id)) return send(res, 404, { error: 'unknown player id' });
+        try {
+          saveState(setOwner(state, id, team_id));
+        } catch (err) {
+          return send(res, 400, { error: err.message });
+        }
+        return send(res, 200, { ok: true });
+      }
+      if (req.method === 'POST' && path === '/api/league/bulk') {
+        const { team_id, text, commit = false } = await readBody(req);
+        if (team_id !== UNKNOWN_OWNER && !state.league.teams.some(t => t.id === team_id)) {
+          return send(res, 400, { error: `unknown team "${team_id}"` });
+        }
+        const resolved = resolveNames(text, db.players);
+        // Two-step by design: resolve and report first, write only when the
+        // caller confirms. Nothing pasted is applied while names are still
+        // unmatched or ambiguous without the user having seen them.
+        if (commit) {
+          for (const m of resolved.matched) setOwner(state, m.id, team_id);
+          saveState(state);
+        }
+        return send(res, 200, { ok: true, committed: !!commit, ...resolved });
+      }
+      if (req.method === 'POST' && path === '/api/league/reset') {
+        const { team_id = null } = await readBody(req);
+        saveState(clearRosters(state, { teamId: team_id }));
+        logEvent({ trigger: team_id ? 'roster_clear' : 'draft_reset', team_id });
+        return send(res, 200, { ok: true });
       }
       if (req.method === 'GET' && path === '/api/scoring') {
         return send(res, 200, {
@@ -247,6 +289,7 @@ const server = createServer(async (req, res) => {
         return send(res, 200, {
           mode: db.mode, week: db.week, stats_season: db.stats_season,
           scoring: describeRules(activeRules),
+          teams: state.league.teams,
           players: db.players.map(p => {
             const a = assessments.get(p.id);
             return {
@@ -259,6 +302,7 @@ const server = createServer(async (req, res) => {
               expert_rank: p.expert?.rank ?? null,
               rostered: state.drafted.includes(p.id),
               mine: state.mine.includes(p.id),
+              owner_id: state.owners?.[p.id] ?? null,
               windows: computeWindows(p),
             };
           }),
@@ -325,7 +369,7 @@ const server = createServer(async (req, res) => {
         return send(res, 200, { ok: true });
       }
       if (req.method === 'POST' && path === '/api/reset-draft') {
-        saveState({ ...state, drafted: [], mine: [] });
+        saveState(clearRosters(state));
         logEvent({ trigger: 'draft_reset' });
         return send(res, 200, { ok: true });
       }
