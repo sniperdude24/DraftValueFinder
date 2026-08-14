@@ -22,7 +22,7 @@ export const api = {
   resetDraft: () => req('/api/reset-draft', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' }),
   personalRank: (id, rank) => req('/api/personal-rank', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id, rank }) }),
   chat: (message, history) => req('/api/chat', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ message, history }) }),
-  adminRefresh: () => req('/api/admin/refresh', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' }),
+  adminRefresh: ({ force = false } = {}) => req(`/api/admin/refresh${force ? '?force=1' : ''}`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' }),
   yahoo: {
     status: () => req('/api/yahoo/status'),
     connect: () => req('/api/yahoo/connect', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' }),

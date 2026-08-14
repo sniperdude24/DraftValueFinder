@@ -1,13 +1,19 @@
 // Player metadata: Sleeper public API (free, no key).
 // Canonical player list with team, position, age, experience, depth chart
 // position, and injury status. Also the season state (current week etc).
-import { fetchJson, saveSnapshot } from '../util.js';
+import { fetchJson, fetchConditional, saveSnapshot } from '../util.js';
 
 const PLAYERS_URL = 'https://api.sleeper.app/v1/players/nfl';
 const STATE_URL = 'https://api.sleeper.app/v1/state/nfl';
 
-export async function ingestSleeperPlayers() {
-  const players = await fetchJson(PLAYERS_URL, { timeoutMs: 120000 });
+export async function ingestSleeperPlayers({ force = false } = {}) {
+  // Sleeper asks that this endpoint be called sparingly — it is a multi-MB
+  // payload. The conditional request also skips the slimming pass below,
+  // which is the expensive half of this function.
+  const got = await fetchConditional(PLAYERS_URL, 'sleeper_players.json', { force, timeoutMs: 120000 });
+  if (got.notModified) return { unchanged: true };
+
+  const players = await got.res.json();
   const count = Object.keys(players).length;
   if (count < 1000) throw new Error(`Sleeper players: only ${count} players — refusing suspicious snapshot`);
   // Keep only fantasy-relevant fields to shrink the snapshot ~10x.
@@ -32,10 +38,14 @@ export async function ingestSleeperPlayers() {
     url: PLAYERS_URL,
     kind: 'player_metadata',
     detail: `${Object.keys(slim).length} offense/K/DEF players (slimmed from ${count})`,
+    ...got.validators,
   });
   return { players: Object.keys(slim).length };
 }
 
+// Deliberately unconditional: this response is well under a kilobyte and it
+// decides the pipeline's mode and stats year, so it must never be served
+// from a stale cache to save nothing.
 export async function ingestSleeperState() {
   const state = await fetchJson(STATE_URL);
   saveSnapshot('sleeper_state.json', state, {

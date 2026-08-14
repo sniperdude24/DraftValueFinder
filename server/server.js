@@ -93,13 +93,15 @@ const autoRefresh = {
   last_result: null,
 };
 
-async function doRefresh(trigger) {
+async function doRefresh(trigger, { force = false } = {}) {
   const lines = [];
   const log = { log: m => { lines.push(m); console.log(m); }, error: m => { lines.push(m); console.error(m); } };
-  const { failures, total } = await runIngest({ log });
+  const { failures, total, unchanged, downloaded } = await runIngest({ log, force });
+  // Always rebuild even when every source was unchanged: the snapshots on
+  // disk are re-parsed here, so a parser change still takes effect.
   buildDatabase();
   loadDb();
-  return { ok: true, trigger, failures, total, mode: db.mode, stats_season: db.stats_season, week: db.week, built_at: db.built_at, log: lines };
+  return { ok: true, trigger, failures, total, unchanged, downloaded, mode: db.mode, stats_season: db.stats_season, week: db.week, built_at: db.built_at, log: lines };
 }
 
 async function maybeAutoRefresh() {
@@ -138,7 +140,9 @@ const server = createServer(async (req, res) => {
         if (refreshing.busy) return send(res, 409, { error: 'A refresh is already running' });
         refreshing.busy = true;
         try {
-          return send(res, 200, await doRefresh('manual'));
+          // ?force=1 ignores cached validators — the escape hatch for when a
+          // source republishes without changing its ETag.
+          return send(res, 200, await doRefresh('manual', { force: url.searchParams.get('force') === '1' }));
         } finally {
           refreshing.busy = false;
         }

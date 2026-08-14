@@ -19,7 +19,9 @@ export async function fetchWithRetry(url, { retries = 3, timeoutMs = 60000, head
         redirect: 'follow',
         signal: AbortSignal.timeout(timeoutMs),
       });
-      if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+      // 304 is a success — it means our cached snapshot is still current.
+      // `res.ok` is false for it, so it has to be allowed through explicitly.
+      if (res.status !== 304 && !res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
       return res;
     } catch (err) {
       lastErr = err;
@@ -27,6 +29,44 @@ export async function fetchWithRetry(url, { retries = 3, timeoutMs = 60000, head
     }
   }
   throw lastErr;
+}
+
+// Validators recorded the last time we stored this snapshot, if any.
+export function snapshotValidators(name) {
+  const metaPath = join(RAW_DIR, name + '.meta.json');
+  if (!existsSync(join(RAW_DIR, name)) || !existsSync(metaPath)) return null;
+  try {
+    const meta = JSON.parse(readFileSync(metaPath, 'utf8'));
+    if (!meta.etag && !meta.last_modified) return null;
+    return meta;
+  } catch {
+    return null;
+  }
+}
+
+// Conditional fetch: ask the server whether what we already have is still
+// current. A 304 costs zero bytes of body, which is the whole point — the
+// pipeline re-runs daily but most sources publish far less often.
+//
+// Callers must check `notModified` BEFORE doing any parsing or reducing
+// work, not after: for several sources the expensive part is what happens
+// to the payload, not the download.
+export async function fetchConditional(url, name, { force = false, ...opts } = {}) {
+  const prev = force ? null : snapshotValidators(name);
+  const headers = { ...(opts.headers ?? {}) };
+  if (prev?.etag) headers['if-none-match'] = prev.etag;
+  if (prev?.last_modified) headers['if-modified-since'] = prev.last_modified;
+
+  const res = await fetchWithRetry(url, { ...opts, headers });
+  if (res.status === 304) return { notModified: true, meta: prev };
+  return { notModified: false, res, validators: responseValidators(res) };
+}
+
+export function responseValidators(res) {
+  return {
+    etag: res.headers.get('etag') ?? null,
+    last_modified: res.headers.get('last-modified') ?? null,
+  };
 }
 
 export async function fetchText(url, opts) {

@@ -216,10 +216,15 @@ export async function renderAbout(el, refresh) {
         ? `Analyzing ${m.stats_season} weekly stats (updates all season); early-season trends compare against each player's ${m.baseline_season} baseline. Expert ranks are rest-of-season consensus.`
         : `Analyzing ${m.stats_season} stats for the ${m.season} draft. The app switches to season mode automatically once ${m.season} week-1 stats are published (refresh data after week 1).`}</p>
       <button class="rowbtn mt" id="data-refresh" style="padding:8px 14px">Refresh data now</button>
+      <button class="rowbtn mt" id="data-refresh-force" style="padding:8px 14px" title="Ignore cached validators and re-download every source. Only needed if a source republished without changing its ETag.">Force full re-download</button>
       <span class="small" id="data-refresh-status"></span>
       <p class="small mt">${m.auto_refresh?.enabled
-        ? `Auto-refresh: on — the server re-fetches everything when the data is over 20 hours old${m.auto_refresh.last_attempt ? ` (last auto run ${new Date(m.auto_refresh.last_attempt).toLocaleString()}: ${esc(m.auto_refresh.last_result ?? '…')})` : ' (no auto run yet this session)'}.`
+        ? `Auto-refresh: on — the server re-checks every source when the data is over 20 hours old${m.auto_refresh.last_attempt ? ` (last auto run ${new Date(m.auto_refresh.last_attempt).toLocaleString()}: ${esc(m.auto_refresh.last_result ?? '…')})` : ' (no auto run yet this session)'}.`
         : 'Auto-refresh: disabled (DVF_NO_AUTO_REFRESH is set).'}</p>
+      <p class="small">Each source is asked whether our copy is still current before anything is downloaded. A source
+        reported as <b>unchanged</b> answered "still current" and sent no data at all — that is a successful check,
+        not a skipped one. Only the play-by-play reduction is version-tracked separately, so a change to its counting
+        rules re-derives it even when the file upstream is byte-identical.</p>
     </div>
     <div class="panel"><h2>Data sources & freshness</h2>
       <table class="mt">
@@ -238,18 +243,24 @@ export async function renderAbout(el, refresh) {
       ${m.unmatched.ffc_only.length ? `<p class="small mt">In ADP data but not expert rankings: ${m.unmatched.ffc_only.map(p => esc(p.name)).join(', ')}</p>` : ''}
     </div>` : ''}`;
   const refreshBtn = el.querySelector('#data-refresh');
-  refreshBtn.onclick = async () => {
-    refreshBtn.disabled = true;
+  const forceBtn = el.querySelector('#data-refresh-force');
+  const runRefresh = async (force) => {
+    refreshBtn.disabled = forceBtn.disabled = true;
     const status = el.querySelector('#data-refresh-status');
-    status.textContent = ' Fetching all sources… (can take a minute)';
+    status.textContent = force ? ' Re-downloading every source…' : ' Checking all sources…';
     try {
-      const r = await api.adminRefresh();
-      status.textContent = ` Done — ${r.total - r.failures}/${r.total} sources OK, ${r.mode} mode, stats ${r.stats_season}.`;
-      setTimeout(() => refresh?.(), 1200);
+      const r = await api.adminRefresh({ force });
+      const parts = [`${r.downloaded ?? 0} updated`];
+      if (r.unchanged) parts.push(`${r.unchanged} already current (no data transferred)`);
+      if (r.failures) parts.push(`${r.failures} failed`);
+      status.textContent = ` Done — ${parts.join(', ')}. ${r.mode} mode, stats ${r.stats_season}.`;
+      setTimeout(() => refresh?.(), 1500);
     } catch (err) {
       status.textContent = ` Failed: ${err.message}`;
-      refreshBtn.disabled = false;
+      refreshBtn.disabled = forceBtn.disabled = false;
     }
   };
+  refreshBtn.onclick = () => runRefresh(false);
+  forceBtn.onclick = () => runRefresh(true);
   await wireYahoo(el, refresh ?? (() => renderAbout(el, refresh)));
 }

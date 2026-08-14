@@ -22,10 +22,18 @@
 //  - A touchdown is credited to the rusher or receiver of the scoring play.
 import { createGunzip } from 'node:zlib';
 import { Readable } from 'node:stream';
-import { fetchWithRetry, saveSnapshot } from '../util.js';
+import { fetchConditional, snapshotValidators, saveSnapshot } from '../util.js';
 
 const BASE = 'https://github.com/nflverse/nflverse-data/releases/download';
 export const pbpUrl = year => `${BASE}/pbp/play_by_play_${year}.csv.gz`;
+
+// This snapshot is DERIVED at ingest rather than stored raw, so unlike the
+// other sources it is not re-parsed from disk on every build. That makes a
+// 304 dangerous in one specific way: if the counting rules below change,
+// the cached output would silently stay on the old rules forever. Bumping
+// this version forces a re-download and a re-reduction.
+// Bump whenever accumulatePlay or finalize changes what they produce.
+export const REDUCER_VERSION = 1;
 
 // Inside the 20 is the red zone; inside the 5 is the goal line, where the
 // scoring rate per touch is far higher and the pecking order is tightest.
@@ -148,8 +156,7 @@ export function finalize(acc, season) {
 
 // Stream the gzipped CSV, decoding incrementally so a multi-byte character
 // split across chunk boundaries is not corrupted.
-async function* streamLines(url) {
-  const res = await fetchWithRetry(url, { timeoutMs: 300000 });
+async function* streamLines(res) {
   const decoder = new TextDecoder('utf-8');
   let buf = '';
   for await (const chunk of Readable.fromWeb(res.body).pipe(createGunzip())) {
@@ -164,12 +171,22 @@ async function* streamLines(url) {
   if (buf.trim() !== '') yield buf.replace(/\r$/, '');
 }
 
-export async function ingestRedZone(year) {
+export async function ingestRedZone(year, { force = false } = {}) {
   const url = pbpUrl(year);
+  const name = `redzone_${year}.json`;
+
+  // Validators are stored against the derived snapshot but describe the
+  // play-by-play file it was reduced from.
+  const prev = snapshotValidators(name);
+  const staleReducer = !!prev && prev.reducer_version !== REDUCER_VERSION;
+  const got = await fetchConditional(url, name, { force: force || staleReducer, timeoutMs: 300000 });
+  // Nothing downloaded and nothing reduced — this is where the 19 MB goes.
+  if (got.notModified) return { year, unchanged: true };
+
   const acc = createAccumulator();
   let idx = null;
 
-  for await (const line of streamLines(url)) {
+  for await (const line of streamLines(got.res)) {
     if (!idx) { idx = resolveColumns(line); continue; }
     if (line === '') continue;
     const f = pickFields(line, idx);
@@ -191,11 +208,13 @@ export async function ingestRedZone(year) {
   if (!acc.weeks.size) throw new Error(`nflverse pbp ${year}: no regular-season red-zone plays parsed`);
 
   const data = finalize(acc, year);
-  saveSnapshot(`redzone_${year}.json`, data, {
+  saveSnapshot(name, data, {
     source: `nflverse play-by-play (${year}), reduced to red-zone usage`,
     url,
     kind: 'redzone',
     season: year,
+    reducer_version: REDUCER_VERSION,
+    ...got.validators,
     detail: `${acc.rzPlays} red-zone touches of ${acc.plays} scrimmage touches, ${data.weeks.length} weeks, ${Object.keys(data.players).length} players`,
     derived: 'Aggregated at ingest; the source play-by-play file is not retained.',
   });
