@@ -9,6 +9,13 @@ import { openProfile } from './profile.js';
 const state = { team: null };
 
 const pct = v => (v == null ? '—' : `${Math.round(v * 100)}%`);
+// Sign off the ROUNDED value: a +0.004 delta rounds to zero, and "+0 pts"
+// next to a plain "0 pts" reads as a distinction that isn't there.
+const deltaPts = v => {
+  if (v == null) return '—';
+  const p = Math.round(v * 100);
+  return p === 0 ? 'no change' : `${p > 0 ? '+' : ''}${p} ${Math.abs(p) === 1 ? 'pt' : 'pts'}`;
+};
 const bar = (share, cls = 'bar-tgt') =>
   `<span class="sharebar"><span class="${cls}" style="width:${Math.min(100, Math.round((share ?? 0) * 100))}%"></span></span>`;
 
@@ -101,7 +108,7 @@ export async function renderTeams(el, refresh) {
           <td class="name" data-id="${esc(m.id)}">${esc(m.name)}<span class="team">${esc(m.position)}</span>${m.still_on_team ? '' : '<span class="badge inj">GONE</span>'}</td>
           <td>${pct(m.target_share_from)}</td><td>${pct(m.target_share_to)}</td>
           <td class="${(m.target_share_delta ?? 0) > 0.02 ? 'trend-up' : (m.target_share_delta ?? 0) < -0.02 ? 'trend-down' : ''}">
-            ${m.target_share_delta == null ? '—' : `${m.target_share_delta > 0 ? '+' : ''}${Math.round(m.target_share_delta * 100)} pts`}</td>
+            ${deltaPts(m.target_share_delta)}</td>
           <td>${m.carries_pg_from ?? '—'} → ${m.carries_pg_to ?? '—'}</td>
         </tr>`).join('')}</tbody>
       </table>
