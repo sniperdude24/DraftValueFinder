@@ -7,18 +7,27 @@ import { ROOT } from '../ingest/util.js';
 
 const HISTORY_PATH = join(ROOT, 'data', 'history.jsonl');
 
-export function logRecommendations(recResult, { trigger }) {
+// `week` and `season` are what make an entry gradeable: without them a logged
+// call cannot be placed against the games that followed it, and the
+// accountability review can only report it as unplaceable. The de-duplication
+// key includes the week for the same reason — in season mode `current_pick` is
+// null on every entry, so keying on it alone would record a player once in
+// week 1 and never mention them again all year.
+export function logRecommendations(recResult, { trigger, week = null, season = null }) {
   mkdirSync(join(ROOT, 'data'), { recursive: true });
   const existing = readHistory();
-  const seen = new Set(existing.map(e => `${e.player_id}|${e.current_pick}`));
+  const keyOf = (id, pick, wk) => `${id}|${pick ?? ''}|${wk ?? ''}`;
+  const seen = new Set(existing.map(e => keyOf(e.player_id, e.current_pick, e.week)));
   const lines = [];
   for (const r of recResult.recommendations) {
-    const key = `${r.id}|${recResult.current_pick}`;
+    const key = keyOf(r.id, recResult.current_pick, week);
     if (seen.has(key)) continue;
     seen.add(key);
     lines.push(JSON.stringify({
       at: new Date().toISOString(),
       trigger,
+      week,
+      season,
       current_pick: recResult.current_pick,
       round: recResult.round,
       player_id: r.id,

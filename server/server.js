@@ -12,6 +12,7 @@ import { leagueView, resolveNames } from '../src/analyze/league.js';
 import { weeklyReport } from '../src/analyze/weekly.js';
 import { applyFreeAgentList } from '../src/store/state.js';
 import { logRecommendations, logEvent, readHistory } from '../src/store/history.js';
+import { backtest, gradeLog } from '../src/analyze/accountability.js';
 import { chat } from '../src/ai/chat.js';
 import { isConfigured, isConnected, authorizeUrl, awaitCallback } from '../src/yahoo/oauth.js';
 import { yahooApi } from '../src/yahoo/client.js';
@@ -425,7 +426,10 @@ const server = createServer(async (req, res) => {
       }
       if (req.method === 'GET' && path === '/api/recommendations') {
         const result = recommendations(db.players, assessments, state, { mode: db.mode ?? 'draft' });
-        const logged = logRecommendations(result, { trigger: db.mode === 'season' ? 'waiver' : 'board' });
+        const logged = logRecommendations(result, {
+          trigger: db.mode === 'season' ? 'waiver' : 'board',
+          week: db.week, season: db.stats_season,
+        });
         return send(res, 200, { ...result, week: db.week, newly_logged: logged });
       }
       if (req.method === 'GET' && path === '/api/sleepers') {
@@ -444,7 +448,16 @@ const server = createServer(async (req, res) => {
         return send(res, 200, { mode: db.mode, week: db.week, sleepers: rows });
       }
       if (req.method === 'GET' && path === '/api/history') {
-        return send(res, 200, { events: readHistory().slice(-500).reverse() });
+        const events = readHistory();
+        return send(res, 200, {
+          stats_season: db.stats_season,
+          mode: db.mode,
+          // Does the method work? Replayed against completed games.
+          backtest: backtest(db.players),
+          // Did it work for you? Needs games played after the call was logged.
+          grading: gradeLog(events, db.players),
+          events: events.slice(-500).reverse(),
+        });
       }
       if (req.method === 'POST' && path === '/api/draft') {
         const { id, mine = false } = await readBody(req);

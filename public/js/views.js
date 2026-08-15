@@ -195,11 +195,105 @@ export async function renderMarket(el, refresh) {
   el.querySelectorAll('td.name').forEach(td => td.onclick = () => openProfile(td.dataset.id, refresh));
 }
 
+// A signed number where the sign is the whole point: green above zero, red
+// below, and never rendered without the baseline it is measured against.
+const signed = v => (v == null ? '<span class="aid">—</span>'
+  : `<span class="${v > 0 ? 'trend-up' : v < 0 ? 'trend-down' : 'trend-flat'}">${v > 0 ? '+' : ''}${v}</span>`);
+
+function backtestSection(b, statsSeason) {
+  const row = (label, g, note) => `<tr>
+    <td><b>${esc(label)}</b>${note ? `<div class="aid">${esc(note)}</div>` : ''}</td>
+    <td>${g.n}<span class="aid"> (${g.players} players)</span></td>
+    <td>${g.trailing_pg ?? '—'}</td>
+    <td>${g.recent_pg ?? '—'}</td>
+    <td><b>${g.forward_pg ?? '—'}</b></td>
+    <td>${signed(g.delta)}</td>
+    <td>${signed(g.delta_vs_recent)}</td>
+  </tr>`;
+
+  return `
+    <div class="panel">
+      <h2>Does the signal predict? · ${esc(String(statsSeason))} replay</h2>
+      <p class="small">The season replayed one game at a time. At each cut the signal is computed from
+        <b>only the games played up to that point</b>, then measured against the next ${b.horizon} games.
+        ${b.cuts.toLocaleString()} cut points.</p>
+      <table>
+        <thead>
+          <tr><th>Group</th><th>Cuts</th><th>Season/g</th><th>Last 3/g</th><th>Next ${b.horizon}/g</th>
+            <th>vs season</th><th>vs last 3</th></tr>
+        </thead>
+        <tbody>
+          ${row('Sleeper signal', b.groups.signal, 'snaps AND opportunities rising')}
+          ${row('Emerging', b.groups.emerging, 'one of the two rising')}
+          ${row('No signal', b.groups.none, 'the rest of the universe')}
+          <tr><td colspan="7" class="bench-label" style="border-bottom:none">Separate claim</td></tr>
+          ${row('Flagged as noise', b.spike, 'points spiked, usage did not — the engine rejects these')}
+        </tbody>
+      </table>
+
+      <div class="evidence mt">
+        <b>Reading it.</b> Everyone gives back some of a hot three-game window — that is regression, not a
+        verdict. What separates the groups is where they land relative to their own prior form.
+        Signal players finished <b>${signed(b.groups.signal.delta)}</b> against their season rate while
+        unflagged players were <b>${signed(b.groups.none.delta)}</b>: a lift of
+        <b>${b.lift ?? '—'}</b> points per game.
+        Players the engine dismissed as noise gave back <b>${signed(b.spike.delta_vs_recent)}</b> from the
+        burst that would have tempted you — the largest give-back of any group, which is the rejection
+        doing its job.
+      </div>
+
+      <h3 class="mt" style="font-size:14px">What would make this wrong</h3>
+      <ul class="small" style="margin-left:18px">
+        ${b.caveats.map(c => `<li style="margin-bottom:4px">${esc(c)}</li>`).join('')}
+      </ul>
+    </div>`;
+}
+
+function gradingSection(g) {
+  if (!g.available) {
+    return `
+      <div class="panel">
+        <h2>Did it work for you?</h2>
+        <p class="small">${esc(g.reason ?? 'Nothing to grade yet.')}</p>
+        <p class="small aid">${g.pending.total} logged recommendation${g.pending.total === 1 ? '' : 's'} waiting —
+          ${g.pending.no_week} without a recorded week, ${g.pending.no_games_yet} with no games played since.
+          This section fills itself in; nothing to do.</p>
+      </div>`;
+  }
+  return `
+    <div class="panel">
+      <h2>Did it work for you?</h2>
+      <p class="small">Every recommendation the app actually made, against what the player did in the
+        following ${g.horizon} games. This is the log grading itself — not a replay.</p>
+      <p class="small"><b>${g.summary.n}</b> graded · ${g.summary.forward_pg} pts/g after ·
+        <b>${signed(g.summary.delta)}</b> against their form at the time</p>
+      <table>
+        <thead><tr><th>Week</th><th>Player</th><th>Signal</th><th>AI</th><th>Before/g</th><th>After/g</th><th>Delta</th></tr></thead>
+        <tbody>${g.graded.slice(-40).reverse().map(r => `<tr>
+          <td>${r.week ?? '—'}</td>
+          <td>${esc(r.player ?? '')}<span class="team">${esc(r.position ?? '')}</span></td>
+          <td>${r.state === 'none' ? '<span class="aid">—</span>' : esc(r.state)}</td>
+          <td>${r.ai_rank != null ? '#' + r.ai_rank : '—'}</td>
+          <td>${r.trailing_pg ?? '—'}</td><td><b>${r.forward_pg ?? '—'}</b></td>
+          <td>${signed(r.delta)}</td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>`;
+}
+
 export async function renderHistory(el) {
-  const { events } = await api.history();
+  const { events, backtest, grading, stats_season } = await api.history();
   el.innerHTML = `
-    <div class="panel"><h2>Recommendation history (accountability log)</h2>
-      <p class="small">Every recommendation is recorded with the market state and evidence at the time it was made, so the system's calls can later be compared against real outcomes.</p></div>
+    <div class="panel"><h2>Accountability</h2>
+      <p class="small">Two different questions, and they need different evidence.
+        <b>Does the signal predict?</b> is answered by replaying a finished season against itself.
+        <b>Did it work for you?</b> is answered by grading the calls this app actually made — which needs
+        games to have been played since it made them.</p></div>
+    ${backtestSection(backtest, stats_season)}
+    ${gradingSection(grading)}
+    <div class="panel"><h2>The log</h2>
+      <p class="small">Every recommendation recorded with the market state and evidence at the time it was
+        made. Append-only — this is the record the grading above reads.</p></div>
     ${events.length ? `<table>
       <thead><tr><th>When</th><th>Event</th><th>Player</th><th>Pick</th><th>ADP</th><th>Expert</th><th>AI</th><th>Conf</th><th>Top reason</th></tr></thead>
       <tbody>${events.map(e => `<tr>

@@ -123,8 +123,13 @@ sources are recorded on the player record, not silently resolved.
 - **AI chat** — grounded in the app's actual data. Uses Claude
   (`ANTHROPIC_API_KEY` or an `ant auth login` profile) when available; falls
   back to a built-in deterministic query engine when not.
-- **History** — every recommendation logged with its full context
-  (`data/history.jsonl`) for later accountability review.
+- **Accountability** — two questions, kept apart because they need different
+  evidence. *Does the signal predict?* replays a finished season one game at a
+  time, computing the signal from only the games played to that point and
+  measuring the next four. *Did it work for you?* grades the calls this app
+  actually made, and stays honestly dormant until games have been played since
+  it made them. Every recommendation is logged with its full context
+  (`data/history.jsonl`), which is what the grading reads.
 
 ## Architecture
 
@@ -265,7 +270,8 @@ with `DVF_NO_AUTO_REFRESH=1`).
    approval; activation steps are on the app's Data page.
 2. **Stats Guy value-history** — per-player market-price timelines, useful
    for grading "the market was late" calls in the accountability log.
-3. **Start/sit + waiver claims** — deliberately out of scope.
+3. **Waiver claims / FAAB tracking and a trade analyzer** — still out of scope.
+   (Start/sit shipped with the This Week page.)
 
 ## Yahoo draft sync (optional)
 
